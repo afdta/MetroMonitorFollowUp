@@ -1,0 +1,413 @@
+"GeoFIPS","GeoName","Region","Table","LineCode","IndustryClassification","Description","2008","2009","2010","2011","2012","2013"
+"01998","Alabama (Metropolitan Portion)","5","RPP1","1","...","RPPs: All items",89.5,89.4,89.2,88.9,89.1,88.9
+"01998","Alabama (Metropolitan Portion)","5","RPP1","2","...","  RPPs: Goods",98.4,98.4,97.5,97.3,97.4,97.4
+"01998","Alabama (Metropolitan Portion)","5","RPP1","3","...","  RPPs: Services: Rents",68.6,68.8,67.8,67.0,67.7,66.9
+"01998","Alabama (Metropolitan Portion)","5","RPP1","4","...","  RPPs: Services: Other",94.8,94.3,93.9,94.1,94.0,94.0
+"01999","Alabama (Nonmetropolitan Portion)","5","RPP1","1","...","RPPs: All items",81.0,80.5,83.1,82.9,83.4,82.9
+"01999","Alabama (Nonmetropolitan Portion)","5","RPP1","2","...","  RPPs: Goods",94.6,94.6,93.5,92.8,92.7,92.9
+"01999","Alabama (Nonmetropolitan Portion)","5","RPP1","3","...","  RPPs: Services: Rents",46.5,45.7,47.2,47.0,48.6,47.8
+"01999","Alabama (Nonmetropolitan Portion)","5","RPP1","4","...","  RPPs: Services: Other",90.1,90.1,90.9,91.6,91.4,91.7
+"02998","Alaska (Metropolitan Portion)","8","RPP1","1","...","RPPs: All items",110.3,110.6,109.3,109.3,110.3,110.0
+"02998","Alaska (Metropolitan Portion)","8","RPP1","2","...","  RPPs: Goods",104.1,104.3,104.3,103.6,103.8,103.5
+"02998","Alaska (Metropolitan Portion)","8","RPP1","3","...","  RPPs: Services: Rents",142.0,146.7,138.1,145.2,149.2,146.8
+"02998","Alaska (Metropolitan Portion)","8","RPP1","4","...","  RPPs: Services: Other",104.5,103.7,102.6,101.2,101.5,101.3
+"02999","Alaska (Nonmetropolitan Portion)","8","RPP1","1","...","RPPs: All items",100.7,100.1,98.8,97.7,98.5,98.6
+"02999","Alaska (Nonmetropolitan Portion)","8","RPP1","2","...","  RPPs: Goods",100.0,99.5,99.0,98.4,98.9,98.9
+"02999","Alaska (Nonmetropolitan Portion)","8","RPP1","3","...","  RPPs: Services: Rents",115.7,122.8,118.0,113.3,119.5,115.4
+"02999","Alaska (Nonmetropolitan Portion)","8","RPP1","4","...","  RPPs: Services: Other",97.0,94.5,94.4,93.6,93.2,93.3
+"04998","Arizona (Metropolitan Portion)","6","RPP1","1","...","RPPs: All items",101.2,100.7,99.1,98.4,98.3,97.6
+"04998","Arizona (Metropolitan Portion)","6","RPP1","2","...","  RPPs: Goods",101.1,100.9,100.4,99.3,99.4,99.3
+"04998","Arizona (Metropolitan Portion)","6","RPP1","3","...","  RPPs: Services: Rents",105.7,103.1,97.3,96.5,96.3,93.7
+"04998","Arizona (Metropolitan Portion)","6","RPP1","4","...","  RPPs: Services: Other",99.0,99.3,98.4,98.4,98.3,98.2
+"04999","Arizona (Nonmetropolitan Portion)","6","RPP1","1","...","RPPs: All items",90.2,89.3,89.3,87.7,88.2,89.1
+"04999","Arizona (Nonmetropolitan Portion)","6","RPP1","2","...","  RPPs: Goods",100.0,99.5,99.1,98.5,98.9,98.9
+"04999","Arizona (Nonmetropolitan Portion)","6","RPP1","3","...","  RPPs: Services: Rents",60.1,60.0,57.3,53.9,57.2,61.8
+"04999","Arizona (Nonmetropolitan Portion)","6","RPP1","4","...","  RPPs: Services: Other",97.1,94.6,94.5,93.6,93.4,93.3
+"05998","Arkansas (Metropolitan Portion)","5","RPP1","1","...","RPPs: All items",89.8,89.3,89.6,89.5,89.1,89.2
+"05998","Arkansas (Metropolitan Portion)","5","RPP1","2","...","  RPPs: Goods",98.2,98.2,97.3,97.1,97.1,97.1
+"05998","Arkansas (Metropolitan Portion)","5","RPP1","3","...","  RPPs: Services: Rents",70.4,69.3,69.9,69.5,68.2,68.8
+"05998","Arkansas (Metropolitan Portion)","5","RPP1","4","...","  RPPs: Services: Other",94.5,94.1,93.8,94.0,93.9,93.9
+"05999","Arkansas (Nonmetropolitan Portion)","5","RPP1","1","...","RPPs: All items",82.2,82.2,84.2,84.3,84.9,84.2
+"05999","Arkansas (Nonmetropolitan Portion)","5","RPP1","2","...","  RPPs: Goods",94.5,94.5,93.4,92.7,92.5,92.7
+"05999","Arkansas (Nonmetropolitan Portion)","5","RPP1","3","...","  RPPs: Services: Rents",48.1,48.0,49.0,49.7,51.9,50.2
+"05999","Arkansas (Nonmetropolitan Portion)","5","RPP1","4","...","  RPPs: Services: Other",89.9,89.9,90.7,91.5,91.3,91.6
+"06998","California (Metropolitan Portion)","8","RPP1","1","...","RPPs: All items",113.7,113.5,114.2,114.0,113.6,112.8
+"06998","California (Metropolitan Portion)","8","RPP1","2","...","  RPPs: Goods",103.5,103.2,103.0,102.9,103.1,103.0
+"06998","California (Metropolitan Portion)","8","RPP1","3","...","  RPPs: Services: Rents",158.2,157.2,153.6,151.9,150.4,148.8
+"06998","California (Metropolitan Portion)","8","RPP1","4","...","  RPPs: Services: Other",105.4,105.7,106.0,106.1,106.1,106.1
+"06999","California (Nonmetropolitan Portion)","8","RPP1","1","...","RPPs: All items",100.7,99.2,99.1,98.0,97.4,97.5
+"06999","California (Nonmetropolitan Portion)","8","RPP1","2","...","  RPPs: Goods",99.9,99.4,99.3,98.7,98.9,98.9
+"06999","California (Nonmetropolitan Portion)","8","RPP1","3","...","  RPPs: Services: Rents",109.1,107.0,108.9,105.8,101.7,102.3
+"06999","California (Nonmetropolitan Portion)","8","RPP1","4","...","  RPPs: Services: Other",97.5,95.0,94.5,93.7,93.6,93.3
+"08998","Colorado (Metropolitan Portion)","7","RPP1","1","...","RPPs: All items",100.8,102.0,102.0,102.7,103.0,103.4
+"08998","Colorado (Metropolitan Portion)","7","RPP1","2","...","  RPPs: Goods",101.8,102.4,102.1,101.7,101.6,101.7
+"08998","Colorado (Metropolitan Portion)","7","RPP1","3","...","  RPPs: Services: Rents",109.0,110.0,106.7,109.1,109.0,112.2
+"08998","Colorado (Metropolitan Portion)","7","RPP1","4","...","  RPPs: Services: Other",95.5,97.5,99.3,100.0,100.7,100.4
+"08999","Colorado (Nonmetropolitan Portion)","7","RPP1","1","...","RPPs: All items",99.3,96.9,96.3,95.9,95.7,96.3
+"08999","Colorado (Nonmetropolitan Portion)","7","RPP1","2","...","  RPPs: Goods",100.0,99.5,99.0,98.5,98.9,98.9
+"08999","Colorado (Nonmetropolitan Portion)","7","RPP1","3","...","  RPPs: Services: Rents",102.2,94.2,93.3,94.9,93.3,96.1
+"08999","Colorado (Nonmetropolitan Portion)","7","RPP1","4","...","  RPPs: Services: Other",97.1,94.6,94.4,93.6,93.3,93.3
+"09998","Connecticut (Metropolitan Portion)","1","RPP1","1","...","RPPs: All items",111.3,111.0,110.0,109.6,109.6,109.0
+"09998","Connecticut (Metropolitan Portion)","1","RPP1","2","...","  RPPs: Goods",105.3,104.9,105.1,104.7,104.6,104.4
+"09998","Connecticut (Metropolitan Portion)","1","RPP1","3","...","  RPPs: Services: Rents",122.6,123.7,120.1,119.8,120.5,117.6
+"09998","Connecticut (Metropolitan Portion)","1","RPP1","4","...","  RPPs: Services: Other",112.3,111.4,110.4,109.9,109.7,109.5
+"09999","Connecticut (Nonmetropolitan Portion)","1","RPP1","1","...","RPPs: All items",104.4,104.2,102.7,101.9,102.6,102.3
+"09999","Connecticut (Nonmetropolitan Portion)","1","RPP1","2","...","  RPPs: Goods",100.5,100.3,100.2,100.0,100.0,99.8
+"09999","Connecticut (Nonmetropolitan Portion)","1","RPP1","3","...","  RPPs: Services: Rents",116.1,116.4,110.1,107.0,111.3,110.6
+"09999","Connecticut (Nonmetropolitan Portion)","1","RPP1","4","...","  RPPs: Services: Other",103.1,102.5,101.8,101.6,101.3,101.1
+"10998","Delaware (Metropolitan Portion)","2","RPP1","1","...","RPPs: All items",102.3,103.5,103.0,102.0,101.8,101.6
+"10998","Delaware (Metropolitan Portion)","2","RPP1","2","...","  RPPs: Goods",102.0,102.3,102.3,101.2,101.1,101.2
+"10998","Delaware (Metropolitan Portion)","2","RPP1","3","...","  RPPs: Services: Rents",97.8,102.9,101.4,99.6,99.4,98.4
+"10998","Delaware (Metropolitan Portion)","2","RPP1","4","...","  RPPs: Services: Other",105.7,105.2,104.6,104.3,103.9,103.9
+"10999","Delaware (Nonmetropolitan Portion)","2","RPP1","1","...","RPPs: All items",0.0,0.0,0.0,0.0,0.0,0.0
+"10999","Delaware (Nonmetropolitan Portion)","2","RPP1","2","...","  RPPs: Goods",0.0,0.0,0.0,0.0,0.0,0.0
+"10999","Delaware (Nonmetropolitan Portion)","2","RPP1","3","...","  RPPs: Services: Rents",0.0,0.0,0.0,0.0,0.0,0.0
+"10999","Delaware (Nonmetropolitan Portion)","2","RPP1","4","...","  RPPs: Services: Other",0.0,0.0,0.0,0.0,0.0,0.0
+"11998","District of Columbia (Metropolitan Portion)","2","RPP1","1","...","RPPs: All items",116.3,117.0,118.7,118.3,118.4,118.1
+"11998","District of Columbia (Metropolitan Portion)","2","RPP1","2","...","  RPPs: Goods",106.4,106.9,107.0,107.7,107.6,107.7
+"11998","District of Columbia (Metropolitan Portion)","2","RPP1","3","...","  RPPs: Services: Rents",144.4,143.6,158.5,156.6,160.2,160.2
+"11998","District of Columbia (Metropolitan Portion)","2","RPP1","4","...","  RPPs: Services: Other",112.4,113.7,112.4,110.7,110.4,110.3
+"11999","District of Columbia (Nonmetropolitan Portion)","2","RPP1","1","...","RPPs: All items",0.0,0.0,0.0,0.0,0.0,0.0
+"11999","District of Columbia (Nonmetropolitan Portion)","2","RPP1","2","...","  RPPs: Goods",0.0,0.0,0.0,0.0,0.0,0.0
+"11999","District of Columbia (Nonmetropolitan Portion)","2","RPP1","3","...","  RPPs: Services: Rents",0.0,0.0,0.0,0.0,0.0,0.0
+"11999","District of Columbia (Nonmetropolitan Portion)","2","RPP1","4","...","  RPPs: Services: Other",0.0,0.0,0.0,0.0,0.0,0.0
+"12998","Florida (Metropolitan Portion)","5","RPP1","1","...","RPPs: All items",101.5,100.6,99.6,99.8,99.4,99.4
+"12998","Florida (Metropolitan Portion)","5","RPP1","2","...","  RPPs: Goods",98.9,98.8,98.3,98.3,98.3,98.3
+"12998","Florida (Metropolitan Portion)","5","RPP1","3","...","  RPPs: Services: Rents",116.0,112.4,108.0,108.8,106.7,106.5
+"12998","Florida (Metropolitan Portion)","5","RPP1","4","...","  RPPs: Services: Other",96.2,95.9,95.9,96.1,96.3,96.4
+"12999","Florida (Nonmetropolitan Portion)","5","RPP1","1","...","RPPs: All items",90.0,89.8,90.2,89.6,89.3,88.6
+"12999","Florida (Nonmetropolitan Portion)","5","RPP1","2","...","  RPPs: Goods",94.5,94.5,93.4,92.7,92.5,92.7
+"12999","Florida (Nonmetropolitan Portion)","5","RPP1","3","...","  RPPs: Services: Rents",78.7,77.8,80.7,77.9,77.1,73.8
+"12999","Florida (Nonmetropolitan Portion)","5","RPP1","4","...","  RPPs: Services: Other",89.9,89.9,90.7,91.5,91.3,91.6
+"13998","Georgia (Metropolitan Portion)","5","RPP1","1","...","RPPs: All items",96.0,95.2,94.0,93.5,93.5,93.5
+"13998","Georgia (Metropolitan Portion)","5","RPP1","2","...","  RPPs: Goods",98.8,98.6,98.0,97.7,97.6,97.6
+"13998","Georgia (Metropolitan Portion)","5","RPP1","3","...","  RPPs: Services: Rents",90.1,89.1,86.8,85.6,85.6,84.6
+"13998","Georgia (Metropolitan Portion)","5","RPP1","4","...","  RPPs: Services: Other",96.8,95.8,94.3,94.1,94.1,94.3
+"13999","Georgia (Nonmetropolitan Portion)","5","RPP1","1","...","RPPs: All items",84.4,84.7,85.2,85.3,84.6,84.7
+"13999","Georgia (Nonmetropolitan Portion)","5","RPP1","2","...","  RPPs: Goods",94.5,94.5,93.4,92.7,92.5,92.7
+"13999","Georgia (Nonmetropolitan Portion)","5","RPP1","3","...","  RPPs: Services: Rents",55.4,56.6,55.8,56.3,54.4,55.0
+"13999","Georgia (Nonmetropolitan Portion)","5","RPP1","4","...","  RPPs: Services: Other",89.9,89.9,90.7,91.5,91.3,91.6
+"15998","Hawaii (Metropolitan Portion)","8","RPP1","1","...","RPPs: All items",121.2,120.6,120.7,120.7,120.7,119.3
+"15998","Hawaii (Metropolitan Portion)","8","RPP1","2","...","  RPPs: Goods",107.2,108.1,108.6,110.5,110.7,109.7
+"15998","Hawaii (Metropolitan Portion)","8","RPP1","3","...","  RPPs: Services: Rents",178.3,179.2,170.5,169.5,171.1,170.8
+"15998","Hawaii (Metropolitan Portion)","8","RPP1","4","...","  RPPs: Services: Other",111.6,108.7,105.8,104.5,104.6,104.2
+"15999","Hawaii (Nonmetropolitan Portion)","8","RPP1","1","...","RPPs: All items",104.7,100.9,101.3,99.6,99.5,98.9
+"15999","Hawaii (Nonmetropolitan Portion)","8","RPP1","2","...","  RPPs: Goods",99.8,99.3,99.7,99.1,98.8,98.9
+"15999","Hawaii (Nonmetropolitan Portion)","8","RPP1","3","...","  RPPs: Services: Rents",129.5,113.3,115.6,109.7,108.6,107.3
+"15999","Hawaii (Nonmetropolitan Portion)","8","RPP1","4","...","  RPPs: Services: Other",98.3,95.7,94.5,93.8,94.3,93.3
+"16998","Idaho (Metropolitan Portion)","7","RPP1","1","...","RPPs: All items",95.5,95.4,94.4,93.7,94.3,93.4
+"16998","Idaho (Metropolitan Portion)","7","RPP1","2","...","  RPPs: Goods",97.4,97.8,98.1,98.1,98.0,98.0
+"16998","Idaho (Metropolitan Portion)","7","RPP1","3","...","  RPPs: Services: Rents",86.8,85.5,81.4,78.0,81.5,78.1
+"16998","Idaho (Metropolitan Portion)","7","RPP1","4","...","  RPPs: Services: Other",98.4,98.2,97.9,98.2,98.3,98.1
+"16999","Idaho (Nonmetropolitan Portion)","7","RPP1","1","...","RPPs: All items",94.5,93.3,91.5,92.1,91.4,91.0
+"16999","Idaho (Nonmetropolitan Portion)","7","RPP1","2","...","  RPPs: Goods",100.0,99.4,99.2,98.6,98.9,98.9
+"16999","Idaho (Nonmetropolitan Portion)","7","RPP1","3","...","  RPPs: Services: Rents",75.7,75.2,69.1,73.6,71.9,71.3
+"16999","Idaho (Nonmetropolitan Portion)","7","RPP1","4","...","  RPPs: Services: Other",97.3,94.8,94.5,93.7,93.5,93.3
+"17998","Illinois (Metropolitan Portion)","3","RPP1","1","...","RPPs: All items",102.8,103.5,103.2,103.4,102.8,103.3
+"17998","Illinois (Metropolitan Portion)","3","RPP1","2","...","  RPPs: Goods",102.7,102.6,102.9,102.6,102.3,102.5
+"17998","Illinois (Metropolitan Portion)","3","RPP1","3","...","  RPPs: Services: Rents",107.4,109.1,108.0,108.0,106.4,107.5
+"17998","Illinois (Metropolitan Portion)","3","RPP1","4","...","  RPPs: Services: Other",100.6,101.6,101.3,102.0,101.7,102.1
+"17999","Illinois (Nonmetropolitan Portion)","3","RPP1","1","...","RPPs: All items",81.5,82.6,83.9,84.3,84.8,84.2
+"17999","Illinois (Nonmetropolitan Portion)","3","RPP1","2","...","  RPPs: Goods",89.7,90.1,90.3,91.6,91.6,91.6
+"17999","Illinois (Nonmetropolitan Portion)","3","RPP1","3","...","  RPPs: Services: Rents",57.4,59.8,60.6,59.2,60.7,58.5
+"17999","Illinois (Nonmetropolitan Portion)","3","RPP1","4","...","  RPPs: Services: Other",87.8,88.2,88.3,89.1,88.9,88.9
+"18998","Indiana (Metropolitan Portion)","3","RPP1","1","...","RPPs: All items",93.2,93.3,93.1,93.4,92.8,93.0
+"18998","Indiana (Metropolitan Portion)","3","RPP1","2","...","  RPPs: Goods",97.2,97.8,97.7,98.0,98.1,98.1
+"18998","Indiana (Metropolitan Portion)","3","RPP1","3","...","  RPPs: Services: Rents",81.1,81.4,80.0,80.6,78.7,79.3
+"18998","Indiana (Metropolitan Portion)","3","RPP1","4","...","  RPPs: Services: Other",95.7,95.4,95.3,95.5,95.4,95.5
+"18999","Indiana (Nonmetropolitan Portion)","3","RPP1","1","...","RPPs: All items",83.5,83.4,83.8,84.5,84.5,84.5
+"18999","Indiana (Nonmetropolitan Portion)","3","RPP1","2","...","  RPPs: Goods",90.2,90.7,90.9,92.1,92.1,92.0
+"18999","Indiana (Nonmetropolitan Portion)","3","RPP1","3","...","  RPPs: Services: Rents",65.0,64.0,62.2,61.9,62.0,62.1
+"18999","Indiana (Nonmetropolitan Portion)","3","RPP1","4","...","  RPPs: Services: Other",88.3,88.6,88.8,89.5,89.3,89.3
+"19998","Iowa (Metropolitan Portion)","4","RPP1","1","...","RPPs: All items",92.6,92.9,92.9,93.2,93.0,93.2
+"19998","Iowa (Metropolitan Portion)","4","RPP1","2","...","  RPPs: Goods",95.7,96.4,96.3,96.8,97.0,97.0
+"19998","Iowa (Metropolitan Portion)","4","RPP1","3","...","  RPPs: Services: Rents",82.7,83.2,83.3,83.3,82.7,83.7
+"19998","Iowa (Metropolitan Portion)","4","RPP1","4","...","  RPPs: Services: Other",94.3,93.8,93.8,93.9,93.8,93.9
+"19999","Iowa (Nonmetropolitan Portion)","4","RPP1","1","...","RPPs: All items",83.0,83.7,84.1,85.6,85.8,86.1
+"19999","Iowa (Nonmetropolitan Portion)","4","RPP1","2","...","  RPPs: Goods",89.3,89.8,90.0,91.3,91.3,91.3
+"19999","Iowa (Nonmetropolitan Portion)","4","RPP1","3","...","  RPPs: Services: Rents",58.6,59.7,57.3,59.7,60.5,61.9
+"19999","Iowa (Nonmetropolitan Portion)","4","RPP1","4","...","  RPPs: Services: Other",87.7,88.2,88.1,88.9,88.7,88.7
+"20998","Kansas (Metropolitan Portion)","4","RPP1","1","...","RPPs: All items",92.4,92.4,92.9,93.4,93.0,93.4
+"20998","Kansas (Metropolitan Portion)","4","RPP1","2","...","  RPPs: Goods",97.3,97.1,96.5,96.9,96.9,97.1
+"20998","Kansas (Metropolitan Portion)","4","RPP1","3","...","  RPPs: Services: Rents",83.8,82.9,83.5,83.3,81.6,83.7
+"20998","Kansas (Metropolitan Portion)","4","RPP1","4","...","  RPPs: Services: Other",91.6,92.3,93.3,94.4,94.4,94.3
+"20999","Kansas (Nonmetropolitan Portion)","4","RPP1","1","...","RPPs: All items",82.1,83.2,83.2,84.5,84.9,85.1
+"20999","Kansas (Nonmetropolitan Portion)","4","RPP1","2","...","  RPPs: Goods",89.3,89.8,90.0,91.3,91.3,91.3
+"20999","Kansas (Nonmetropolitan Portion)","4","RPP1","3","...","  RPPs: Services: Rents",58.9,61.3,58.0,59.7,60.8,61.7
+"20999","Kansas (Nonmetropolitan Portion)","4","RPP1","4","...","  RPPs: Services: Other",87.4,88.0,88.0,88.9,88.6,88.7
+"21998","Kentucky (Metropolitan Portion)","5","RPP1","1","...","RPPs: All items",91.3,91.3,90.5,90.5,90.6,90.8
+"21998","Kentucky (Metropolitan Portion)","5","RPP1","2","...","  RPPs: Goods",97.6,97.4,96.5,96.2,96.2,96.3
+"21998","Kentucky (Metropolitan Portion)","5","RPP1","3","...","  RPPs: Services: Rents",74.2,75.5,73.8,74.3,75.2,75.7
+"21998","Kentucky (Metropolitan Portion)","5","RPP1","4","...","  RPPs: Services: Other",95.5,94.5,94.0,93.9,93.8,93.8
+"21999","Kentucky (Nonmetropolitan Portion)","5","RPP1","1","...","RPPs: All items",85.0,84.6,85.5,85.7,85.8,86.2
+"21999","Kentucky (Nonmetropolitan Portion)","5","RPP1","2","...","  RPPs: Goods",94.6,94.6,93.5,92.8,92.7,92.9
+"21999","Kentucky (Nonmetropolitan Portion)","5","RPP1","3","...","  RPPs: Services: Rents",54.1,53.1,53.0,53.9,54.6,56.5
+"21999","Kentucky (Nonmetropolitan Portion)","5","RPP1","4","...","  RPPs: Services: Other",90.1,90.1,90.9,91.6,91.4,91.7
+"22998","Louisiana (Metropolitan Portion)","5","RPP1","1","...","RPPs: All items",92.7,93.2,92.6,92.5,92.7,92.7
+"22998","Louisiana (Metropolitan Portion)","5","RPP1","2","...","  RPPs: Goods",98.3,98.3,97.3,97.1,97.2,97.2
+"22998","Louisiana (Metropolitan Portion)","5","RPP1","3","...","  RPPs: Services: Rents",80.2,82.5,81.8,81.7,82.1,82.4
+"22998","Louisiana (Metropolitan Portion)","5","RPP1","4","...","  RPPs: Services: Other",94.6,94.2,93.8,94.0,93.9,93.9
+"22999","Louisiana (Nonmetropolitan Portion)","5","RPP1","1","...","RPPs: All items",81.0,83.2,84.7,84.0,85.0,83.7
+"22999","Louisiana (Nonmetropolitan Portion)","5","RPP1","2","...","  RPPs: Goods",94.8,94.8,93.7,93.1,92.9,93.1
+"22999","Louisiana (Nonmetropolitan Portion)","5","RPP1","3","...","  RPPs: Services: Rents",46.3,50.9,51.5,49.8,53.3,49.7
+"22999","Louisiana (Nonmetropolitan Portion)","5","RPP1","4","...","  RPPs: Services: Other",90.4,90.3,91.0,91.8,91.6,91.8
+"23998","Maine (Metropolitan Portion)","1","RPP1","1","...","RPPs: All items",99.6,100.1,98.4,98.9,99.5,98.9
+"23998","Maine (Metropolitan Portion)","1","RPP1","2","...","  RPPs: Goods",98.5,98.3,98.1,98.0,98.1,97.9
+"23998","Maine (Metropolitan Portion)","1","RPP1","3","...","  RPPs: Services: Rents",101.6,105.5,98.4,101.5,104.9,102.8
+"23998","Maine (Metropolitan Portion)","1","RPP1","4","...","  RPPs: Services: Other",99.7,99.3,98.7,98.3,98.0,98.0
+"23999","Maine (Nonmetropolitan Portion)","1","RPP1","1","...","RPPs: All items",95.7,95.3,94.6,95.0,95.7,94.8
+"23999","Maine (Nonmetropolitan Portion)","1","RPP1","2","...","  RPPs: Goods",98.3,98.1,98.0,97.8,98.4,97.9
+"23999","Maine (Nonmetropolitan Portion)","1","RPP1","3","...","  RPPs: Services: Rents",77.5,76.8,76.0,79.6,82.1,81.0
+"23999","Maine (Nonmetropolitan Portion)","1","RPP1","4","...","  RPPs: Services: Other",98.5,98.2,96.5,96.5,97.0,96.9
+"24998","Maryland (Metropolitan Portion)","2","RPP1","1","...","RPPs: All items",111.6,112.7,112.2,112.2,111.9,112.0
+"24998","Maryland (Metropolitan Portion)","2","RPP1","2","...","  RPPs: Goods",103.2,103.2,103.8,104.3,104.3,104.4
+"24998","Maryland (Metropolitan Portion)","2","RPP1","3","...","  RPPs: Services: Rents",128.1,129.8,126.5,129.5,128.1,129.1
+"24998","Maryland (Metropolitan Portion)","2","RPP1","4","...","  RPPs: Services: Other",110.6,112.5,112.2,110.2,109.8,109.9
+"24999","Maryland (Nonmetropolitan Portion)","2","RPP1","1","...","RPPs: All items",91.3,89.7,90.6,88.8,90.2,91.0
+"24999","Maryland (Nonmetropolitan Portion)","2","RPP1","2","...","  RPPs: Goods",94.5,94.5,93.4,92.7,92.5,92.8
+"24999","Maryland (Nonmetropolitan Portion)","2","RPP1","3","...","  RPPs: Services: Rents",84.1,74.8,80.8,72.1,80.1,83.8
+"24999","Maryland (Nonmetropolitan Portion)","2","RPP1","4","...","  RPPs: Services: Other",89.9,89.9,90.7,91.5,91.3,91.6
+"25998","Massachusetts (Metropolitan Portion)","1","RPP1","1","...","RPPs: All items",108.8,108.4,108.4,108.2,107.1,107.7
+"25998","Massachusetts (Metropolitan Portion)","1","RPP1","2","...","  RPPs: Goods",98.8,98.2,98.0,99.1,99.0,99.0
+"25998","Massachusetts (Metropolitan Portion)","1","RPP1","3","...","  RPPs: Services: Rents",127.0,126.7,125.6,126.2,122.9,125.5
+"25998","Massachusetts (Metropolitan Portion)","1","RPP1","4","...","  RPPs: Services: Other",111.6,111.6,111.4,109.0,108.8,108.9
+"25999","Massachusetts (Nonmetropolitan Portion)","1","RPP1","1","...","RPPs: All items",100.2,100.3,100.1,99.6,98.6,99.4
+"25999","Massachusetts (Nonmetropolitan Portion)","1","RPP1","2","...","  RPPs: Goods",98.3,98.2,98.0,97.8,98.3,97.9
+"25999","Massachusetts (Nonmetropolitan Portion)","1","RPP1","3","...","  RPPs: Services: Rents",110.9,113.0,116.3,113.2,103.0,108.6
+"25999","Massachusetts (Nonmetropolitan Portion)","1","RPP1","4","...","  RPPs: Services: Other",98.6,98.3,97.0,96.9,97.1,97.0
+"26998","Michigan (Metropolitan Portion)","3","RPP1","1","...","RPPs: All items",97.2,96.9,96.2,96.1,96.0,95.6
+"26998","Michigan (Metropolitan Portion)","3","RPP1","2","...","  RPPs: Goods",98.3,98.7,98.8,99.0,99.0,99.0
+"26998","Michigan (Metropolitan Portion)","3","RPP1","3","...","  RPPs: Services: Rents",89.7,87.6,85.7,84.9,84.7,84.7
+"26998","Michigan (Metropolitan Portion)","3","RPP1","4","...","  RPPs: Services: Other",99.8,99.6,98.8,98.7,98.5,98.3
+"26999","Michigan (Nonmetropolitan Portion)","3","RPP1","1","...","RPPs: All items",85.8,85.9,86.2,86.7,86.9,86.6
+"26999","Michigan (Nonmetropolitan Portion)","3","RPP1","2","...","  RPPs: Goods",90.4,90.8,91.0,92.2,92.2,92.2
+"26999","Michigan (Nonmetropolitan Portion)","3","RPP1","3","...","  RPPs: Services: Rents",71.2,70.7,70.4,69.2,70.2,68.8
+"26999","Michigan (Nonmetropolitan Portion)","3","RPP1","4","...","  RPPs: Services: Other",89.1,89.4,89.3,90.0,89.8,89.8
+"27998","Minnesota (Metropolitan Portion)","4","RPP1","1","...","RPPs: All items",100.9,101.2,100.4,100.4,100.7,100.6
+"27998","Minnesota (Metropolitan Portion)","4","RPP1","2","...","  RPPs: Goods",98.9,99.6,100.5,101.2,101.3,101.3
+"27998","Minnesota (Metropolitan Portion)","4","RPP1","3","...","  RPPs: Services: Rents",103.6,105.0,102.2,102.1,103.1,103.0
+"27998","Minnesota (Metropolitan Portion)","4","RPP1","4","...","  RPPs: Services: Other",101.9,101.1,99.3,98.5,98.8,98.6
+"27999","Minnesota (Nonmetropolitan Portion)","4","RPP1","1","...","RPPs: All items",84.5,85.4,85.5,85.8,86.8,86.6
+"27999","Minnesota (Nonmetropolitan Portion)","4","RPP1","2","...","  RPPs: Goods",89.3,89.8,90.0,91.3,91.3,91.3
+"27999","Minnesota (Nonmetropolitan Portion)","4","RPP1","3","...","  RPPs: Services: Rents",68.3,70.3,68.9,66.5,70.6,69.9
+"27999","Minnesota (Nonmetropolitan Portion)","4","RPP1","4","...","  RPPs: Services: Other",87.5,88.0,88.1,88.9,88.6,88.7
+"28998","Mississippi (Metropolitan Portion)","5","RPP1","1","...","RPPs: All items",91.7,91.5,90.8,90.3,90.0,90.2
+"28998","Mississippi (Metropolitan Portion)","5","RPP1","2","...","  RPPs: Goods",98.1,98.1,97.1,96.9,97.0,97.0
+"28998","Mississippi (Metropolitan Portion)","5","RPP1","3","...","  RPPs: Services: Rents",78.0,77.9,76.3,74.7,73.7,74.4
+"28998","Mississippi (Metropolitan Portion)","5","RPP1","4","...","  RPPs: Services: Other",94.4,93.9,93.7,93.9,93.8,93.8
+"28999","Mississippi (Nonmetropolitan Portion)","5","RPP1","1","...","RPPs: All items",81.7,81.1,83.1,83.7,83.0,83.2
+"28999","Mississippi (Nonmetropolitan Portion)","5","RPP1","2","...","  RPPs: Goods",94.4,94.5,93.4,92.7,92.5,92.7
+"28999","Mississippi (Nonmetropolitan Portion)","5","RPP1","3","...","  RPPs: Services: Rents",50.7,49.4,50.5,52.4,50.6,51.9
+"28999","Mississippi (Nonmetropolitan Portion)","5","RPP1","4","...","  RPPs: Services: Other",89.9,89.8,90.7,91.5,91.3,91.6
+"29998","Missouri (Metropolitan Portion)","4","RPP1","1","...","RPPs: All items",89.7,89.7,90.0,91.0,90.3,90.7
+"29998","Missouri (Metropolitan Portion)","4","RPP1","2","...","  RPPs: Goods",93.6,93.3,93.7,94.7,94.5,94.7
+"29998","Missouri (Metropolitan Portion)","4","RPP1","3","...","  RPPs: Services: Rents",81.7,81.0,79.6,80.6,79.0,80.6
+"29998","Missouri (Metropolitan Portion)","4","RPP1","4","...","  RPPs: Services: Other",89.7,90.6,91.4,92.2,92.0,91.9
+"29999","Missouri (Nonmetropolitan Portion)","4","RPP1","1","...","RPPs: All items",81.2,81.5,82.3,83.0,84.0,84.1
+"29999","Missouri (Nonmetropolitan Portion)","4","RPP1","2","...","  RPPs: Goods",89.3,89.8,90.0,91.3,91.3,91.3
+"29999","Missouri (Nonmetropolitan Portion)","4","RPP1","3","...","  RPPs: Services: Rents",56.3,56.4,55.1,54.7,57.7,58.0
+"29999","Missouri (Nonmetropolitan Portion)","4","RPP1","4","...","  RPPs: Services: Other",87.6,88.1,88.1,88.9,88.7,88.7
+"30998","Montana (Metropolitan Portion)","7","RPP1","1","...","RPPs: All items",95.8,95.6,95.6,95.8,95.8,97.5
+"30998","Montana (Metropolitan Portion)","7","RPP1","2","...","  RPPs: Goods",97.1,97.6,97.9,98.0,97.9,97.9
+"30998","Montana (Metropolitan Portion)","7","RPP1","3","...","  RPPs: Services: Rents",88.5,85.7,86.1,86.2,86.9,94.9
+"30998","Montana (Metropolitan Portion)","7","RPP1","4","...","  RPPs: Services: Other",98.3,98.4,98.3,98.6,98.6,98.6
+"30999","Montana (Nonmetropolitan Portion)","7","RPP1","1","...","RPPs: All items",94.4,93.3,92.3,92.2,92.1,91.8
+"30999","Montana (Nonmetropolitan Portion)","7","RPP1","2","...","  RPPs: Goods",100.0,99.4,99.1,98.6,98.9,98.9
+"30999","Montana (Nonmetropolitan Portion)","7","RPP1","3","...","  RPPs: Services: Rents",74.2,74.0,70.9,72.7,73.5,72.9
+"30999","Montana (Nonmetropolitan Portion)","7","RPP1","4","...","  RPPs: Services: Other",97.3,94.7,94.5,93.7,93.4,93.3
+"31998","Nebraska (Metropolitan Portion)","4","RPP1","1","...","RPPs: All items",93.3,93.1,93.5,93.6,93.3,93.2
+"31998","Nebraska (Metropolitan Portion)","4","RPP1","2","...","  RPPs: Goods",96.1,96.7,96.6,97.1,97.3,97.3
+"31998","Nebraska (Metropolitan Portion)","4","RPP1","3","...","  RPPs: Services: Rents",84.6,83.0,85.3,84.6,83.3,82.7
+"31998","Nebraska (Metropolitan Portion)","4","RPP1","4","...","  RPPs: Services: Other",94.6,94.1,94.1,94.2,94.1,94.1
+"31999","Nebraska (Nonmetropolitan Portion)","4","RPP1","1","...","RPPs: All items",82.6,83.5,84.3,84.3,85.5,85.6
+"31999","Nebraska (Nonmetropolitan Portion)","4","RPP1","2","...","  RPPs: Goods",89.3,89.8,90.0,91.3,91.3,91.3
+"31999","Nebraska (Nonmetropolitan Portion)","4","RPP1","3","...","  RPPs: Services: Rents",58.5,60.1,60.0,56.4,61.0,61.4
+"31999","Nebraska (Nonmetropolitan Portion)","4","RPP1","4","...","  RPPs: Services: Other",87.5,88.1,88.1,88.9,88.7,88.7
+"32998","Nevada (Metropolitan Portion)","8","RPP1","1","...","RPPs: All items",101.1,101.2,100.2,100.2,99.2,98.7
+"32998","Nevada (Metropolitan Portion)","8","RPP1","2","...","  RPPs: Goods",96.1,96.9,97.1,97.6,97.5,97.3
+"32998","Nevada (Metropolitan Portion)","8","RPP1","3","...","  RPPs: Services: Rents",122.0,116.4,108.8,105.8,101.3,99.2
+"32998","Nevada (Metropolitan Portion)","8","RPP1","4","...","  RPPs: Services: Other",97.7,99.2,99.5,100.3,100.1,100.3
+"32999","Nevada (Nonmetropolitan Portion)","8","RPP1","1","...","RPPs: All items",97.9,95.2,95.9,95.4,94.8,93.9
+"32999","Nevada (Nonmetropolitan Portion)","8","RPP1","2","...","  RPPs: Goods",99.2,99.0,99.1,98.7,98.7,98.7
+"32999","Nevada (Nonmetropolitan Portion)","8","RPP1","3","...","  RPPs: Services: Rents",94.3,85.2,89.6,89.3,86.7,83.3
+"32999","Nevada (Nonmetropolitan Portion)","8","RPP1","4","...","  RPPs: Services: Other",98.0,96.0,95.3,94.7,94.9,94.4
+"33998","New Hampshire (Metropolitan Portion)","1","RPP1","1","...","RPPs: All items",110.4,109.3,109.5,108.4,108.3,108.5
+"33998","New Hampshire (Metropolitan Portion)","1","RPP1","2","...","  RPPs: Goods",98.8,98.1,97.9,99.2,99.1,99.1
+"33998","New Hampshire (Metropolitan Portion)","1","RPP1","3","...","  RPPs: Services: Rents",131.0,127.2,127.5,123.3,126.0,126.4
+"33998","New Hampshire (Metropolitan Portion)","1","RPP1","4","...","  RPPs: Services: Other",113.1,113.2,113.0,110.3,110.2,110.2
+"33999","New Hampshire (Nonmetropolitan Portion)","1","RPP1","1","...","RPPs: All items",101.9,101.3,101.0,99.9,101.0,100.5
+"33999","New Hampshire (Nonmetropolitan Portion)","1","RPP1","2","...","  RPPs: Goods",98.5,98.3,98.1,97.9,98.2,97.9
+"33999","New Hampshire (Nonmetropolitan Portion)","1","RPP1","3","...","  RPPs: Services: Rents",116.2,114.0,115.6,110.0,115.1,113.2
+"33999","New Hampshire (Nonmetropolitan Portion)","1","RPP1","4","...","  RPPs: Services: Other",99.3,98.9,98.0,97.7,97.6,97.5
+"34998","New Jersey (Metropolitan Portion)","2","RPP1","1","...","RPPs: All items",113.3,113.7,114.4,114.9,114.9,114.8
+"34998","New Jersey (Metropolitan Portion)","2","RPP1","2","...","  RPPs: Goods",100.7,100.4,101.3,102.0,102.0,102.1
+"34998","New Jersey (Metropolitan Portion)","2","RPP1","3","...","  RPPs: Services: Rents",143.2,143.8,140.0,140.2,138.9,137.4
+"34998","New Jersey (Metropolitan Portion)","2","RPP1","4","...","  RPPs: Services: Other",112.8,113.9,115.7,116.0,116.1,116.0
+"34999","New Jersey (Nonmetropolitan Portion)","2","RPP1","1","...","RPPs: All items",0.0,0.0,0.0,0.0,0.0,0.0
+"34999","New Jersey (Nonmetropolitan Portion)","2","RPP1","2","...","  RPPs: Goods",0.0,0.0,0.0,0.0,0.0,0.0
+"34999","New Jersey (Nonmetropolitan Portion)","2","RPP1","3","...","  RPPs: Services: Rents",0.0,0.0,0.0,0.0,0.0,0.0
+"34999","New Jersey (Nonmetropolitan Portion)","2","RPP1","4","...","  RPPs: Services: Other",0.0,0.0,0.0,0.0,0.0,0.0
+"35998","New Mexico (Metropolitan Portion)","6","RPP1","1","...","RPPs: All items",96.0,95.9,96.1,96.9,96.5,96.3
+"35998","New Mexico (Metropolitan Portion)","6","RPP1","2","...","  RPPs: Goods",96.3,97.0,97.3,97.7,97.6,97.4
+"35998","New Mexico (Metropolitan Portion)","6","RPP1","3","...","  RPPs: Services: Rents",92.1,87.8,87.7,89.3,88.3,87.6
+"35998","New Mexico (Metropolitan Portion)","6","RPP1","4","...","  RPPs: Services: Other",97.9,99.1,99.3,100.0,99.8,100.0
+"35999","New Mexico (Nonmetropolitan Portion)","6","RPP1","1","...","RPPs: All items",90.4,90.5,89.9,90.6,91.0,91.3
+"35999","New Mexico (Nonmetropolitan Portion)","6","RPP1","2","...","  RPPs: Goods",99.6,99.2,99.4,98.9,98.7,98.8
+"35999","New Mexico (Nonmetropolitan Portion)","6","RPP1","3","...","  RPPs: Services: Rents",63.7,66.9,65.9,69.7,72.5,73.7
+"35999","New Mexico (Nonmetropolitan Portion)","6","RPP1","4","...","  RPPs: Services: Other",98.1,95.7,94.9,94.3,94.6,93.9
+"36998","New York (Metropolitan Portion)","2","RPP1","1","...","RPPs: All items",117.4,117.6,117.4,117.3,117.0,117.2
+"36998","New York (Metropolitan Portion)","2","RPP1","2","...","  RPPs: Goods",107.8,108.0,109.0,109.0,108.9,108.6
+"36998","New York (Metropolitan Portion)","2","RPP1","3","...","  RPPs: Services: Rents",137.9,139.5,138.5,140.2,140.0,140.9
+"36998","New York (Metropolitan Portion)","2","RPP1","4","...","  RPPs: Services: Other",116.2,115.7,114.8,114.1,113.9,113.8
+"36999","New York (Nonmetropolitan Portion)","2","RPP1","1","...","RPPs: All items",94.9,95.2,94.7,94.9,95.3,94.5
+"36999","New York (Nonmetropolitan Portion)","2","RPP1","2","...","  RPPs: Goods",98.4,98.2,98.0,97.8,98.2,97.9
+"36999","New York (Nonmetropolitan Portion)","2","RPP1","3","...","  RPPs: Services: Rents",77.7,80.3,79.1,80.9,83.1,81.0
+"36999","New York (Nonmetropolitan Portion)","2","RPP1","4","...","  RPPs: Services: Other",98.7,98.3,97.1,96.9,97.1,97.0
+"37998","North Carolina (Metropolitan Portion)","5","RPP1","1","...","RPPs: All items",93.6,93.5,92.7,92.7,92.8,92.9
+"37998","North Carolina (Metropolitan Portion)","5","RPP1","2","...","  RPPs: Goods",98.4,98.4,97.5,97.3,97.4,97.4
+"37998","North Carolina (Metropolitan Portion)","5","RPP1","3","...","  RPPs: Services: Rents",82.8,83.3,81.7,82.0,82.2,82.8
+"37998","North Carolina (Metropolitan Portion)","5","RPP1","4","...","  RPPs: Services: Other",94.7,94.3,93.9,94.1,94.0,94.0
+"37999","North Carolina (Nonmetropolitan Portion)","5","RPP1","1","...","RPPs: All items",85.2,85.6,85.2,85.7,86.0,85.7
+"37999","North Carolina (Nonmetropolitan Portion)","5","RPP1","2","...","  RPPs: Goods",94.4,94.5,93.4,92.6,92.5,92.7
+"37999","North Carolina (Nonmetropolitan Portion)","5","RPP1","3","...","  RPPs: Services: Rents",61.9,63.1,60.6,62.4,63.7,63.1
+"37999","North Carolina (Nonmetropolitan Portion)","5","RPP1","4","...","  RPPs: Services: Other",89.8,89.8,90.7,91.5,91.3,91.5
+"38998","North Dakota (Metropolitan Portion)","4","RPP1","1","...","RPPs: All items",92.9,93.2,93.0,92.9,93.6,93.9
+"38998","North Dakota (Metropolitan Portion)","4","RPP1","2","...","  RPPs: Goods",96.5,97.2,97.0,97.4,97.6,97.6
+"38998","North Dakota (Metropolitan Portion)","4","RPP1","3","...","  RPPs: Services: Rents",80.1,80.9,80.7,79.8,83.4,84.5
+"38998","North Dakota (Metropolitan Portion)","4","RPP1","4","...","  RPPs: Services: Other",95.0,94.5,94.4,94.5,94.4,94.5
+"38999","North Dakota (Nonmetropolitan Portion)","4","RPP1","1","...","RPPs: All items",83.4,84.3,84.9,86.2,87.7,88.7
+"38999","North Dakota (Nonmetropolitan Portion)","4","RPP1","2","...","  RPPs: Goods",89.3,89.8,90.0,91.3,91.3,91.3
+"38999","North Dakota (Nonmetropolitan Portion)","4","RPP1","3","...","  RPPs: Services: Rents",58.3,61.0,61.9,64.4,72.1,78.7
+"38999","North Dakota (Nonmetropolitan Portion)","4","RPP1","4","...","  RPPs: Services: Other",87.6,88.1,88.1,88.9,88.7,88.7
+"39998","Ohio (Metropolitan Portion)","3","RPP1","1","...","RPPs: All items",91.5,90.5,90.9,90.8,90.3,90.5
+"39998","Ohio (Metropolitan Portion)","3","RPP1","2","...","  RPPs: Goods",95.7,95.8,95.6,95.9,95.9,96.0
+"39998","Ohio (Metropolitan Portion)","3","RPP1","3","...","  RPPs: Services: Rents",79.2,76.8,77.8,77.0,76.2,76.5
+"39998","Ohio (Metropolitan Portion)","3","RPP1","4","...","  RPPs: Services: Other",94.0,92.8,92.6,92.5,92.4,92.4
+"39999","Ohio (Nonmetropolitan Portion)","3","RPP1","1","...","RPPs: All items",82.6,83.3,83.9,84.2,84.7,84.5
+"39999","Ohio (Nonmetropolitan Portion)","3","RPP1","2","...","  RPPs: Goods",90.7,91.1,91.2,92.3,92.3,92.3
+"39999","Ohio (Nonmetropolitan Portion)","3","RPP1","3","...","  RPPs: Services: Rents",62.6,64.0,63.0,61.7,63.3,62.5
+"39999","Ohio (Nonmetropolitan Portion)","3","RPP1","4","...","  RPPs: Services: Other",88.4,88.7,88.8,89.6,89.4,89.4
+"40998","Oklahoma (Metropolitan Portion)","6","RPP1","1","...","RPPs: All items",91.3,91.7,91.7,91.5,91.7,91.8
+"40998","Oklahoma (Metropolitan Portion)","6","RPP1","2","...","  RPPs: Goods",98.5,98.5,97.6,97.4,97.5,97.5
+"40998","Oklahoma (Metropolitan Portion)","6","RPP1","3","...","  RPPs: Services: Rents",73.5,75.4,75.9,75.5,76.2,76.7
+"40998","Oklahoma (Metropolitan Portion)","6","RPP1","4","...","  RPPs: Services: Other",94.8,94.4,94.0,94.1,94.0,94.0
+"40999","Oklahoma (Nonmetropolitan Portion)","6","RPP1","1","...","RPPs: All items",84.6,85.5,85.8,85.9,86.3,86.1
+"40999","Oklahoma (Nonmetropolitan Portion)","6","RPP1","2","...","  RPPs: Goods",94.8,94.8,93.7,93.0,92.9,93.1
+"40999","Oklahoma (Nonmetropolitan Portion)","6","RPP1","3","...","  RPPs: Services: Rents",54.4,57.2,55.3,55.8,57.7,57.2
+"40999","Oklahoma (Nonmetropolitan Portion)","6","RPP1","4","...","  RPPs: Services: Other",90.4,90.3,91.0,91.8,91.6,91.8
+"41998","Oregon (Metropolitan Portion)","8","RPP1","1","...","RPPs: All items",98.9,99.8,99.2,99.4,99.5,99.7
+"41998","Oregon (Metropolitan Portion)","8","RPP1","2","...","  RPPs: Goods",97.0,97.2,97.7,98.1,98.2,98.3
+"41998","Oregon (Metropolitan Portion)","8","RPP1","3","...","  RPPs: Services: Rents",101.9,106.2,101.5,102.9,103.0,103.9
+"41998","Oregon (Metropolitan Portion)","8","RPP1","4","...","  RPPs: Services: Other",100.0,100.2,99.9,99.3,99.3,99.2
+"41999","Oregon (Nonmetropolitan Portion)","8","RPP1","1","...","RPPs: All items",95.3,94.0,94.1,92.9,92.8,92.6
+"41999","Oregon (Nonmetropolitan Portion)","8","RPP1","2","...","  RPPs: Goods",99.9,99.4,99.4,98.8,98.9,98.9
+"41999","Oregon (Nonmetropolitan Portion)","8","RPP1","3","...","  RPPs: Services: Rents",81.0,80.2,82.2,79.3,80.1,79.8
+"41999","Oregon (Nonmetropolitan Portion)","8","RPP1","4","...","  RPPs: Services: Other",97.7,95.1,94.5,93.7,93.8,93.3
+"42998","Pennsylvania (Metropolitan Portion)","2","RPP1","1","...","RPPs: All items",99.3,99.3,99.6,99.5,99.5,99.6
+"42998","Pennsylvania (Metropolitan Portion)","2","RPP1","2","...","  RPPs: Goods",99.8,99.9,100.2,99.8,99.8,99.7
+"42998","Pennsylvania (Metropolitan Portion)","2","RPP1","3","...","  RPPs: Services: Rents",92.4,91.8,92.4,92.6,93.2,94.0
+"42998","Pennsylvania (Metropolitan Portion)","2","RPP1","4","...","  RPPs: Services: Other",102.7,102.8,102.8,102.6,102.6,102.3
+"42999","Pennsylvania (Nonmetropolitan Portion)","2","RPP1","1","...","RPPs: All items",91.1,90.9,91.4,91.2,91.1,91.2
+"42999","Pennsylvania (Nonmetropolitan Portion)","2","RPP1","2","...","  RPPs: Goods",98.2,98.1,97.9,97.6,97.9,97.6
+"42999","Pennsylvania (Nonmetropolitan Portion)","2","RPP1","3","...","  RPPs: Services: Rents",63.0,63.1,63.0,62.9,63.7,66.2
+"42999","Pennsylvania (Nonmetropolitan Portion)","2","RPP1","4","...","  RPPs: Services: Other",98.4,98.1,96.9,96.8,96.9,96.8
+"44998","Rhode Island (Metropolitan Portion)","1","RPP1","1","...","RPPs: All items",100.5,100.3,99.3,99.5,98.8,98.3
+"44998","Rhode Island (Metropolitan Portion)","1","RPP1","2","...","  RPPs: Goods",98.5,98.3,98.1,97.9,98.0,97.8
+"44998","Rhode Island (Metropolitan Portion)","1","RPP1","3","...","  RPPs: Services: Rents",107.5,107.8,104.6,106.6,102.5,101.2
+"44998","Rhode Island (Metropolitan Portion)","1","RPP1","4","...","  RPPs: Services: Other",98.9,98.4,97.8,97.6,97.2,97.1
+"44999","Rhode Island (Nonmetropolitan Portion)","1","RPP1","1","...","RPPs: All items",0.0,0.0,0.0,0.0,0.0,0.0
+"44999","Rhode Island (Nonmetropolitan Portion)","1","RPP1","2","...","  RPPs: Goods",0.0,0.0,0.0,0.0,0.0,0.0
+"44999","Rhode Island (Nonmetropolitan Portion)","1","RPP1","3","...","  RPPs: Services: Rents",0.0,0.0,0.0,0.0,0.0,0.0
+"44999","Rhode Island (Nonmetropolitan Portion)","1","RPP1","4","...","  RPPs: Services: Other",0.0,0.0,0.0,0.0,0.0,0.0
+"45998","South Carolina (Metropolitan Portion)","5","RPP1","1","...","RPPs: All items",92.2,92.8,91.2,91.7,91.7,91.4
+"45998","South Carolina (Metropolitan Portion)","5","RPP1","2","...","  RPPs: Goods",98.3,98.3,97.3,97.2,97.2,97.2
+"45998","South Carolina (Metropolitan Portion)","5","RPP1","3","...","  RPPs: Services: Rents",78.7,81.6,77.4,79.3,79.4,78.1
+"45998","South Carolina (Metropolitan Portion)","5","RPP1","4","...","  RPPs: Services: Other",94.6,94.2,93.8,94.0,93.9,93.9
+"45999","South Carolina (Nonmetropolitan Portion)","5","RPP1","1","...","RPPs: All items",83.9,82.5,84.5,84.0,84.3,83.9
+"45999","South Carolina (Nonmetropolitan Portion)","5","RPP1","2","...","  RPPs: Goods",94.7,94.7,93.6,92.9,92.8,93.0
+"45999","South Carolina (Nonmetropolitan Portion)","5","RPP1","3","...","  RPPs: Services: Rents",56.1,52.7,56.6,55.1,56.3,55.5
+"45999","South Carolina (Nonmetropolitan Portion)","5","RPP1","4","...","  RPPs: Services: Other",90.2,90.1,90.9,91.7,91.5,91.7
+"46998","South Dakota (Metropolitan Portion)","4","RPP1","1","...","RPPs: All items",92.3,92.0,92.8,92.1,93.5,91.7
+"46998","South Dakota (Metropolitan Portion)","4","RPP1","2","...","  RPPs: Goods",95.7,96.3,96.2,96.7,96.9,96.9
+"46998","South Dakota (Metropolitan Portion)","4","RPP1","3","...","  RPPs: Services: Rents",81.2,79.4,83.0,79.1,85.6,77.8
+"46998","South Dakota (Metropolitan Portion)","4","RPP1","4","...","  RPPs: Services: Other",94.2,93.8,93.7,93.8,93.7,93.8
+"46999","South Dakota (Nonmetropolitan Portion)","4","RPP1","1","...","RPPs: All items",81.3,80.0,81.3,82.8,84.2,84.0
+"46999","South Dakota (Nonmetropolitan Portion)","4","RPP1","2","...","  RPPs: Goods",89.3,89.8,90.0,91.3,91.3,91.3
+"46999","South Dakota (Nonmetropolitan Portion)","4","RPP1","3","...","  RPPs: Services: Rents",54.4,50.0,50.4,52.6,56.9,56.2
+"46999","South Dakota (Nonmetropolitan Portion)","4","RPP1","4","...","  RPPs: Services: Other",87.5,88.0,88.0,88.9,88.6,88.7
+"47998","Tennessee (Metropolitan Portion)","5","RPP1","1","...","RPPs: All items",92.3,92.2,91.7,91.7,92.0,91.9
+"47998","Tennessee (Metropolitan Portion)","5","RPP1","2","...","  RPPs: Goods",98.3,98.3,97.4,97.2,97.3,97.3
+"47998","Tennessee (Metropolitan Portion)","5","RPP1","3","...","  RPPs: Services: Rents",78.5,78.6,78.1,78.2,79.5,79.1
+"47998","Tennessee (Metropolitan Portion)","5","RPP1","4","...","  RPPs: Services: Other",94.6,94.2,93.9,94.0,93.9,93.9
+"47999","Tennessee (Nonmetropolitan Portion)","5","RPP1","1","...","RPPs: All items",83.8,83.9,84.6,84.5,85.1,84.8
+"47999","Tennessee (Nonmetropolitan Portion)","5","RPP1","2","...","  RPPs: Goods",94.7,94.7,93.6,92.9,92.8,93.0
+"47999","Tennessee (Nonmetropolitan Portion)","5","RPP1","3","...","  RPPs: Services: Rents",54.1,54.5,55.3,55.4,57.9,57.1
+"47999","Tennessee (Nonmetropolitan Portion)","5","RPP1","4","...","  RPPs: Services: Other",90.2,90.2,91.0,91.7,91.5,91.8
+"48998","Texas (Metropolitan Portion)","6","RPP1","1","...","RPPs: All items",98.1,98.1,97.6,97.6,97.8,98.0
+"48998","Texas (Metropolitan Portion)","6","RPP1","2","...","  RPPs: Goods",99.1,98.9,98.3,97.9,98.0,98.1
+"48998","Texas (Metropolitan Portion)","6","RPP1","3","...","  RPPs: Services: Rents",92.4,92.6,91.8,92.7,92.9,93.8
+"48998","Texas (Metropolitan Portion)","6","RPP1","4","...","  RPPs: Services: Other",100.5,100.6,100.4,100.4,100.3,100.3
+"48999","Texas (Nonmetropolitan Portion)","6","RPP1","1","...","RPPs: All items",86.8,86.4,87.6,87.0,87.7,87.7
+"48999","Texas (Nonmetropolitan Portion)","6","RPP1","2","...","  RPPs: Goods",94.7,94.7,93.6,92.9,92.7,92.9
+"48999","Texas (Nonmetropolitan Portion)","6","RPP1","3","...","  RPPs: Services: Rents",60.9,59.5,61.6,59.6,63.4,63.0
+"48999","Texas (Nonmetropolitan Portion)","6","RPP1","4","...","  RPPs: Services: Other",90.4,90.3,91.1,91.8,91.6,91.9
+"49998","Utah (Metropolitan Portion)","7","RPP1","1","...","RPPs: All items",97.2,98.4,97.4,97.9,97.6,97.9
+"49998","Utah (Metropolitan Portion)","7","RPP1","2","...","  RPPs: Goods",96.4,97.1,97.4,97.8,97.6,97.5
+"49998","Utah (Metropolitan Portion)","7","RPP1","3","...","  RPPs: Services: Rents",97.8,100.5,94.3,95.0,94.2,95.3
+"49998","Utah (Metropolitan Portion)","7","RPP1","4","...","  RPPs: Services: Other",98.0,99.0,99.1,99.7,99.6,99.7
+"49999","Utah (Nonmetropolitan Portion)","7","RPP1","1","...","RPPs: All items",95.9,94.5,93.4,92.0,93.8,93.0
+"49999","Utah (Nonmetropolitan Portion)","7","RPP1","2","...","  RPPs: Goods",100.0,99.4,99.2,98.6,98.9,98.9
+"49999","Utah (Nonmetropolitan Portion)","7","RPP1","3","...","  RPPs: Services: Rents",81.6,80.3,77.7,73.9,82.7,80.1
+"49999","Utah (Nonmetropolitan Portion)","7","RPP1","4","...","  RPPs: Services: Other",97.4,94.9,94.5,93.7,93.5,93.3
+"50998","Vermont (Metropolitan Portion)","1","RPP1","1","...","RPPs: All items",102.8,103.4,101.2,102.4,102.4,101.3
+"50998","Vermont (Metropolitan Portion)","1","RPP1","2","...","  RPPs: Goods",98.5,98.3,98.1,97.9,98.0,97.8
+"50998","Vermont (Metropolitan Portion)","1","RPP1","3","...","  RPPs: Services: Rents",119.1,125.4,114.6,123.6,121.5,117.2
+"50998","Vermont (Metropolitan Portion)","1","RPP1","4","...","  RPPs: Services: Other",98.9,98.4,97.8,97.6,97.2,97.1
+"50999","Vermont (Nonmetropolitan Portion)","1","RPP1","1","...","RPPs: All items",99.0,99.0,98.1,98.3,99.0,98.7
+"50999","Vermont (Nonmetropolitan Portion)","1","RPP1","2","...","  RPPs: Goods",98.3,98.2,98.0,97.8,98.3,97.9
+"50999","Vermont (Nonmetropolitan Portion)","1","RPP1","3","...","  RPPs: Services: Rents",102.6,103.6,101.8,103.9,106.6,104.9
+"50999","Vermont (Nonmetropolitan Portion)","1","RPP1","4","...","  RPPs: Services: Other",98.6,98.3,96.9,96.8,97.0,97.0
+"51998","Virginia (Metropolitan Portion)","5","RPP1","1","...","RPPs: All items",105.9,106.6,106.1,106.1,105.9,105.8
+"51998","Virginia (Metropolitan Portion)","5","RPP1","2","...","  RPPs: Goods",101.6,101.8,101.5,101.8,101.7,101.7
+"51998","Virginia (Metropolitan Portion)","5","RPP1","3","...","  RPPs: Services: Rents",119.4,122.4,122.0,122.6,122.2,121.9
+"51998","Virginia (Metropolitan Portion)","5","RPP1","4","...","  RPPs: Services: Other",103.1,103.3,102.6,102.1,101.8,101.9
+"51999","Virginia (Nonmetropolitan Portion)","5","RPP1","1","...","RPPs: All items",88.8,89.2,88.7,88.4,88.9,88.6
+"51999","Virginia (Nonmetropolitan Portion)","5","RPP1","2","...","  RPPs: Goods",94.9,94.9,93.8,93.1,92.9,93.2
+"51999","Virginia (Nonmetropolitan Portion)","5","RPP1","3","...","  RPPs: Services: Rents",64.4,66.7,62.9,61.7,65.5,63.2
+"51999","Virginia (Nonmetropolitan Portion)","5","RPP1","4","...","  RPPs: Services: Other",90.7,90.6,91.3,92.0,91.9,92.2
+"53998","Washington (Metropolitan Portion)","8","RPP1","1","...","RPPs: All items",104.1,104.6,103.8,103.7,104.0,104.0
+"53998","Washington (Metropolitan Portion)","8","RPP1","2","...","  RPPs: Goods",103.7,103.5,103.1,103.0,103.2,103.1
+"53998","Washington (Metropolitan Portion)","8","RPP1","3","...","  RPPs: Services: Rents",114.5,117.9,114.0,113.7,114.3,113.9
+"53998","Washington (Metropolitan Portion)","8","RPP1","4","...","  RPPs: Services: Other",99.9,100.0,100.2,100.3,100.4,100.4
+"53999","Washington (Nonmetropolitan Portion)","8","RPP1","1","...","RPPs: All items",97.1,96.8,95.8,95.0,95.3,95.9
+"53999","Washington (Nonmetropolitan Portion)","8","RPP1","2","...","  RPPs: Goods",100.9,100.4,100.1,99.6,99.8,99.8
+"53999","Washington (Nonmetropolitan Portion)","8","RPP1","3","...","  RPPs: Services: Rents",86.6,89.7,86.8,85.5,86.9,90.5
+"53999","Washington (Nonmetropolitan Portion)","8","RPP1","4","...","  RPPs: Services: Other",98.0,95.9,95.5,94.8,94.9,94.5
+"54998","West Virginia (Metropolitan Portion)","5","RPP1","1","...","RPPs: All items",87.7,88.1,89.0,89.5,89.1,88.8
+"54998","West Virginia (Metropolitan Portion)","5","RPP1","2","...","  RPPs: Goods",98.8,98.8,98.1,98.0,98.0,98.0
+"54998","West Virginia (Metropolitan Portion)","5","RPP1","3","...","  RPPs: Services: Rents",62.8,63.7,64.4,66.0,64.6,64.0
+"54998","West Virginia (Metropolitan Portion)","5","RPP1","4","...","  RPPs: Services: Other",97.0,96.7,96.4,96.4,96.3,96.3
+"54999","West Virginia (Nonmetropolitan Portion)","5","RPP1","1","...","RPPs: All items",84.9,85.7,86.6,86.2,86.7,86.7
+"54999","West Virginia (Nonmetropolitan Portion)","5","RPP1","2","...","  RPPs: Goods",94.5,94.5,93.4,92.7,92.5,92.8
+"54999","West Virginia (Nonmetropolitan Portion)","5","RPP1","3","...","  RPPs: Services: Rents",51.8,54.4,55.1,53.0,55.6,55.8
+"54999","West Virginia (Nonmetropolitan Portion)","5","RPP1","4","...","  RPPs: Services: Other",89.9,89.9,90.7,91.5,91.3,91.7
+"55998","Wisconsin (Metropolitan Portion)","3","RPP1","1","...","RPPs: All items",95.2,95.2,95.0,95.2,95.0,94.7
+"55998","Wisconsin (Metropolitan Portion)","3","RPP1","2","...","  RPPs: Goods",97.6,97.8,97.7,97.3,97.3,97.3
+"55998","Wisconsin (Metropolitan Portion)","3","RPP1","3","...","  RPPs: Services: Rents",93.2,92.9,92.0,92.2,91.5,89.8
+"55998","Wisconsin (Metropolitan Portion)","3","RPP1","4","...","  RPPs: Services: Other",93.5,93.3,93.5,94.2,94.2,94.2
+"55999","Wisconsin (Nonmetropolitan Portion)","3","RPP1","1","...","RPPs: All items",86.3,86.0,85.9,87.3,87.3,87.2
+"55999","Wisconsin (Nonmetropolitan Portion)","3","RPP1","2","...","  RPPs: Goods",89.3,89.8,90.0,91.3,91.3,91.3
+"55999","Wisconsin (Nonmetropolitan Portion)","3","RPP1","3","...","  RPPs: Services: Rents",76.0,73.1,71.0,73.6,73.7,72.9
+"55999","Wisconsin (Nonmetropolitan Portion)","3","RPP1","4","...","  RPPs: Services: Other",87.6,88.1,88.1,88.9,88.7,88.7
+"56998","Wyoming (Metropolitan Portion)","7","RPP1","1","...","RPPs: All items",94.5,95.5,95.8,98.9,97.2,97.6
+"56998","Wyoming (Metropolitan Portion)","7","RPP1","2","...","  RPPs: Goods",96.0,96.8,97.1,97.6,97.4,97.3
+"56998","Wyoming (Metropolitan Portion)","7","RPP1","3","...","  RPPs: Services: Rents",84.6,85.3,85.3,99.4,91.0,93.0
+"56998","Wyoming (Metropolitan Portion)","7","RPP1","4","...","  RPPs: Services: Other",97.7,99.3,99.6,100.4,100.2,100.4
+"56999","Wyoming (Nonmetropolitan Portion)","7","RPP1","1","...","RPPs: All items",96.6,96.0,95.5,95.3,95.1,94.5
+"56999","Wyoming (Nonmetropolitan Portion)","7","RPP1","2","...","  RPPs: Goods",100.0,99.4,99.2,98.6,98.9,98.9
+"56999","Wyoming (Nonmetropolitan Portion)","7","RPP1","3","...","  RPPs: Services: Rents",84.3,87.9,88.0,90.0,89.3,86.5
+"56999","Wyoming (Nonmetropolitan Portion)","7","RPP1","4","...","  RPPs: Services: Other",97.4,94.9,94.5,93.7,93.6,93.3
+"Note: See the included footnote file."
+"RPP1: Regional Price Parities"
+"Last updated: July 1, 2015."
+"Source: U.S. Department of Commerce / Bureau of Economic Analysis / Regional Prices Branch
