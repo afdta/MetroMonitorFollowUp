@@ -1,6 +1,11 @@
-//produce an object for metro index state tracking
-function MetroIndexState(){
+LaunchMetroInteractive = {}
+
+
+//produce a state/navigation object for MPP interactives
+function MetroInteractive(appWrapperElement){
 	var S = {};
+
+	S.wrap = appWrapperElement;
 
 	//keep track of selected metro area code
 	S.metro = null; //no defaults
@@ -9,14 +14,15 @@ function MetroIndexState(){
 	//metro lookup table to validate metro areas
 	S.metroLookup = null;
 	
-	//each view listener entry needs to be structured accordingly:
-	//
-	S.viewListeners = {};
+	//view listeners need to:
+	// draw a view for a selected metro
+	// each listener should take 
+	// view listeners will 1) change views and draw selected metro version. if the view is already shown, it just draws the selected metro version of the view.
+	S.viewRegister = {};
 
 	//metro listeners that will be called upon changes to metro code
-	S.metListeners = [];
-	S.addMetroChangeListener = function(f){
-		S.metListeners.push(f);
+	S.addView = function(fn, viewName){
+		S.viewRegister[viewName] = fn;
 	}
 
 	//args
@@ -37,6 +43,7 @@ function MetroIndexState(){
 	}
 
 	//hash changes
+	//need to test the hash changes in wide variety of browsers
 	function set_hash(hash){
 		if(window.history.replaceState) {
 		    window.history.replaceState(null, null, hash);
