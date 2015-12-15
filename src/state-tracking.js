@@ -28,7 +28,8 @@ function MetroInteractive(appWrapperElement){
 	//view listener that will be called when the view is changed
 	//viewName shall include letters and numbers only--no special characters
 	//metroLookup can be used later to restrict the geography for a given view--use case not needed now and handled in the view callback
-	S.addView = function(fn, viewName, metroLookup){
+	//a truthy argument for defaultView assigns the registered view as the default
+	S.addView = function(fn, viewName, defaultView, metroLookup){
 		S.viewRegister[viewName] = fn;
 		S.viewList.push(viewName);
 		//if(!!metroLookup){S.metroLookupVS[viewName]=metroLookup}
