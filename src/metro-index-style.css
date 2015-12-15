@@ -1,0 +1,29 @@
+.metro-interactive-wrap{
+	position:relative;
+
+}
+
+.metro-interactive-menu-wrap{
+	position:relative;
+}
+
+.metro-interactive-views-wrap{
+	position:relative;
+}
+
+.metro-interactive-view{
+	position:relative;
+	top:0px;
+	left:0%;
+	transition: left 1s;
+}
+.metro-interactive-view.out-left{left:-100%;}
+.metro-interactive-view.out-right{left:100%;}
+
+
+/*Utility classes*/
+.metro-interactive-wrap .c-fix::after{
+	content:"";
+	display:table;
+	clear:both;
+}
