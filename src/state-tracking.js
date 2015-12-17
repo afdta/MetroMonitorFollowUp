@@ -1,5 +1,4 @@
-LaunchMetroInteractive = {}
-
+//depends: d3.js
 
 //produce a state/navigation object for MPP interactives
 function MetroInteractive(appWrapperElement){
@@ -25,11 +24,17 @@ function MetroInteractive(appWrapperElement){
 	S.viewRegister = {};
 	S.viewList = [];
 
+	var numViews = 0;
+
 	//view listener that will be called when the view is changed
 	//viewName shall include letters and numbers only--no special characters
 	//metroLookup can be used later to restrict the geography for a given view--use case not needed now and handled in the view callback
 	//a truthy argument for defaultView assigns the registered view as the default
-	S.addView = function(fn, viewName, defaultView, metroLookup){
+	//Need to test makedefault argument
+	S.addView = function(fn, viewName, makeDefault, metroLookup){
+		if(numViews===0 || !!makeDefault){S.viewRegister["default"] = fn}
+		numViews++;
+
 		S.viewRegister[viewName] = fn;
 		S.viewList.push(viewName);
 		//if(!!metroLookup){S.metroLookupVS[viewName]=metroLookup}
@@ -66,9 +71,9 @@ function MetroInteractive(appWrapperElement){
 		}
 	}
 
-	//wrappers for changeView, when you just want to change metro or view and force a hash change
-	S.changeMetro = function(metroCode){S.changeView(null, metroCode, true);}
-	S.changeView = function(viewCode){S.changeView(viewCode, null, true);}
+	//qc, or "quick change" wrappers for changeView, when you just want to change metro or view and force a hash change
+	S.qcMetro = function(metroCode){S.changeView(null, metroCode, true);}
+	S.qcView = function(viewCode){S.changeView(viewCode, null, true);}
 
 	//hash changes -- need to test the hash changes in wide variety of browsers
 	function set_hash(hash){
@@ -82,10 +87,10 @@ function MetroInteractive(appWrapperElement){
 	function get_hash(){
 		try{
 			var a = window.location.hash.replace("#","").split("-");
-			var h = {view:h[0], metro:h[1]}
+			var h = {view:a[0], metro:a[1]}
 		}
 		catch(e){
-			var h = {view:"", metro:""};
+			var h = {view:"", metro:""}; //use empty string rather than null so changeView is triggered (see below)
 		}
 		finally{
 			return h;
@@ -93,8 +98,10 @@ function MetroInteractive(appWrapperElement){
 	};
 	function hash_listener(){
 		var h = get_hash(); 
+		console.log(h);
+
 		if(h.metro !== S.metro || h.view !== S.view){
-			S.changeView(h.view, h.metro); //all validation is performed in changeView -- this is a no-op if thes are bad hashes
+			S.changeView(h.view, h.metro); //ALL validation is performed in changeView -- this is a no-op if thes are bad hashes
 		}
 	}
 
