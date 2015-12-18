@@ -7,14 +7,14 @@ function MetroInteractive(appWrapperElement){
 	//basic structure: A] app wrapper > a] menu wrapper, b] slide/views wrapper
 	S.wrap = d3.select(appWrapperElement).classed("metro-interactive-wrap",true);
 	S.menu = S.wrap.append("div").classed("metro-interactive-menu-wrap",true);
-	S.views = S.wrap.append("div").classed("metro-interactive-views-wrap",true);
+	S.allViews = S.wrap.append("div").classed("metro-interactive-views-wrap",true);
 
 	//keep track of selected metro area and view
 	S.metro = null; //no defaults
 	S.view = null;
 
 	//metro lookup table to validate metro areas
-	S.metroLookup = null;
+	S.metroLookup = {"placeholder":1};
 	S.metroLookupVS = {}; //VS, or "view specific" metro lookup
 	
 	//view listeners need to:
@@ -24,25 +24,26 @@ function MetroInteractive(appWrapperElement){
 	S.viewRegister = {};
 	S.viewList = [];
 
-	var numViews = 0;
-
 	//view listener that will be called when the view is changed
-	//viewName shall include letters and numbers only--no special characters
-	//metroLookup can be used later to restrict the geography for a given view--use case not needed now and handled in the view callback
-	//a truthy argument for defaultView assigns the registered view as the default
-	//Need to test makedefault argument
-	S.addView = function(fn, viewName, makeDefault, metroLookup){
-		if(numViews===0 || !!makeDefault){S.viewRegister["default"] = fn}
+
+	//setupView will be run one time
+	//redrawView will be run each time changeView is called
+	//metroLookup can be used later to restrict the geography for a given view--use case not needed now and will be handled in the view callback
+	//the first registered view becomes the default
+	var numViews = 0;
+	S.addView = function(redrawView, setupView, metroLookup){
+		var viewIndex = "v"+numViews;
 		numViews++;
 
-		S.viewRegister[viewName] = fn;
-		S.viewList.push(viewName);
+		S.viewRegister[viewIndex] = redrawView;
+		S.viewList.push(viewIndex);
 		//if(!!metroLookup){S.metroLookupVS[viewName]=metroLookup}
 
 		//create a "view slide" in the DOM
-		S.views.append("div").classed("metro-interactive-view",true).datum(viewName);
+		S.allViews.append("div").classed("metro-interactive-view active-view",true).datum(viewIndex);
 
-		return(S.viewList);
+		//return some kind of view object w/ setup, callback, and change view to this one methods
+		return({});
 	}
 
 	//args
@@ -77,8 +78,8 @@ function MetroInteractive(appWrapperElement){
 
 	//hash changes -- need to test the hash changes in wide variety of browsers
 	function set_hash(hash){
-		if(window.history.replaceState) {
-		    window.history.replaceState(null, null, hash);
+		if(window.history.pushState) {
+		    window.history.pushState(null, null, ("#"+hash));
 		}
 		else {
 		    window.location.hash = hash;
@@ -96,16 +97,16 @@ function MetroInteractive(appWrapperElement){
 			return h;
 		}
 	};
-	function hash_listener(){
+	function hash_listener(ev){
 		var h = get_hash(); 
-		console.log(h);
 
 		if(h.metro !== S.metro || h.view !== S.view){
 			S.changeView(h.view, h.metro); //ALL validation is performed in changeView -- this is a no-op if thes are bad hashes
 		}
 	}
 
-	window.addEventListener("hashchange",hash_listener,false)
+	window.addEventListener("hashchange",hash_listener,false);
+	//window.addEventListener("popstate",function(e){console.log(e.state)})
 
 	return S;
 };

@@ -12,13 +12,20 @@
 }
 
 .metro-interactive-view{
+	border:1px solid #aaaaaa;
+	background-color:#dddddd;
+	border-radius:5px;
+	
+	margin:0px 0px 10px 0px;
 	position:relative;
 	top:0px;
 	left:0%;
 	transition: left 1s;
+	min-height:100px;
 }
 .metro-interactive-view.out-left{left:-100%;}
 .metro-interactive-view.out-right{left:100%;}
+.metro-interactive-view.active-view{left:0%;}
 
 
 /*Utility classes*/

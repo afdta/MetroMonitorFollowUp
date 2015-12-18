@@ -12,13 +12,21 @@
 <script src="d3.min.js" type="text/javascript"></script>
 <script src="state-tracking.js" type="text/javascript"></script>
 
-<div id="metro-index-wrap"></div>
+<div style="position:relative;width:950px;height:600px;margin:auto">
+	<div id="metro-index-wrap"></div>
+</div>
 
 <script>
 	var el = document.getElementById("metro-index-wrap");
 	var MI = MetroInteractive(el);
+	MI.addView(function(){alert("First!")});
+	MI.addView(function(){alert("Second!")});
+	MI.addView(function(){alert("Third!")});
+	MI.metro = "placeholder";
+	
+	setTimeout(function(){MI.qcView("default")},2000);
+	setTimeout(function(){MI.qcView("view2")},4000);
 
-	console.log(MI);
 
 </script>
 
