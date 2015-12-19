@@ -22,10 +22,21 @@
 	left:0%;
 	transition: left 1s;
 	min-height:100px;
+
+	opacity: 1;
+	visibility: visible;
+
+	-webkit-transition:opacity 1s ease, left 0.5s ease, visibility 0s 1s;
+	-moz-transition:opacity 1s ease, left 0.5s ease, visibility 0s 1s;
+	-o-transition:opacity 1s ease, left 0.5s ease, visibility 0s 1s;
+	transition:opacity 1s ease, left 0.5s ease, visibility 0s 1s;
 }
-.metro-interactive-view.out-left{left:-100%;}
-.metro-interactive-view.out-right{left:100%;}
-.metro-interactive-view.active-view{left:0%;}
+
+.metro-interactive-view.out-left{left:-100%; opacity:0; visibility:hidden;}
+.metro-interactive-view.out-right{left:100%; opacity:0; visibility:hidden;}
+.metro-interactive-view.view-is-loading{}
+.metro-interactive-view.bad-view{opacity:0.3;}
+.metro-interactive-view.bad-view::before{content:"An error occured while retrieving your data. Please reload the page"; position:absolute; top:50px; left:30px;}
 
 
 /*Utility classes*/
