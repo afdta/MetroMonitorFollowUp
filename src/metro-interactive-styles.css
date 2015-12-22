@@ -39,6 +39,16 @@
 .metro-interactive-view.bad-view::before{content:"An error occured while retrieving your data. Please reload the page"; position:absolute; top:50px; left:30px;}
 
 
+.metro-interactive-loading-icon{
+	position:absolute;
+	left:50%;
+	margin-left:-20px;
+	top:50px;
+}
+
+.metro-interactive-loading-icon rect{shape-rendering:crispEdges;}
+.metro-interactive-loading-icon rect, .metro-interactive-loading-icon text{fill:#666666;}
+
 /*Utility classes*/
 .metro-interactive-wrap .c-fix::after{
 	content:"";

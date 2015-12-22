@@ -5,14 +5,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<link rel="stylesheet" type="text/css" href="metro-index-style.css">
+<link rel="stylesheet" type="text/css" href="metro-interactive-styles.css">
 </head>
 
 <body>
 <script src="d3.min.js" type="text/javascript"></script>
 <script src="state-tracking.js" type="text/javascript"></script>
+<script src="/Mapping/metro-map/map-class.js"></script>
 
-<div style="position:relative;width:950px;height:600px;margin:auto">
+<div style="position:relative;width:950px;min-height:600px;margin:auto">
 	<div id="metro-index-wrap" class="metro-interactive-wrap"></div>
 </div>
 
@@ -21,7 +22,7 @@
 	var MI = MetroInteractive(el);
 	var view0 = MI.addView(function(){
 		console.log(this); //has access to methods like getMetro();
-		alert("First!");
+		//alert("First!");
 	});
 
 
