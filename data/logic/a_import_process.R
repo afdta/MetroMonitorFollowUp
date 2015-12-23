@@ -1,5 +1,10 @@
 #Notes about data:Inflation adjustment? Not necessary for index, but useful for display
 
+library("reshape2")
+library("ggplot2")
+library("GGally")
+library("metromonitor")
+
 #IMPORT
 tryCatch(
   {
@@ -68,6 +73,10 @@ listIndicators(IncChg,IncVal,IncRnk)
 listIndicators(ProChg,ProVal,ProRnk)
 listIndicators(ProIdx)
 
+metID <- metropops(TRUE, "2013")[c("CBSA_Code","CBSA_Title")]
+metID$Geo <- factor(metID$CBSA_Code, levels=metID$CBSA_Code, labels=metID$CBSA_Title)
+sum(metID$Geo == metID$CBSA_Title)
+
 ##LOOK AT THE OVERALLS
 
 merge3 <- function(df1, df2, df3, by, all, suffixes=c(".df1", ".df2", ".df3")){
@@ -76,15 +85,37 @@ merge3 <- function(df1, df2, df3, by, all, suffixes=c(".df1", ".df2", ".df3")){
   return(m2)
 }
 
-IncRnk$IncYear <- IncRnk$Year
+GrRnk$Year_ <- GrRnk$Year
+ProRnk$Year_ <- ProRnk$Year
+IncRnk$Year_ <- IncRnk$Year
 IncRnk[IncRnk$Year=="2000-2014","Year"] <- "2004-2014"
 
-overall <- merge3(GrRnk, ProRnk, IncRnk, by=c("Year", "CBSA"), all=TRUE)
+overall <- rbind(GrRnk, ProRnk, IncRnk)
+overall <- merge(metID, overall, by.x="CBSA_Code", by.y="CBSA")
+overall$quintile <- cut(overall$Rank, breaks=c(0, 20, 40, 60, 80, 100), labels=c("First", "Second", "Third", "Fourth", "Fifth"))
+
+overall$orderByGrowth <- reorder(overall$Geo, overall$Score)
+
+hm_theme <- theme_bw() + theme(panel.border = element_blank() ) + theme(axis.text.x=element_text(angle = 45, hjust = 1)) + theme(text=element_text(size=12), panel.grid.major = element_line(colour="#dddddd"))
+pdf(file="~/Desktop/MMScores.pdf", width=11, height=17, useDingbats=FALSE)
+p <- ggplot(data=overall)
+p + geom_tile(aes(x=Composite, y=Geo, fill=quintile)) + 
+  scale_fill_manual(values=c('#2c7bb6','#abd9e9','#ffffbf','#fdae61','#d7191c')) + 
+  facet_wrap(~ Year, ncol=3) +
+  hm_theme
+
+dev.off()
+
+overall_wide <- dcast(overall, CBSA_Code + CBSA_Title + Geo ~ Composite + Year, value.var="Score")
+names(overall_wide) <- gsub("-","_",names(overall_wide))
+
+mat <- as.matrix(overall_wide[-1:-3])
+source("https://raw.githubusercontent.com/briatte/ggcorr/master/ggcorr.R")
+ggcorr(mat, geom="circle")
+ggpairs(mat[,c(1,4,7)])
 
 #why don't names match? -- truncation!
-nomatch <- overall[overall$CBSA.Name.df1!=overall$CBSA.Name.df2, c("CBSA.Name", "CBSA.Name.df1", "CBSA.Name.df2")]
+#nomatch <- overall[overall$CBSA.Name.df1!=overall$CBSA.Name.df2, c("CBSA.Name", "CBSA.Name.df1", "CBSA.Name.df2")]
 
-library("reshape2")
-
-overall_melted <- melt(overall, id.vars=c("CBSA", "CBSA.Name", "Year"), measure.vars=c("Rank.df1", "Rank.df2", "Rank", "Score.df1", "Score.df2", "Score"))
+#overall_melted <- melt(overall, id.vars=c("CBSA", "CBSA.Name", "Year"), measure.vars=c("Rank.df1", "Rank.df2", "Rank", "Score.df1", "Score.df2", "Score"))
 
