@@ -76,7 +76,15 @@ merge3 <- function(df1, df2, df3, by, all, suffixes=c(".df1", ".df2", ".df3")){
   return(m2)
 }
 
+IncRnk$IncYear <- IncRnk$Year
+IncRnk[IncRnk$Year=="2000-2014","Year"] <- "2004-2014"
+
 overall <- merge3(GrRnk, ProRnk, IncRnk, by=c("Year", "CBSA"), all=TRUE)
 
+#why don't names match? -- truncation!
+nomatch <- overall[overall$CBSA.Name.df1!=overall$CBSA.Name.df2, c("CBSA.Name", "CBSA.Name.df1", "CBSA.Name.df2")]
 
+library("reshape2")
+
+overall_melted <- melt(overall, id.vars=c("CBSA", "CBSA.Name", "Year"), measure.vars=c("Rank.df1", "Rank.df2", "Rank", "Score.df1", "Score.df2", "Score"))
 
