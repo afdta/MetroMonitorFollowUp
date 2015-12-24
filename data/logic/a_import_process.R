@@ -1,4 +1,8 @@
 #Notes about data:Inflation adjustment? Not necessary for index, but useful for display
+#inclusion change missing ranks (though not necessary, right?)
+#index values are 0 in 2000
+
+
 
 library("reshape2")
 library("ggplot2")
@@ -97,22 +101,43 @@ overall$quintile <- cut(overall$Rank, breaks=c(0, 20, 40, 60, 80, 100), labels=c
 overall$orderByGrowth <- reorder(overall$Geo, overall$Score)
 
 hm_theme <- theme_bw() + theme(panel.border = element_blank() ) + theme(axis.text.x=element_text(angle = 45, hjust = 1)) + theme(text=element_text(size=12), panel.grid.major = element_line(colour="#dddddd"))
-pdf(file="~/Desktop/MMScores.pdf", width=11, height=17, useDingbats=FALSE)
+pdf(file="~/Desktop/MMScores.pdf", width=11, height=8.5, useDingbats=FALSE)
+
+#FIG 1
 p <- ggplot(data=overall)
 p + geom_tile(aes(x=Composite, y=Geo, fill=quintile)) + 
   scale_fill_manual(values=c('#2c7bb6','#abd9e9','#ffffbf','#fdae61','#d7191c')) + 
   facet_wrap(~ Year, ncol=3) +
   hm_theme
 
-dev.off()
-
 overall_wide <- dcast(overall, CBSA_Code + CBSA_Title + Geo ~ Composite + Year, value.var="Score")
 names(overall_wide) <- gsub("-","_",names(overall_wide))
 
 mat <- as.matrix(overall_wide[-1:-3])
 source("https://raw.githubusercontent.com/briatte/ggcorr/master/ggcorr.R")
-ggcorr(mat, geom="circle")
-ggpairs(mat[,c(1,4,7)])
+
+#FIGS 2&3
+pairs(mat[,c(2,5,8)])
+ggcorr(mat[,c(2,5,8)], label=TRUE, hjust=1, angle=-35, size=4)
+
+##assemble underlying growth rates
+ProChg100 <- ProChg[ProChg$CBSA %in% metID$CBSA_Code, ]
+IncChg100 <- IncChg[IncChg$CBSA %in% metID$CBSA_Code & IncChg$Race=="Total", c("Year", "CBSA", "CBSA.Name", "Indicator", "Value", "SE")]
+IncChg100$rank <- as.numeric(NA)
+names(IncChg100) <- c("year", "CBSA", "CBSA_name", "indicator", "value", "SE", "rank")
+
+GrChg$SE <- as.numeric(NA)
+ProChg100$SE <- as.numeric(NA)
+
+underlying <- rbind(GrChg, ProChg100, IncChg100)
+underlying_wide <- dcast(underlying, CBSA ~ year + indicator, value.var = "value")
+names(underlying_wide) <- paste0("y", gsub("\\s+|-", "_", names(underlying_wide)))
+
+#FIGS 4&5
+pairs(as.matrix(underlying_wide[,11:19]))
+ggcorr(as.matrix(underlying_wide[,11:19]), label=TRUE, hjust=1, angle=-35, size=4)
+
+dev.off()
 
 #why don't names match? -- truncation!
 #nomatch <- overall[overall$CBSA.Name.df1!=overall$CBSA.Name.df2, c("CBSA.Name", "CBSA.Name.df1", "CBSA.Name.df2")]
