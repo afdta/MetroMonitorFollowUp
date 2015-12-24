@@ -1,6 +1,7 @@
 #Notes about data:Inflation adjustment? Not necessary for index, but useful for display
 #inclusion change missing ranks (though not necessary, right?)
 #index values are 0 in 2000
+#are percentage points used
 
 
 
@@ -118,6 +119,7 @@ source("https://raw.githubusercontent.com/briatte/ggcorr/master/ggcorr.R")
 
 #FIGS 2&3
 pairs(mat[,c(2,5,8)])
+ggpairs(mat[,c(2,5,8)])
 ggcorr(mat[,c(2,5,8)], label=TRUE, hjust=1, angle=-35, size=4)
 
 ##assemble underlying growth rates
@@ -133,9 +135,30 @@ underlying <- rbind(GrChg, ProChg100, IncChg100)
 underlying_wide <- dcast(underlying, CBSA ~ year + indicator, value.var = "value")
 names(underlying_wide) <- paste0("y", gsub("\\s+|-", "_", names(underlying_wide)))
 
+underlying_wide_5yr <- underlying_wide[,c(1,11:19)]
+names(underlying_wide_5yr) <-c("CBSA","AggWages", "AvgWage", "Emp", "EmpPop", "MedEarn", "GMP", "GMPJob", "GMPCap","RelPov")
+#check names
+data.frame(long=names(underlying_wide[,c(1,11:19)]), short=names(underlying_wide_5yr))
+underlying_wide_5yr_ordered <- underlying_wide_5yr[c(1,4,7,2,8,9,3,5,6,10)]
+underlying_wide_5yr_id <- merge(metID, underlying_wide_5yr_ordered, by.x="CBSA_Code", by.y="CBSA")
+ifscale <- function(v){
+  if(is.numeric(v)){
+    return(scale(v))
+  } else{
+    return(v)
+  }
+}
+underlying_std <- do.call(data.frame,lapply(underlying_wide_5yr_id, ifscale))
+row.names(underlying_std) <- as.character(underlying_std$Geo)
+underlying_std <- underlying_std[4:12]
+
 #FIGS 4&5
-pairs(as.matrix(underlying_wide[,11:19]))
-ggcorr(as.matrix(underlying_wide[,11:19]), label=TRUE, hjust=1, angle=-35, size=4)
+#use standardized variables -- now beta on regression line is correlation coefficent
+
+#ggpairs(underlying_wide_5yr_ordered, axisLabels="internal", size=3)
+ggpairs(underlying_std, axisLabels="internal", size=3)
+#ggcorr(underlying_wide_5yr_ordered, label=TRUE, hjust=1, size=4)
+ggcorr(underlying_std, label=TRUE, hjust=1, size=4)
 
 dev.off()
 
@@ -144,3 +167,46 @@ dev.off()
 
 #overall_melted <- melt(overall, id.vars=c("CBSA", "CBSA.Name", "Year"), measure.vars=c("Rank.df1", "Rank.df2", "Rank", "Score.df1", "Score.df2", "Score"))
 
+#clustering (http://www.statmethods.net/advstats/cluster.html)
+
+# Ward Hierarchical Clustering
+distances <- dist(underlying_std, method = "euclidean") # distance matrix
+fit <- hclust(distances, method="ward.D") 
+plot(fit) # display dendogram
+groups <- cutree(fit, k=5) # cut tree into 5 clusters
+# draw dendogram with red borders around the 5 clusters 
+rect.hclust(fit, k=5, border="red")
+
+#K means
+# Determine number of clusters
+wss <- (nrow(underlying_std)-1)*sum(apply(underlying_std,2,var))
+for (i in 2:15) wss[i] <- sum(kmeans(underlying_std, centers=i)$withinss)
+plot(1:15, wss, type="b", xlab="Number of Clusters",ylab="Within groups sum of squares")
+
+# K-Means Cluster Analysis
+fit <- kmeans(underlying_std, 7) # 7 cluster solution
+# get cluster means 
+clusterMeans <- aggregate(underlying_std,by=list(fit$cluster),FUN=mean)
+# append cluster assignment
+mydata <- data.frame(underlying_std, cluster=fit$cluster)
+clusters <- split(underlying_std, fit$cluster)
+lapply(clusters, function(g){
+  cat("CLUSTER MEANS\n")
+  print(colMeans(g))
+  cat(paste(nrow(g), "metro areas:\n"))
+  cat(paste0(row.names(g), collapse="\n"))
+  cat("\n\n")
+})
+
+#figure out some kind of grouping --- maybe just the high here, high there, high there...
+
+
+#testing
+a<-data.frame(a=rnorm(100), b=rnorm(100))
+a$aa <- (a$a-mean(a$a))/sd(a$a)
+a$bb <- (a$b-mean(a$b))/sd(a$b)
+
+cat("Unstandardized\n")
+summary(lm(a~b, a))
+cat("Standardized\n")
+summary(lm(aa~bb, a))
