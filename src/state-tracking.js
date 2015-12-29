@@ -73,12 +73,15 @@ function MetroInteractive(appWrapperElement){
 
 		S.allSlides = S.viewWrap.selectAll(".metro-interactive-view"); //update selection of slides
 
+		var dataURI = null;
+
 		//hold parameters for the current view redrawView will be drawn with this object as the this
 		var viewOps = {};
 		viewOps.getMetro = function(){return S.metro;}
-		viewOps.dataURI = null;
+		viewOps.setData = function(URI){dataURI = URI};
 		viewOps.dataState = 0; // 0: empty, 1: loading, 2: ready, -1: error
 		viewOps.data = null; //placeholder for the view data
+		viewOps.wrap = slide;
 
 		function viewLoading(){slide.classed("view-is-loading",true)}
 		function viewLoaded(){slide.classed("view-is-loading",false)}
@@ -110,8 +113,9 @@ function MetroInteractive(appWrapperElement){
 		function get_data(){
 			viewOps.dataState = 1; //now loading
 			viewLoading();
+
 			//get the data
-			d3.json(viewOps.dataURI, function(err, dat){
+			d3.json(dataURI, function(err, dat){
 				if(err){
 					viewLoaded();
 					slide.classed("bad-view", true);
@@ -127,8 +131,8 @@ function MetroInteractive(appWrapperElement){
 
 		//the function exposed that will show this view
 		viewOps.show = function(){
-			if(viewOps.dataState===2){
-				//data is loaded...
+			if(viewOps.dataState===2 || viewOps.dataState===3){
+				//data is loaded (2) or there is no data to load asynchronously (3)...
 				draw_view();  //draw
 				show_this_slide();  //and show the view
 			}
@@ -181,7 +185,7 @@ function MetroInteractive(appWrapperElement){
 		//if valid codes...
 		if(V.view && V.metro){
 			//update state
-			var newhash = viewCode + "-" + metroCode;
+			var newhash = viewCode + "geo" + metroCode;
 			if(!!setHash){set_hash(newhash)}
 			S.view = viewCode;
 			S.metro = metroCode;
@@ -238,7 +242,7 @@ function MetroInteractive(appWrapperElement){
 	}
 	function get_hash(){
 		try{
-			var a = window.location.hash.replace("#","").split("-");
+			var a = window.location.hash.replace("#","").split("geo");
 			var h = {view:a[0], metro:a[1]}
 		}
 		catch(e){

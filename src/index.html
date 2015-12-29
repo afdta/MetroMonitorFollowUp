@@ -13,7 +13,7 @@
 <script src="state-tracking.js" type="text/javascript"></script>
 <script src="/Mapping/metro-map/map-class.js"></script>
 
-<div style="position:relative;width:950px;min-height:600px;margin:auto">
+<div style="position:relative;max-width:950px;width:100%;min-width:320px;min-height:600px;margin:auto">
 	<div id="metro-index-wrap" class="metro-interactive-wrap"></div>
 </div>
 
@@ -21,16 +21,27 @@
 	var el = document.getElementById("metro-index-wrap");
 	var MI = MetroInteractive(el);
 	var view0 = MI.addView(function(){
-		console.log(this); //has access to methods like getMetro();
+		//console.log(this); //has access to methods like getMetro();
+		//console.log(JSON.stringify(this.data));
+		
+		console.log("METRO ACCESSED!");
+		console.log(this.getMetro());
+
+		this.wrap.append("p").text("loaded " +this.getMetro() );
 		//alert("First!");
 	});
+	view0.setData("coreIndicators.json")
 
-
-	view0.dataState = 2; //faking the API into thinking data is loaded -- FOR TESTING PURPOSES ONLY!
+	console.log(view0.dataState);
 
 	//MI.metro = "10140" //can set the default
 	
 	MI.cap(); //tell the app to try and auto-draw based on hash and defaults
+	setTimeout(function(){
+		console.log("METRO RESET!")
+		MI.metro = 10580;
+	},150)
+
 
 
 </script>

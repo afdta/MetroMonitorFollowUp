@@ -201,6 +201,141 @@ lapply(clusters, function(g){
 #figure out some kind of grouping --- maybe just the high here, high there, high there...
 
 
+#EXPORT
+library(reshape2)
+library(jsonlite)
+
+GRR <- GrRnk
+GRCHG <- GrChg
+GRVAL <- GrVal
+GRR$Period <- ifelse(GRR$Year=="2013-2014", "One", ifelse(GRR$Year=="2009-2014", "Five", "Ten"))
+GRCHG$Period <- ifelse(GRCHG$year=="2013-2014", "One", ifelse(GRCHG$year=="2009-2014", "Five", "Ten"))
+GRCHG$IND <- ifelse(GRCHG$indicator=="Percent Change in Aggregate Wages", "Wages", ifelse(GRCHG$indicator=="Percent Change in Employment", "Emp", "GMP"))
+GRVAL$IND <- ifelse(GRVAL$indicator=="Aggregate Wages, indexed to 2000", "Wages", ifelse(GRVAL$indicator=="Employment, indexed to 2000", "Emp", "GMP"))
+table(GRR$Period, GRR$Year)
+table(GRCHG$Period, GRCHG$year)
+table(GRCHG$IND, GRCHG$indicator)
+table(GRVAL$IND, GRVAL$indicator)
+
+GRR_WIDE <- merge(dcast(GRR, CBSA~Period, value.var="Rank"), dcast(GRR, CBSA~Period, value.var="Score"), by="CBSA", suffixes=c("R", "Z"))
+GRCHG_WIDE <- merge(dcast(GRCHG, CBSA~IND+Period, value.var="rank"), dcast(GRCHG, CBSA~IND+Period, value.var="value"), by="CBSA", suffixes=c("R","V"))
+
+PROR <- ProRnk
+PROCHG <- ProChg100
+PROVAL <- ProVal[ProVal$CBSA %in% metID$CBSA_Code, ]
+PROR$Period <- ifelse(PROR$Year=="2013-2014", "One", ifelse(PROR$Year=="2009-2014", "Five", "Ten"))
+PROCHG$Period <- ifelse(PROCHG$year=="2013-2014", "One", ifelse(PROCHG$year=="2009-2014", "Five", "Ten"))
+PROCHG$IND <- ifelse(PROCHG$indicator=="Percent Change in Average Annual Wage", "AvgWage", ifelse(PROCHG$indicator=="Percent Change in Output per Job", "GMPJob", "GMPCap"))
+PROVAL$IND <- ifelse(PROVAL$indicator=="Average Annual Wage", "AvgWage", ifelse(PROVAL$indicator=="Output per Job", "GMPJob", "GMPCap"))
+table(PROR$Period, PROR$Year)
+table(PROCHG$Period, PROCHG$year)
+table(PROCHG$IND, PROCHG$indicator)
+table(PROVAL$IND, PROVAL$indicator)
+
+PROR_WIDE <- merge(dcast(PROR, CBSA~Period, value.var="Rank"), dcast(PROR, CBSA~Period, value.var="Score"), by="CBSA", suffixes=c("R", "Z"))
+PROCHG_WIDE <- merge(dcast(PROCHG, CBSA~IND+Period, value.var="rank"), dcast(PROCHG, CBSA~IND+Period, value.var="value"), by="CBSA", suffixes=c("R","V"))
+
+INCR <- IncRnk
+INCCHG <- IncChg100
+INCVAL <- IncVal[IncVal$CBSA %in% metID$CBSA_Code & IncVal$Race=="Total", ]
+INCR$Period <- ifelse(INCR$Year=="2013-2014", "One", ifelse(INCR$Year=="2009-2014", "Five", "Ten"))
+INCCHG$Period <- ifelse(INCCHG$year=="2013-2014", "One", ifelse(INCCHG$year=="2009-2014", "Five", "Ten"))
+INCCHG$IND <- ifelse(INCCHG$indicator=="Percent Change in Employment-to-Population Ratio", "EmpRatio", ifelse(INCCHG$indicator=="Percent Change in Median Earnings", "MedEarn", "RelPov"))
+INCVAL$IND <- ifelse(INCVAL$Indicator=="Employment-to-Population Ratio", "EmpRatio", ifelse(INCVAL$Indicator=="Median Earnings", "MedEarn", "RelPov"))
+table(INCR$Period, INCR$Year)
+table(INCCHG$Period, INCCHG$year)
+table(INCCHG$IND, INCCHG$Indicator)
+table(INCVAL$IND, INCVAL$Indicator)
+
+INCR_WIDE <- merge(dcast(INCR, CBSA~Period, value.var="Rank"), dcast(INCR, CBSA~Period, value.var="Score"), by="CBSA", suffixes=c("R","Z"))
+INCCHG1_WIDE <- merge(dcast(INCCHG, CBSA~IND+Period, value.var="value"), dcast(INCCHG, CBSA~IND+Period, value.var="SE"), by="CBSA", suffixes=c("V","SE"))
+
+INCCHG_LIST <- split(INCCHG[c("CBSA", "Period", "IND", "value")], list(INCCHG$Period, INCCHG$IND))
+INCCHG2 <- do.call(rbind, lapply(INCCHG_LIST, function(d){
+  if(d[1,"IND"]=="RelPov"){
+    rvalues <- d$value
+  } else{
+    rvalues <- -d$value
+  }
+  d$rank <- rank(rvalues, ties.method="min")
+  d$Z <- (d$value-mean(d$value))/sd(d$value)
+  return(d)
+}))
+INCCHG2_WIDE <- merge(dcast(INCCHG2, CBSA~IND+Period, value.var="rank"), dcast(INCCHG2, CBSA~IND+Period, value.var="Z"), by="CBSA", suffixes=c("R","Z"))
+INCCHG_WIDE <- merge(INCCHG1_WIDE, INCCHG2_WIDE, by="CBSA")
+
+ALL <- list(growth=list(overall=GRR_WIDE, detailed=GRCHG_WIDE),
+            prosperity=list(overall=PROR_WIDE, detailed=PROCHG_WIDE),
+            inclusion=list(overall=INCR_WIDE, detailed=INCCHG_WIDE))
+
+names(INCVAL) <- tolower(names(INCVAL))
+names(GRVAL) <- tolower(names(GRVAL))
+names(PROVAL) <- tolower(names(PROVAL))
+PROVAL$se <- 0
+GRVAL$se <- 0
+getVals <- function(df){
+  years <- unique(df$year)
+  cat("Available years in data frame: ")
+  cat(paste0(years, collapse=", "))
+  cat("\n")
+  s <- split(df, df$cbsa)
+  ss <- lapply(s, function(e){
+    wide <- merge(dcast(e, year+cbsa~ind, value.var="value"), dcast(e, year+cbsa~ind, value.var="se"), by=c("year","cbsa"), suffixes=c("V","SE"))
+    wide <- wide[order(wide$year), ]
+    return(wide)
+  })
+  return(ss)
+}
+  
+VALUES <- list(growth=getVals(GRVAL), prosperity=getVals(PROVAL), inclusion=getVals(INCVAL))
+
+
+json <- toJSON(ALL, digits=5)
+writeLines(json, "coreIndicators.json")
+
+
+
+
+
+
+organize <- function(code){
+  #growth ranks/scores
+  gr1 <- GrRnk[GrRnk$Year=="2013-2014" & GrRnk$CBSA==code, ]
+  gr5 <- GrRnk[GrRnk$Year=="2009-2014" & GrRnk$CBSA==code, ]
+  gr10 <- GrRnk[GrRnk$Year=="2004-2014" & GrRnk$CBSA==code, ]
+  #growth values
+  grch1 <- GrChg[GrChg$year=="2013-2014" & GrChg$CBSA==code, ]
+  grch5 <- GrChg[GrChg$year=="2009-2014" & GrChg$CBSA==code, ]
+  grch10 <- GrChg[GrChg$year=="2004-2014" & GrChg$CBSA==code, ]
+  
+  
+  grOverall <- list(one=list(score=gr1[1,"Score"], rank=gr1[1,"Rank"]),
+                    five=list(score=gr5[1,"Score"], rank=gr5[1,"Rank"]),
+                    ten=list(score=gr10[1,"Score"], rank=gr10[1,"Rank"]))
+  
+  pro1 <- ProRnk[ProRnk$Year=="2013-2014" & ProRnk$CBSA==code, ]
+  pro5 <- ProRnk[ProRnk$Year=="2009-2014" & ProRnk$CBSA==code, ]
+  pro10 <- ProRnk[ProRnk$Year=="2004-2014" & ProRnk$CBSA==code, ]
+  proOverall <- list(one=list(score=pro1[1,"Score"], rank=pro1[1,"Rank"]),
+                     five=list(score=pro5[1,"Score"], rank=pro5[1,"Rank"]),
+                     ten=list(score=pro10[1,"Score"], rank=pro10[1,"Rank"]))
+  
+  inc1 <- IncRnk[IncRnk$Year=="2013-2014" & IncRnk$CBSA==code, ]
+  inc5 <- IncRnk[IncRnk$Year=="2009-2014" & IncRnk$CBSA==code, ]
+  inc10 <- IncRnk[IncRnk$Year=="2004-2014" & IncRnk$CBSA==code, ]
+  incOverall <- list(one=list(score=inc1[1,"Score"], rank=inc1[1,"Rank"]),
+                     five=list(score=inc5[1,"Score"], rank=inc5[1,"Rank"]),
+                     ten=list(score=inc10[1,"Score"], rank=inc10[1,"Rank"]))
+  
+  return(grch1)
+}
+ex <- list()
+for(i in metID$CBSA_Code){
+  
+}
+
+
+
 #testing
 a<-data.frame(a=rnorm(100), b=rnorm(100))
 a$aa <- (a$a-mean(a$a))/sd(a$a)
