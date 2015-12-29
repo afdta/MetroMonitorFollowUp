@@ -20,17 +20,17 @@
 <script>
 	var el = document.getElementById("metro-index-wrap");
 	var MI = MetroInteractive(el);
-	var view0 = MI.addView(function(){
-		//console.log(this); //has access to methods like getMetro();
-		//console.log(JSON.stringify(this.data));
-		
-		console.log("METRO ACCESSED!");
-		console.log(this.getMetro());
 
-		this.wrap.append("p").text("loaded " +this.getMetro() );
-		//alert("First!");
-	});
-	view0.setData("coreIndicators.json")
+	var view0 = MI.addView(function(){
+		this.wrap.append("p").text("Metro Index")
+	})
+
+	//base view
+	var redrawBase = function(){
+		var metro = this.getMetro();
+	}
+
+	var view1 = MI.addView(redrawBase, "coreIndicators.json");
 
 	console.log(view0.dataState);
 

@@ -17,11 +17,11 @@
 	border-radius:5px;
 	
 	margin:0px 0px 10px 0px;
-	position:relative;
+	position:absolute;
 	top:0px;
 	left:0%;
 	transition: left 1s;
-	min-height:100px;
+	min-height:500px;
 
 	opacity: 1;
 	visibility: visible;
@@ -30,11 +30,16 @@
 	-moz-transition:opacity 1s ease, left 0.5s ease, visibility 0s 1s;
 	-o-transition:opacity 1s ease, left 0.5s ease, visibility 0s 1s;
 	transition:opacity 1s ease, left 0.5s ease, visibility 0s 1s;
+
+ 	-moz-box-sizing: border-box;
+  	box-sizing: border-box;
+
+  	padding:15px;
+  	width:100%;
 }
 
-.metro-interactive-view.out-left{left:-100%; opacity:0; visibility:hidden;}
-.metro-interactive-view.out-right{left:100%; opacity:0; visibility:hidden;}
-.metro-interactive-view.view-is-loading{}
+.metro-interactive-view.out-left{left:-100%; opacity:0;background-color:red;}
+.metro-interactive-view.out-right{left:100%; opacity:0;background-color:blue;}
 .metro-interactive-view.bad-view{opacity:0.3;}
 .metro-interactive-view.bad-view::before{content:"An error occured while retrieving your data. Please reload the page"; position:absolute; top:50px; left:30px;}
 
@@ -44,14 +49,26 @@
 	left:50%;
 	margin-left:-20px;
 	top:50px;
+	display:none;
 }
 
 .metro-interactive-loading-icon rect{shape-rendering:crispEdges;}
 .metro-interactive-loading-icon rect, .metro-interactive-loading-icon text{fill:#666666;}
+
+.metro-interactive-view.view-is-loading .metro-interactive-loading-icon{display:block;}
 
 /*Utility classes*/
 .metro-interactive-wrap .c-fix::after{
 	content:"";
 	display:table;
 	clear:both;
+}
+
+.metro-interactive-wrap p, .metro-interactive-wrap a, .metro-interactive-wrap text{
+	font-family:arial;
+	font-size:15px;
+	color:#333333;
+	fill:#333333;
+	margin:0px;
+	padding:0px;
 }

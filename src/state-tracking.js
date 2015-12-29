@@ -61,24 +61,25 @@ function MetroInteractive(appWrapperElement){
 	//metroLookup can be used later to restrict the geography for a given view--use case not needed now and will be handled in the view callback
 	//the first registered view becomes the default
 	var numViews = 0;
-	S.addView = function(redrawView, setupView, metroLookup){
-		var viewIndex = "v"+numViews;
+	S.addView = function(redrawView, data_uri, setupView, metroLookup){
+		var viewIndex = "V"+numViews;
+		var viewNum = numViews;
 
 		//run setup
 		if(!!setupView){setupView(slide.node());} //must be synchronous!!}
 
 		//create a "view slide" in the DOM
 		var slide = S.viewWrap.append("div");
-			slide.classed("metro-interactive-view",true).datum(viewIndex);
+			slide.classed("metro-interactive-view out-right",true).datum(viewNum);
 
 		S.allSlides = S.viewWrap.selectAll(".metro-interactive-view"); //update selection of slides
 
-		var dataURI = null;
+		var dataURI = !!data_uri ? data_uri : null;
 
 		//hold parameters for the current view redrawView will be drawn with this object as the this
 		var viewOps = {};
+		viewOps.firstDraw = true; //useful for determining if particular information should be shown on first view
 		viewOps.getMetro = function(){return S.metro;}
-		viewOps.setData = function(URI){dataURI = URI};
 		viewOps.dataState = 0; // 0: empty, 1: loading, 2: ready, -1: error
 		viewOps.data = null; //placeholder for the view data
 		viewOps.wrap = slide;
@@ -88,14 +89,20 @@ function MetroInteractive(appWrapperElement){
 
 		//handle the swapping of slides -- bring this slide into view
 		function show_this_slide(){
-			//knock out current view
+			
 			if(S.currentSlide){
-				var index = parseInt(S.currentSlide.datum()); 
-				S.currentSlide.classed("out-right", true)
+				var index = S.currentSlide.datum(); //index of current slide
+				if(viewNum < index){S.currentSlide.classed("out-right", true);}
+				else if(viewNum > index){S.currentSlide.classed("out-left", true);}
 			}
 
 			//show this view
 			S.currentSlide = slide.classed("out-right",false).classed("out-left",false); //S.view is already set in changeView;
+
+			//make sure all slides are properly positioned -- left off here
+			S.allSlides.each()
+
+
 		}
 
 		//TWO FUNCTIONS FOR SHOWING DATA: 1) IF DATA ALREADY LOADED: JUST DRAW IT, 2) DATA NOT LOADED: LOAD DATA AND JUST DRAW IT
@@ -105,6 +112,7 @@ function MetroInteractive(appWrapperElement){
 
 			//redraw this view -- viewOps available as this (e.g. this.data, this.getMetro, etc...)
 			redrawView.call(viewOps); //must be a synchronous fn
+			viewOps.firstDraw = false; //it's been drawn
 
 			viewLoaded();
 		}
@@ -114,24 +122,29 @@ function MetroInteractive(appWrapperElement){
 			viewOps.dataState = 1; //now loading
 			viewLoading();
 
-			//get the data
-			d3.json(dataURI, function(err, dat){
-				if(err){
-					viewLoaded();
-					slide.classed("bad-view", true);
-					viewOps.dataState = -1;
-				}
-				else{
-					viewOps.data = dat;
-					viewOps.dataState = 2; //data loaded!
-					draw_view(); //draw the view
-				}
-			});
+			if(!dataURI){
+				draw_view(); //if no URI set, just draw the view
+			}
+			else{
+				//get the data and draw_view
+				d3.json(dataURI, function(err, dat){
+					if(err){
+						viewLoaded();
+						slide.classed("bad-view", true);
+						viewOps.dataState = -1;
+					}
+					else{
+						viewOps.data = dat;
+						viewOps.dataState = 2; //data loaded!
+						draw_view(); //draw the view
+					}
+				});
+			}
 		}
 
 		//the function exposed that will show this view
 		viewOps.show = function(){
-			if(viewOps.dataState===2 || viewOps.dataState===3){
+			if(viewOps.dataState===2){
 				//data is loaded (2) or there is no data to load asynchronously (3)...
 				draw_view();  //draw
 				show_this_slide();  //and show the view
@@ -185,7 +198,7 @@ function MetroInteractive(appWrapperElement){
 		//if valid codes...
 		if(V.view && V.metro){
 			//update state
-			var newhash = viewCode + "geo" + metroCode;
+			var newhash = viewCode + "G" + metroCode;
 			if(!!setHash){set_hash(newhash)}
 			S.view = viewCode;
 			S.metro = metroCode;
@@ -211,7 +224,7 @@ function MetroInteractive(appWrapperElement){
 		var metro = hash.metro;
 
 		var MD = !!S.metro ? S.metro : metroDefault(S.metroLookup);
-		var VD = !!S.view ? S.view : "v0";
+		var VD = !!S.view ? S.view : "V0";
 
 		//validate the location hash values
 		var valid = validate(view, metro);
@@ -242,7 +255,7 @@ function MetroInteractive(appWrapperElement){
 	}
 	function get_hash(){
 		try{
-			var a = window.location.hash.replace("#","").split("geo");
+			var a = window.location.hash.replace("#","").split("G");
 			var h = {view:a[0], metro:a[1]}
 		}
 		catch(e){

@@ -223,14 +223,17 @@ GRCHG_WIDE <- merge(dcast(GRCHG, CBSA~IND+Period, value.var="rank"), dcast(GRCHG
 PROR <- ProRnk
 PROCHG <- ProChg100
 PROVAL <- ProVal[ProVal$CBSA %in% metID$CBSA_Code, ]
+PROIDX <- ProIdx[ProIdx$CBSA %in% metID$CBSA_Code, ]
 PROR$Period <- ifelse(PROR$Year=="2013-2014", "One", ifelse(PROR$Year=="2009-2014", "Five", "Ten"))
 PROCHG$Period <- ifelse(PROCHG$year=="2013-2014", "One", ifelse(PROCHG$year=="2009-2014", "Five", "Ten"))
 PROCHG$IND <- ifelse(PROCHG$indicator=="Percent Change in Average Annual Wage", "AvgWage", ifelse(PROCHG$indicator=="Percent Change in Output per Job", "GMPJob", "GMPCap"))
 PROVAL$IND <- ifelse(PROVAL$indicator=="Average Annual Wage", "AvgWage", ifelse(PROVAL$indicator=="Output per Job", "GMPJob", "GMPCap"))
+PROIDX$IND <- ifelse(PROIDX$indicator=="Average Annual Wage, indexed to 2000", "AvgWage", ifelse(PROIDX$indicator=="Output per Job, indexed to 2000", "GMPJob", "GMPCap"))
 table(PROR$Period, PROR$Year)
 table(PROCHG$Period, PROCHG$year)
 table(PROCHG$IND, PROCHG$indicator)
 table(PROVAL$IND, PROVAL$indicator)
+table(PROIDX$IND, PROIDX$indicator)
 
 PROR_WIDE <- merge(dcast(PROR, CBSA~Period, value.var="Rank"), dcast(PROR, CBSA~Period, value.var="Score"), by="CBSA", suffixes=c("R", "Z"))
 PROCHG_WIDE <- merge(dcast(PROCHG, CBSA~IND+Period, value.var="rank"), dcast(PROCHG, CBSA~IND+Period, value.var="value"), by="CBSA", suffixes=c("R","V"))
@@ -271,7 +274,9 @@ ALL <- list(growth=list(overall=GRR_WIDE, detailed=GRCHG_WIDE),
 names(INCVAL) <- tolower(names(INCVAL))
 names(GRVAL) <- tolower(names(GRVAL))
 names(PROVAL) <- tolower(names(PROVAL))
+names(PROIDX) <- tolower(names(PROIDX))
 PROVAL$se <- 0
+PROIDX$se <- 0
 GRVAL$se <- 0
 getVals <- function(df){
   years <- unique(df$year)
@@ -287,10 +292,10 @@ getVals <- function(df){
   return(ss)
 }
   
-VALUES <- list(growth=getVals(GRVAL), prosperity=getVals(PROVAL), inclusion=getVals(INCVAL))
+VALUES <- list(growth=getVals(GRVAL), prosperity=getVals(PROVAL), prosperity2=getVals(PROIDX), inclusion=getVals(INCVAL))
 
 
-json <- toJSON(ALL, digits=5)
+json <- toJSON(list(measures=ALL, values=VALUES), digits=5)
 writeLines(json, "coreIndicators.json")
 
 
