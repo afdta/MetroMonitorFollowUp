@@ -47,10 +47,11 @@
 		else{
 			var data = {};
 			data.table = {};
-			function putInTable(A){
+			function putInTable(A,propName){
 				for(var i=0; i<A.length; i++){
 					var prop = A[i].CBSA+"";
 					if(!data.table.hasOwnProperty(prop)){data.table[prop] = {}}
+					data.table[prop][propName] = A[i]
 				}
 			}
 		}
@@ -69,7 +70,7 @@
 
 	var view2 = MI.addView(function(){
 		this.container.append("p").text("Metro Index");
-	})
+	}, null, function(){this.header.append("p").text("Outcomes by race")})
 
 	var view3 = MI.addView(function(){}, null, function(){
 		this.header.append("p").text("Stay tuned for...");
