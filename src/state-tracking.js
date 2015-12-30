@@ -8,7 +8,7 @@ function MetroInteractive(appWrapperElement){
 	//basic structure: A] app wrapper > a] menu wrapper, b] slide/views wrapper
 	S.wrap = d3.select(appWrapperElement).classed("metro-interactive-wrap",true);
 	S.menu = S.wrap.append("div").classed("metro-interactive-menu-wrap",true);
-	S.viewWrap = S.wrap.append("div").classed("metro-interactive-views-wrap",true);
+	S.viewWrap = S.wrap.append("div").classed("metro-interactive-views",true);
 
 	//keep track of selected metro area and view
 	S.metro = null; //no defaults
@@ -51,26 +51,29 @@ function MetroInteractive(appWrapperElement){
 	// draw a view for a selected metro
 	// each listener should take 
 	// view listeners will 1) change views and draw selected metro version. if the view is already shown, it just draws the selected metro version of the view.
-	S.viewRegister = {};
-	S.viewList = [];
+	viewRegister = {};
+	viewList = [];
 
 	//view listener that will be called when the view is changed
 
-	//setupView will be run one time -- its code must be synchronous -- it is passed a reference to the slide node element.
-	//redrawView will be run each time changeView is called
+	//setupView will be run one time -- its code must be synchronous -- it has access to the slide wrap and slide header area through the this object.
+	//redrawView will be run each time changeView is called -- its code must be synchronous -- it has access to the viewOps object as the this object
 	//metroLookup can be used later to restrict the geography for a given view--use case not needed now and will be handled in the view callback
 	//the first registered view becomes the default
 	var numViews = 0;
 	S.addView = function(redrawView, data_uri, setupView, metroLookup){
-		var viewIndex = "V"+numViews;
 		var viewNum = numViews;
-
-		//run setup
-		if(!!setupView){setupView(slide.node());} //must be synchronous!!}
+		var viewIndex = "V"+viewNum;
+		var viewName = viewIndex; //can be set by user later
 
 		//create a "view slide" in the DOM
-		var slide = S.viewWrap.append("div");
-			slide.classed("metro-interactive-view out-right",true).datum(viewNum);
+		var outer_slide = S.viewWrap.append("div").classed("metro-interactive-view-wrap",true);
+		var slide = outer_slide.append("div").classed("metro-interactive-view out-right c-fix",true).datum(viewNum);
+			slide.append("div").classed("metro-interactive-view-marker",true); //.append("p").text(viewNum);
+		var slideHeader = slide.append("div").classed("metro-interactive-view-header",true);
+
+		//run setup
+		if(!!setupView){setupView.call({container:slide, header:slideHeader});} //must be synchronous!!}
 
 		S.allSlides = S.viewWrap.selectAll(".metro-interactive-view"); //update selection of slides
 
@@ -81,27 +84,36 @@ function MetroInteractive(appWrapperElement){
 		viewOps.firstDraw = true; //useful for determining if particular information should be shown on first view
 		viewOps.getMetro = function(){return S.metro;}
 		viewOps.dataState = 0; // 0: empty, 1: loading, 2: ready, -1: error
-		viewOps.data = null; //placeholder for the view data
-		viewOps.wrap = slide;
+		viewOps.data = {raw:null, processed:null}; //placeholder for the view data
+		viewOps.container = slide;
+		viewOps.header = slideHeader;
+		viewOps.lookup = S.metroLookup;
+		viewOps.name = function(name){
+			if(name===null || typeof name === "undefined"){
+				return viewName;
+			}
+			else{
+				viewName = name;
+			}
+		}
 
 		function viewLoading(){slide.classed("view-is-loading",true)}
 		function viewLoaded(){slide.classed("view-is-loading",false)}
 
 		//handle the swapping of slides -- bring this slide into view
 		function show_this_slide(){
-			
-			if(S.currentSlide){
-				var index = S.currentSlide.datum(); //index of current slide
-				if(viewNum < index){S.currentSlide.classed("out-right", true);}
-				else if(viewNum > index){S.currentSlide.classed("out-left", true);}
-			}
+			//var index = S.currentSlide ? S.currentSlide.datum() : viewNum;
+			var index_to_show = viewNum;
+
+			S.allSlides.classed("out-right", function(d,i){
+				return d > index_to_show;
+			});
+			S.allSlides.classed("out-left", function(d,i){
+				return d < index_to_show;
+			});
 
 			//show this view
-			S.currentSlide = slide.classed("out-right",false).classed("out-left",false); //S.view is already set in changeView;
-
-			//make sure all slides are properly positioned -- left off here
-			S.allSlides.each()
-
+			S.currentSlide = slide.classed("out-right out-left out-of-view",false); //S.view is already set in changeView;
 
 		}
 
@@ -115,6 +127,11 @@ function MetroInteractive(appWrapperElement){
 			viewOps.firstDraw = false; //it's been drawn
 
 			viewLoaded();
+
+			//any time you (re)draw the view, resize the wrapper height
+			var rect = slide.node().getBoundingClientRect();
+			var h = Math.round(rect.bottom - rect.top)+100; //big margin for error
+			S.viewWrap.style("height",h+"px");
 		}
 
 		//get data and show view
@@ -124,6 +141,7 @@ function MetroInteractive(appWrapperElement){
 
 			if(!dataURI){
 				draw_view(); //if no URI set, just draw the view
+				viewOps.dataState = 3; //no data
 			}
 			else{
 				//get the data and draw_view
@@ -134,7 +152,7 @@ function MetroInteractive(appWrapperElement){
 						viewOps.dataState = -1;
 					}
 					else{
-						viewOps.data = dat;
+						viewOps.data.raw = dat;
 						viewOps.dataState = 2; //data loaded!
 						draw_view(); //draw the view
 					}
@@ -144,7 +162,7 @@ function MetroInteractive(appWrapperElement){
 
 		//the function exposed that will show this view
 		viewOps.show = function(){
-			if(viewOps.dataState===2){
+			if(viewOps.dataState===2 || viewOps.dataState===3){
 				//data is loaded (2) or there is no data to load asynchronously (3)...
 				draw_view();  //draw
 				show_this_slide();  //and show the view
@@ -161,8 +179,8 @@ function MetroInteractive(appWrapperElement){
 		}
 
 		//register the methods -- view0 is considered the default
-		S.viewRegister[viewIndex] = viewOps;
-		S.viewList.push(viewIndex);
+		viewRegister[viewIndex] = viewOps;
+		viewList.push(viewIndex);
 
 		numViews++;
 
@@ -170,6 +188,7 @@ function MetroInteractive(appWrapperElement){
 
 		return(viewOps);
 	}
+
 
 	//validate view and metro selections
 	function validate(viewCode, metroCode){
@@ -179,7 +198,7 @@ function MetroInteractive(appWrapperElement){
 		var result = {view:false, metro:false}
 
 		//validate -- metro codes are validated on a per-app basis not per-view basis
-		if(vh && vh in S.viewRegister){
+		if(vh && vh in viewRegister){
 			result.view = true;
 		}
 		if(mh && mh in S.metroLookup){
@@ -205,7 +224,7 @@ function MetroInteractive(appWrapperElement){
 
 			//state must be updated before show is called because it relies on the current state -- if the user changes metro while the redraw method is called asynchronously, you want that callback to use the new metro. It might redraw twice, but it will do so with the right data.
 			//because the data
-			S.viewRegister[viewCode].show();
+			viewRegister[viewCode].show();
 		} 
 		else{
 			//no-op
@@ -213,8 +232,31 @@ function MetroInteractive(appWrapperElement){
 	}
 
 	//qc, or "quick change" wrappers for changeView, when you just want to change metro or view and force a hash change
-	S.qcMetro = function(metroCode){changeView(S.view, metroCode, true);}
-	S.qcView = function(viewCode){changeView(viewCode, S.metro, true);}
+	function qcMetro(metroCode){changeView(S.view, metroCode, true);}
+	function qcView(viewCode){changeView(viewCode, S.metro, true);}
+	function qcRedraw(){changeView(S.view, S.metro, false);} //redraw the current view -- for resize events
+
+	//build_view_nav can only be called once everything has been registered -- i.e. in S.cap
+	function build_view_nav(){
+		var buttons = S.menu.selectAll("div.nav-menu-button").data(viewList);
+		buttons.enter().append("div").classed("nav-menu-button",true).append("p");
+		buttons.exit().remove();
+		buttons.select("p").text(function(d,i){return viewRegister[d].name()});
+		buttons.on("mousedown", function(d,i){
+			buttons.classed("nav-menu-button-selected",false);
+			d3.select(this).classed("nav-menu-button-selected",true);
+			qcView(d);
+		});
+		buttons.classed("nav-menu-button-selected",function(d,i){
+			return d===S.view;
+		})
+
+		//buttons
+
+		window.addEventListener("keypress",function(e){
+			console.log(e);
+		});
+	}
 
 	//"cap off" the app: load the default view/metro, otherwise no setup is performed
 	S.cap = function(){
@@ -242,6 +284,8 @@ function MetroInteractive(appWrapperElement){
 		else if(!valid.view){
 			changeView(VD, metro, true);
 		}
+
+		build_view_nav();
 	}
 
 	//hash changes -- need to test the hash changes in wide variety of browsers
@@ -275,6 +319,13 @@ function MetroInteractive(appWrapperElement){
 
 	window.addEventListener("hashchange",hash_listener,false);
 	//window.addEventListener("popstate",function(e){console.log(e.state)})
+	
+	//on resize, redraw the current view
+	var resize_timer;
+	window.addEventListener("resize",function(){
+		clearTimeout(resize_timer);
+		resize_timer = setTimeout(qcRedraw, 200);
+	})
 
 
 	function append_loading_icon(wrapper_selection){

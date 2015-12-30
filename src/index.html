@@ -8,12 +8,12 @@
 <link rel="stylesheet" type="text/css" href="metro-interactive-styles.css">
 </head>
 
-<body>
+<body style="min-height:1000px">
 <script src="d3.min.js" type="text/javascript"></script>
 <script src="state-tracking.js" type="text/javascript"></script>
 <script src="/Mapping/metro-map/map-class.js"></script>
 
-<div style="position:relative;max-width:950px;width:100%;min-width:320px;min-height:600px;margin:auto">
+<div style="position:relative;max-width:950px;width:100%;min-width:320px;min-height:600px;height:100%;margin:auto">
 	<div id="metro-index-wrap" class="metro-interactive-wrap"></div>
 </div>
 
@@ -21,29 +21,73 @@
 	var el = document.getElementById("metro-index-wrap");
 	var MI = MetroInteractive(el);
 
-	var view0 = MI.addView(function(){
-		this.wrap.append("p").text("Metro Index")
+	var view0 = MI.addView(function(){},null,function(){
+		var slide = this.container;
+		var header = this.header;
+		header.append("p").text("About the Metro Monitor");
+		//header.append("p").text("Tracking progress towards an advanced economy that works for all").style({"font-style":"italic","margin-bottom":"0px"});
+		//slide.append("hr").style("margin-bottom","20px");
+		slide.append("p").style({"font-weight":"bold","color":"#4285f4","margin-bottom":"25px"}).text("[This is space for the opening view. It could be used to convey: 1) What the Monitor is and/or what it measures, 2) Why the Monitor is valuable, and/or 3) A high level overview of the data. It should be snappier than what is here now, and should include at least one graphic. The text here can link to other views in the interactive.]")
+		slide.append("div").style({"float":"left","width":"56%","padding":"0% 2% 0px 0px"})
+			.html("<p><b>Summary</b></p><p>To help informlocal leaders’ efforts to achieve an advanced economy that worksfor all, the Brookings Metropolitan Policy Program is launching a new<i>Metro Monitor </i>that examines metropolitan areas’ progresstoward improving outcomes in three key areas of economic development:growth, prosperity, and inclusion. Successful economic developmentputs a metropolitan economy on a <u>higher trajectory of long-rungrowth</u> (<i>growth</i>) by<i> </i><u>improving the productivity ofindividuals and firms in order to raise local standards of living</u>(<i>prosperity</i>) <u>for all people</u> (<i>inclusion</i>). ThisMetro Monitor examines indicators within each of these categories forthe 100 largest U.S. metropolitan areas, primarily during therecovery from the Great Recession, and finds that:</p><ol><li><b>Economicgrowth has been widespread but uneven among metropolitan areasduring the recovery from 2009 to 2014.</b>Every metropolitan area saw gains on at least one measure of growth.However, some places boomed while others grew barely at all.Metropolitan areas that specialize in information technology,professional services, energy, or certain types of manufacturing sawespecially strong growth. Growth was slower over the course of therecovery for many metropolitan areas in the Sunbelt and most ofthose in the Northeast.</li><li><b>Whileevery large metropolitan area experienced at least some modestgrowth during the economic recovery, increases in prosperity werenot as widespread.</b>Fast-growing technology strongholds and places that specialize inprofessional services, a sector that has grown since the recessionended and pays well, saw especially large gains in prosperity.Metropolitan areas in the Sunbelt, especially Central and SouthernCalifornia, the Intermountain West, and Florida, ranked among theweakest performers on prosperity during the economic recovery.</li><li><b>Comparedto outcomes in growth and prosperity during the recovery,improvements in inclusion proved more elusive and more fleetingduring the economic recovery. </b>Evenin places that made gains in growth and prosperity, middle- andlow-income workers often fared worse. And disparities between peopleof different races and ethnicities widened. In fact, metropolitanareas that saw among the best improvements for middle- and lo-incomeworkers posted some of the worst outcomes in racial disparity. Andplaces rarely made consistent gains over time.</li><li><b>Thesetrends suggest that, at least during the recovery, few metropolitanareas have simultaneously sustained gains in growth, prosperity, andinclusion. </b>Across the boardsuccess on these outcomes tends to be exceptional. Some metropolitanareas grew by adding jobs while others grew by becoming moreprosperous. Few did well at both. Rising prosperity seldombenefitted middle- and low-wage workers. And even where growth wasinclusive, middle- and low-income whites fared better than middle-and low-income people of color. Metropolitan areas that sustainedabove-average performance over time are more exceptional still</li></ol><p>This edition of the Metro Monitor advances new ways of measuringeconomic success in metropolitan America. It finds that metropolitanareas made great strides on improving growth and competitivenessduring the economic recovery. However, economic growth alone, evengrowth that produces rising living standards, is not enough to assurebetter outcomes for all groups in a metropolitan area. Over the nextseveral months, the Brookings Metropolitan Policy Program willpublish follow-up analyses to help metro leaders understand whatcontributes to growth, prosperity, and inclusion in metropolitanAmerica, and how new models of economic development can help deliveran advanced economy that works for all.</p>")
+
+		slide.append("div").style({"float":"right","width":"36%","padding":"2%","background-color":"#dddddd"})
+			.html("<p><b>Categories and indicators</b></p><p>The&nbsp;<i>Metro Monitor&nbsp;</i>measures the performance of the nation’s major metropolitan economies in three critical areas for economic development: growth, prosperity, and inclusion. Successful economic development puts a metropolitan economy on a higher trajectory of long-run growth (<i>growth</i>) by<i>&nbsp;</i>improving the productivity of individuals and firms in order to raise local standards of living (<i>prosperity</i>) for all people (<i>inclusion</i>). This&nbsp;<i>Metro Monitor</i>&nbsp;examines indicators within each of these categories that help assess metropolitan areas’ progress toward shaping an advanced economy for all.</p><p>Growth</p><p>Growth indicators capture net change in the total size of a metropolitan area’s economy. As a metropolitan economy grows, it creates new opportunities for individuals and can become more efficient as it grows larger. The&nbsp;<i>Metro Monitor&nbsp;</i>measures growth in output or gross product, number of jobs, and aggregate wages paid to workers.</p><ul><li><i><b>Change in aggregate output</b></i>—Output measures the total value of goods and services produced in a metropolitan economy, a concept known as gross domestic product at the national level.</li><li><i><b>Change in the number of jobs</b></i>—Jobs measure the total number of occupied full- and part-time employment positions in a metropolitan economy.</li><li><i><b>Change in aggregate income</b></i>—Aggregate income measures the total value of wages, salaries, and benefits paid to workers in a metropolitan economy.</li></ul><p>Changes in these indicators are measured as the percent difference between values in the final and initial years of analysis. Data on output, jobs, and aggregate income come from Moody’s Analytics.</p><p><b>Prosperity</b></p><p>Prosperity indicators indicate the quality and impact of a metropolitan economy’s growth. An economy can grow by adding more inputs, like workers, which may not necessarily make each worker better off. It can also grow by increasing the productivity of its workers, through innovation or by upgrading workers’ skills, for example. This can increase the value of workers’ labor and the compensation they receive for it, as indicated by output per job and the average wage. It can also raise overall standards of living in the metropolitan area, as indicated by output per person.</p><ul><li><i><b>Change in output per job</b></i>—Output per job is a crude measure of a metropolitan economy’s productivity, or how much value is generated per job.</li><li><i><b>Change in the average wage</b></i>—Average wage measures the aggregate income of a metropolitan economy on a per-job basis.</li><li><i><b>Change in output per person</b></i>—Output per person measures the size of the metropolitan economy on a per-person basis, including people of all ages regardless of labor force status, and thus indicates the general standard of living.</li></ul><p>Changes in these indicators are measured as the percent difference between values in the final and initial years of analysis. Data on output, jobs, and aggregate income come from Moody’s Analytics. Data on population come from the U.S. Census Bureau’s Population Estimates Program.</p><p><b>Inclusion</b></p><p>Inclusion indicators measure how the benefits of growth and prosperity in a metropolitan economy—specifically, income and employment opportunity—are distributed among people. People who benefit from growth have more opportunities to fulfill their and their children’s potential. They can also purchase more of the goods and services the metropolitan economy produces. Inclusive growth can thus increase the amount of current and future human capital available in an economy, and raise the amount of demand, boosting both its prosperity and growth. Ensuring that all people can contribute to and benefit from growth and prosperity also helps sustain widespread support for the policies on which growth and prosperity depend.</p><ul><li><i><b>Change in the median wage</b></i>—Median wage measures the annual income earned by a person who earns more than exactly half of workers in the metropolitan economy, among people at least 16 years old who earned income in the last year.</li><li><i><b>Change in the relative income poverty rate</b></i>—Commonly used to measure poverty in other countries, this measures the share of workers in the metropolitan economy who earn less than half of the median annual wage in that metropolitan economy. This measures poverty relative to local costs of living and captures the distribution of income among workers earning below the median.</li><li><i><b>Change in the employment rate</b></i>—The employment-to-population ratio measures the share of individuals aged 18 to 65 who are currently employed.</li></ul><p>Change in median wage is measured as the percent difference between values in the final and initial years of analysis. Changes in relative income poverty and employment rates are measured as the percentage point difference between rates in the final and initial years of analysis. Data for inclusion indicators come from the Census Public-Use Microdata Series (PUMS) for the 2000 Decennial Census and the 2006 to 2014 American Community Survey (ACS) 1-year estimates. Estimates derived from survey data come with estimates of survey error, which are reported on the series website.</p>")
+
 	})
+		
 
 	//base view
 	var redrawBase = function(){
-		var metro = this.getMetro();
+		var table = d3.select("svg#core-svg-table");
+		var map = d3.select("svg#core-svg-map");
+		if(this.data.processed){
+			var data = this.data.processed;
+		}
+		else{
+			var data = {};
+			data.table = {};
+			function putInTable(A){
+				for(var i=0; i<A.length; i++){
+					var prop = A[i].CBSA+"";
+					if(!data.table.hasOwnProperty(prop)){data.table[prop] = {}}
+				}
+			}
+		}
+
+		var rows = table.selectAll("g").data([])
+
+		console.log(this.data);
+	}
+	var setupBase = function(){
+		this.header.append("p").text("Core data section");
+		this.container.append("svg").attr("id","core-svg-table");
+		this.container.append("svg").attr("id","core-svg-map")
 	}
 
-	var view1 = MI.addView(redrawBase, "coreIndicators.json");
+	var view1 = MI.addView(redrawBase, "coreIndicators.json", setupBase);
+
+	var view2 = MI.addView(function(){
+		this.container.append("p").text("Metro Index");
+	})
+
+	var view3 = MI.addView(function(){}, null, function(){
+		this.header.append("p").text("Stay tuned for...");
+		this.container.append("p").text("Industrial structure... [February 2016]");
+		this.container.append("p").text("Lorem ipsum [February 2016]");
+		this.container.append("p").text("Lorem ipsum [March 2016]");
+	})
 
 	console.log(view0.dataState);
 
 	//MI.metro = "10140" //can set the default
 	
+	view0.name("Overview");
+	view1.name("Core data");
+	view2.name("Racial disparities");
+	view3.name("Upcoming")
+
 	MI.cap(); //tell the app to try and auto-draw based on hash and defaults
-	setTimeout(function(){
-		console.log("METRO RESET!")
-		MI.metro = 10580;
-	},150)
-
-
-
 </script>
 
 

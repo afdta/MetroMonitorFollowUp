@@ -1,24 +1,72 @@
-.metro-interactive-wrap{
-	position:relative;
+/*core styles*/
+.metro-interactive-wrap p, .metro-interactive-wrap a, .metro-interactive-wrap text, .metro-interactive-wrap i, .metro-interactive-wrap li{
+	font-family:arial;
+	font-size:15px;
+	color:#333333;
+	fill:#333333;
+	margin:0em 0px 0.5em 0px;
+	padding:0px;
+	line-height:1.3em;
+}
 
+.metro-interactive-wrap hr{
+	border:1px solid #cccccc;
+	border-width:1px 0px 0px 0px;
+	height:1px;
+	margin:8px 0px 8px 0px;
+	padding:0px;
+}
+/*end core styles*/
+
+
+.metro-interactive-wrap{
 }
 
 .metro-interactive-menu-wrap{
-	position:relative;
+	background-color:#ffffff;
+	margin-bottom:0px;
+	margin-left:15px;
 }
 
-.metro-interactive-views-wrap{
+.metro-interactive-menu-wrap .nav-menu-button{
+	display:inline-block;
+	border:1px solid #ffffff;
+	border-width:1px 1px 0px 1px;
+	padding:4px 0px;
+	margin:0px 20px 0px 0px;
+	cursor:pointer;
+	background-color:#ffffff;
 	position:relative;
+}
+/*.metro-interactive-menu-wrap .nav-menu-button:first-child{
+	margin-left:0px;
+}*/
+.metro-interactive-menu-wrap .nav-menu-button-selected{
+	background-color:#ffffff;
+}
+.metro-interactive-menu-wrap .nav-menu-button p{margin:0px 0px 0px 0px;line-height:1em;}
+.metro-interactive-menu-wrap .nav-menu-button:hover p{color:#CE7E00;}
+.metro-interactive-menu-wrap .nav-menu-button-selected p, .metro-interactive-menu-wrap .nav-menu-button-selected:hover p{color:#2879FF;}
+/*.metro-interactive-menu-wrap .nav-menu-button-selected p::before{content:"• ";position:absolute; left:-10px;}*/
+
+
+.metro-interactive-views{
+	height:1000px;
+	position:relative;
+	overflow:hidden;
+	border:1px solid #aaaaaa;
+	border-width:0px 0px 0px 0px;
+}
+
+.metro-interactive-view-wrap{
+	position:absolute;
+	width:100%;
+	height:100%;
 }
 
 .metro-interactive-view{
-	border:1px solid #aaaaaa;
-	background-color:#dddddd;
-	border-radius:5px;
-	
-	margin:0px 0px 10px 0px;
-	position:absolute;
-	top:0px;
+	position:relative;
+	top:0%;
 	left:0%;
 	transition: left 1s;
 	min-height:500px;
@@ -26,20 +74,56 @@
 	opacity: 1;
 	visibility: visible;
 
-	-webkit-transition:opacity 1s ease, left 0.5s ease, visibility 0s 1s;
-	-moz-transition:opacity 1s ease, left 0.5s ease, visibility 0s 1s;
-	-o-transition:opacity 1s ease, left 0.5s ease, visibility 0s 1s;
-	transition:opacity 1s ease, left 0.5s ease, visibility 0s 1s;
+	-webkit-transition:opacity 0.5s ease, left 0.75s ease, visibility 0s 1s;
+	-moz-transition:opacity 0.5s ease, left 0.75s ease, visibility 0s 1s;
+	-o-transition:opacity 0.5s ease, left 0.75s ease, visibility 0s 1s;
+	transition:opacity 0.5s ease, left 0.75s ease, visibility 0s 1s;
 
  	-moz-box-sizing: border-box;
   	box-sizing: border-box;
 
-  	padding:15px;
-  	width:100%;
+  	border:1px solid #aaaaaa;
+  	border-width:0px 0px 0px 0px;
+
+  	padding:0px 15px 15px 15px;
+  	z-index:10;
+
+  	background: #ffffff;
 }
 
-.metro-interactive-view.out-left{left:-100%; opacity:0;background-color:red;}
-.metro-interactive-view.out-right{left:100%; opacity:0;background-color:blue;}
+.metro-interactive-view-header{
+	border:0px solid #053769;
+	background-color: #074187;
+	border-width:0px 0px 0px 0px;
+	left:-16px;
+	position:relative;
+	min-height:20px;
+	width:100%;
+	padding:5px 15px;
+	z-index:15;
+	margin-bottom:20px;
+}
+
+.metro-interactive-view-header p{color:#ffffff; line-height:1.3em; font-size:18px; font-weight:bold;margin:0px;}
+.metro-interactive-view p, .metro-interactive-view li{line-height:1.6em;}
+
+.metro-interactive-view-marker{
+	position:absolute;
+	right:5px;
+	top:5px;
+	height:5px;
+	width:5px;
+	border:1px solid #aaaaaa;
+	background-color:#dddddd;
+}
+.metro-interactive-view-marker p{
+	line-height:15px;
+	font-size:10px;
+	text-align:center;
+}
+
+.metro-interactive-view.out-left{left:-110%; opacity:0; z-index:1;}
+.metro-interactive-view.out-right{left:110%; opacity:0; z-index:1;}
 .metro-interactive-view.bad-view{opacity:0.3;}
 .metro-interactive-view.bad-view::before{content:"An error occured while retrieving your data. Please reload the page"; position:absolute; top:50px; left:30px;}
 
@@ -62,13 +146,4 @@
 	content:"";
 	display:table;
 	clear:both;
-}
-
-.metro-interactive-wrap p, .metro-interactive-wrap a, .metro-interactive-wrap text{
-	font-family:arial;
-	font-size:15px;
-	color:#333333;
-	fill:#333333;
-	margin:0px;
-	padding:0px;
 }
