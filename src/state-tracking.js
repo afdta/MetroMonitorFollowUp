@@ -68,7 +68,7 @@ function MetroInteractive(appWrapperElement){
 
 		//create a "view slide" in the DOM
 		var outer_slide = S.viewWrap.append("div").classed("metro-interactive-view-wrap",true);
-		var slide = outer_slide.append("div").classed("metro-interactive-view c-fix",true).datum(viewNum);
+		var slide = outer_slide.append("div").classed("metro-interactive-view c-fix out-of-view",true).datum(viewNum);
 			slide.append("div").classed("metro-interactive-view-marker",true); //.append("p").text(viewNum);
 		var slideHeader = slide.append("div").classed("metro-interactive-view-header",true);
 
