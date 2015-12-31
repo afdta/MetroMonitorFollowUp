@@ -39,7 +39,8 @@
 
 	//base view
 	var redrawBase = function(){
-		var table = d3.select("svg#core-svg-table");
+		var vo = this;
+		var table = d3.select("svg g#core-svg-table");
 		var map = d3.select("svg#core-svg-map");
 		if(this.data.processed){
 			var data = this.data.processed;
@@ -51,18 +52,38 @@
 				for(var i=0; i<A.length; i++){
 					var prop = A[i].CBSA+"";
 					if(!data.table.hasOwnProperty(prop)){data.table[prop] = {}}
-					data.table[prop][propName] = A[i]
+					data.table[prop][propName] = A[i];
 				}
 			}
+			putInTable(this.data.raw.measures.growth.overall, "gr0");
+			putInTable(this.data.raw.measures.growth.detailed, "gr1");
+			putInTable(this.data.raw.measures.prosperity.overall, "pro0");
+			putInTable(this.data.raw.measures.prosperity.detailed, "pro1");
+			putInTable(this.data.raw.measures.inclusion.overall, "inc0");
+			putInTable(this.data.raw.measures.inclusion.detailed, "inc1");
+
+			data.universe = this.data.raw.measures.growth.overall.map(function(d,i){return d.CBSA+""});
+			this.data.processed = data;
 		}
 
-		var rows = table.selectAll("g").data([])
+		var rows = table.selectAll("g").data(data.universe);
+		rows.enter().append("g").append("text");
+		rows.exit().remove("g");
+		rows.attr("transform",function(d,i){
+			return "translate(0," + ((i*50)+25) + ")";
+		})
 
-		console.log(this.data);
+		rows.select("text").text(function(d,i){return vo.lookup[d][0].CBSA_Title});
+
+		var box = table.node().getBoundingClientRect();
+		d3.select(table.node().parentNode).style("height", (Math.round(box.bottom-box.top)+25)+"px")
+
+
+
 	}
 	var setupBase = function(){
 		this.header.append("p").text("Core data section");
-		this.container.append("svg").attr("id","core-svg-table");
+		this.container.append("svg").style("width","100%").append("g").attr("id","core-svg-table");
 		this.container.append("svg").attr("id","core-svg-map")
 	}
 
