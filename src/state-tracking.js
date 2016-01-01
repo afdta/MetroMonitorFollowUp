@@ -72,9 +72,6 @@ function MetroInteractive(appWrapperElement){
 			slide.append("div").classed("metro-interactive-view-marker",true); //.append("p").text(viewNum);
 		var slideHeader = slide.append("div").classed("metro-interactive-view-header",true);
 
-		//run setup
-		if(!!setupView){setupView.call({container:slide, header:slideHeader});} //must be synchronous!!}
-
 		S.allSlides = S.viewWrap.selectAll(".metro-interactive-view"); //update selection of slides
 
 		var dataURI = !!data_uri ? data_uri : null;
@@ -84,7 +81,7 @@ function MetroInteractive(appWrapperElement){
 		viewOps.firstDraw = true; //useful for determining if particular information should be shown on first view
 		viewOps.getMetro = function(){return S.metro;}
 		viewOps.dataState = 0; // 0: empty, 1: loading, 2: ready, -1: error
-		viewOps.data = {raw:null, processed:null}; //placeholder for the view data
+		viewOps.dataStore = {raw:null, processed:null, state:{}}; //placeholder for the view data
 		viewOps.container = slide;
 		viewOps.header = slideHeader;
 		viewOps.lookup = S.metroLookup;
@@ -96,6 +93,35 @@ function MetroInteractive(appWrapperElement){
 				viewName = name;
 			}
 		}
+		viewOps.viewData = function(name, data){
+			if(arguments.length===0){
+				return viewOps.dataStore.raw;
+			}
+			else if(arguments.length===1){
+				return viewOps.dataStore[name];
+			}
+			else if(arguments.length===2){
+				viewOps.dataStore[name] = data;
+				return data;
+			}
+			else{
+				return [];
+			}
+		}
+
+		//get or set arbitrary name-value pairs in dataStore.state.
+		viewOps.attr = function(name, value){
+			if(arguments.length===1){
+				return viewOps.dataStore.state[name];
+			}
+			else if(arguments.length===2){
+				viewOps.dataStore.state[name] = value;
+				return value;
+			}
+		}
+
+		//run setup
+		if(!!setupView){setupView.call(viewOps);} //must be synchronous!!}
 
 		function viewLoading(){slide.classed("view-is-loading",true)}
 		function viewLoaded(){slide.classed("view-is-loading",false)}
@@ -152,7 +178,7 @@ function MetroInteractive(appWrapperElement){
 						viewOps.dataState = -1;
 					}
 					else{
-						viewOps.data.raw = dat;
+						viewOps.dataStore.raw = dat;
 						viewOps.dataState = 2; //data loaded!
 						draw_view(); //draw the view
 					}

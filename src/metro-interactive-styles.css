@@ -85,7 +85,7 @@
   	border:1px solid #aaaaaa;
   	border-width:0px 0px 0px 0px;
 
-  	padding:0px 15px 15px 15px;
+  	padding:0px 0px 0px 0px;
   	z-index:10;
 
   	background: #ffffff;
@@ -95,7 +95,7 @@
 	border:0px solid #053769;
 	background-color: #074187;
 	border-width:0px 0px 0px 0px;
-	left:-16px;
+	left:0px;
 	position:relative;
 	min-height:20px;
 	width:100%;

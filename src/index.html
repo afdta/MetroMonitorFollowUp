@@ -34,60 +34,94 @@
 		slide.append("div").style({"float":"right","width":"36%","padding":"2%","background-color":"#dddddd"})
 			.html("<p><b>Categories and indicators</b></p><p>The&nbsp;<i>Metro Monitor&nbsp;</i>measures the performance of the nation’s major metropolitan economies in three critical areas for economic development: growth, prosperity, and inclusion. Successful economic development puts a metropolitan economy on a higher trajectory of long-run growth (<i>growth</i>) by<i>&nbsp;</i>improving the productivity of individuals and firms in order to raise local standards of living (<i>prosperity</i>) for all people (<i>inclusion</i>). This&nbsp;<i>Metro Monitor</i>&nbsp;examines indicators within each of these categories that help assess metropolitan areas’ progress toward shaping an advanced economy for all.</p><p>Growth</p><p>Growth indicators capture net change in the total size of a metropolitan area’s economy. As a metropolitan economy grows, it creates new opportunities for individuals and can become more efficient as it grows larger. The&nbsp;<i>Metro Monitor&nbsp;</i>measures growth in output or gross product, number of jobs, and aggregate wages paid to workers.</p><ul><li><i><b>Change in aggregate output</b></i>—Output measures the total value of goods and services produced in a metropolitan economy, a concept known as gross domestic product at the national level.</li><li><i><b>Change in the number of jobs</b></i>—Jobs measure the total number of occupied full- and part-time employment positions in a metropolitan economy.</li><li><i><b>Change in aggregate income</b></i>—Aggregate income measures the total value of wages, salaries, and benefits paid to workers in a metropolitan economy.</li></ul><p>Changes in these indicators are measured as the percent difference between values in the final and initial years of analysis. Data on output, jobs, and aggregate income come from Moody’s Analytics.</p><p><b>Prosperity</b></p><p>Prosperity indicators indicate the quality and impact of a metropolitan economy’s growth. An economy can grow by adding more inputs, like workers, which may not necessarily make each worker better off. It can also grow by increasing the productivity of its workers, through innovation or by upgrading workers’ skills, for example. This can increase the value of workers’ labor and the compensation they receive for it, as indicated by output per job and the average wage. It can also raise overall standards of living in the metropolitan area, as indicated by output per person.</p><ul><li><i><b>Change in output per job</b></i>—Output per job is a crude measure of a metropolitan economy’s productivity, or how much value is generated per job.</li><li><i><b>Change in the average wage</b></i>—Average wage measures the aggregate income of a metropolitan economy on a per-job basis.</li><li><i><b>Change in output per person</b></i>—Output per person measures the size of the metropolitan economy on a per-person basis, including people of all ages regardless of labor force status, and thus indicates the general standard of living.</li></ul><p>Changes in these indicators are measured as the percent difference between values in the final and initial years of analysis. Data on output, jobs, and aggregate income come from Moody’s Analytics. Data on population come from the U.S. Census Bureau’s Population Estimates Program.</p><p><b>Inclusion</b></p><p>Inclusion indicators measure how the benefits of growth and prosperity in a metropolitan economy—specifically, income and employment opportunity—are distributed among people. People who benefit from growth have more opportunities to fulfill their and their children’s potential. They can also purchase more of the goods and services the metropolitan economy produces. Inclusive growth can thus increase the amount of current and future human capital available in an economy, and raise the amount of demand, boosting both its prosperity and growth. Ensuring that all people can contribute to and benefit from growth and prosperity also helps sustain widespread support for the policies on which growth and prosperity depend.</p><ul><li><i><b>Change in the median wage</b></i>—Median wage measures the annual income earned by a person who earns more than exactly half of workers in the metropolitan economy, among people at least 16 years old who earned income in the last year.</li><li><i><b>Change in the relative income poverty rate</b></i>—Commonly used to measure poverty in other countries, this measures the share of workers in the metropolitan economy who earn less than half of the median annual wage in that metropolitan economy. This measures poverty relative to local costs of living and captures the distribution of income among workers earning below the median.</li><li><i><b>Change in the employment rate</b></i>—The employment-to-population ratio measures the share of individuals aged 18 to 65 who are currently employed.</li></ul><p>Change in median wage is measured as the percent difference between values in the final and initial years of analysis. Changes in relative income poverty and employment rates are measured as the percentage point difference between rates in the final and initial years of analysis. Data for inclusion indicators come from the Census Public-Use Microdata Series (PUMS) for the 2000 Decennial Census and the 2006 to 2014 American Community Survey (ACS) 1-year estimates. Estimates derived from survey data come with estimates of survey error, which are reported on the series website.</p>")
 
-	})
+	});
 		
 
-	//base view
-	var redrawBase = function(){
-		var vo = this;
-		var table = d3.select("svg g#core-svg-table");
-		var map = d3.select("svg#core-svg-map");
-		if(this.data.processed){
-			var data = this.data.processed;
+	/////////////////base view
+
+	(function(){
+		var colors = ['#d7191c','#fdae61','#ffffbf','#abd9e9','#2c7bb6'];
+		colors.reverse();
+		
+		//hold svg groups -- will be defined in setupBase
+		var table;
+		var map; 
+
+		var period = "Five";
+		var columns = [{}, {}];
+
+		var data = {};
+
+		function drawTable(){
+			var VO = this;
+
+			var rows = table.selectAll("g").data(data.universe);
+			var rowenter = rows.enter().append("g");
+			rowenter.append("text");
+
+			rows.exit().remove("g");
+			rows.attr("transform",function(d,i){
+				return "translate(0," + ((i*50)+25) + ")";
+			})
+
+			rows.select("text").text(function(d,i){return VO.lookup[d][0].CBSA_Title});
+
+			console.log(this.viewData);
+
+			var swatches = rows.selectAll("rect").data(function(d,i){
+				//console.log(data.table[d]);
+
+				return [];
+			});
 		}
-		else{
-			var data = {};
-			data.table = {};
-			function putInTable(A,propName){
-				for(var i=0; i<A.length; i++){
-					var prop = A[i].CBSA+"";
-					if(!data.table.hasOwnProperty(prop)){data.table[prop] = {}}
-					data.table[prop][propName] = A[i];
-				}
+
+		//base view
+		function redrawBase(){
+			var period;
+
+			if(this.viewData.processed){
+				data = this.viewData.processed;
 			}
-			putInTable(this.data.raw.measures.growth.overall, "gr0");
-			putInTable(this.data.raw.measures.growth.detailed, "gr1");
-			putInTable(this.data.raw.measures.prosperity.overall, "pro0");
-			putInTable(this.data.raw.measures.prosperity.detailed, "pro1");
-			putInTable(this.data.raw.measures.inclusion.overall, "inc0");
-			putInTable(this.data.raw.measures.inclusion.detailed, "inc1");
+			else{
+				data.table = {};
+				function putInTable(A,propName){
+					for(var i=0; i<A.length; i++){
+						var prop = A[i].CBSA+"";
+						if(!data.table.hasOwnProperty(prop)){data.table[prop] = {}}
+						data.table[prop][propName] = A[i];
+					}
+				}
+				putInTable(this.viewData.raw.measures.growth.overall, "gr0");
+				putInTable(this.viewData.raw.measures.growth.detailed, "gr1");
+				putInTable(this.viewData.raw.measures.prosperity.overall, "pro0");
+				putInTable(this.viewData.raw.measures.prosperity.detailed, "pro1");
+				putInTable(this.viewData.raw.measures.inclusion.overall, "inc0");
+				putInTable(this.viewData.raw.measures.inclusion.detailed, "inc1");
 
-			data.universe = this.data.raw.measures.growth.overall.map(function(d,i){return d.CBSA+""});
-			this.data.processed = data;
+				data.universe = this.viewData.raw.measures.growth.overall.map(function(d,i){return d.CBSA+""});
+				this.viewData.processed = data;
+			}
+
+			drawTable();
+
+			//calculate svg height
+
+			var box = table.node().getBoundingClientRect();
+			d3.select(table.node().parentNode).style("height", (Math.round(box.bottom-box.top)+25)+"px")
+
+		}
+		var setupBase = function(){
+			this.header.append("p").text("Core data section");
+			var table = this.container.append("svg").style("width","100%").append("g").attr("id","core-svg-table");
+			var map = this.container.append("svg").attr("id","core-svg-map");
+
+			this.attr("table", table); //store these in the view state
+			this.attr("map", map); 
 		}
 
-		var rows = table.selectAll("g").data(data.universe);
-		rows.enter().append("g").append("text");
-		rows.exit().remove("g");
-		rows.attr("transform",function(d,i){
-			return "translate(0," + ((i*50)+25) + ")";
-		})
-
-		rows.select("text").text(function(d,i){return vo.lookup[d][0].CBSA_Title});
-
-		var box = table.node().getBoundingClientRect();
-		d3.select(table.node().parentNode).style("height", (Math.round(box.bottom-box.top)+25)+"px")
-
-
-
-	}
-	var setupBase = function(){
-		this.header.append("p").text("Core data section");
-		this.container.append("svg").style("width","100%").append("g").attr("id","core-svg-table");
-		this.container.append("svg").attr("id","core-svg-map")
-	}
-
-	var view1 = MI.addView(redrawBase, "coreIndicators.json", setupBase);
+		var view1 = MI.addView(redrawBase, "coreIndicators.json", setupBase);
+		view1.name("Core data");
+	})();
 
 	var view2 = MI.addView(function(){
 		this.container.append("p").text("Metro Index");
@@ -105,7 +139,7 @@
 	//MI.metro = "10140" //can set the default
 	
 	view0.name("Overview");
-	view1.name("Core data");
+	
 	view2.name("Racial disparities");
 	view3.name("Upcoming")
 
