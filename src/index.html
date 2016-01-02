@@ -11,7 +11,8 @@
 <body style="min-height:1000px">
 <script src="d3.min.js" type="text/javascript"></script>
 <script src="state-tracking.js" type="text/javascript"></script>
-<script src="/Mapping/metro-map/map-class.js"></script>
+<!--<script src="/Mapping/metro-map/map-class.js"></script>-->
+<script src="/home/alec/Projects/quick-map/map-class.js"></script>
 
 <div style="position:relative;max-width:950px;width:100%;min-width:320px;min-height:600px;height:100%;margin:auto">
 	<div id="metro-index-wrap" class="metro-interactive-wrap"></div>
@@ -44,8 +45,6 @@
 		colors.reverse();
 		
 		//hold svg groups -- will be defined in setupBase
-		var table;
-		var map; 
 
 		var period = "Five";
 		var columns = [{}, {}];
@@ -54,6 +53,7 @@
 
 		function drawTable(){
 			var VO = this;
+			var table = this.storage("table");
 
 			var rows = table.selectAll("g").data(data.universe);
 			var rowenter = rows.enter().append("g");
@@ -66,8 +66,6 @@
 
 			rows.select("text").text(function(d,i){return VO.lookup[d][0].CBSA_Title});
 
-			console.log(this.viewData);
-
 			var swatches = rows.selectAll("rect").data(function(d,i){
 				//console.log(data.table[d]);
 
@@ -78,7 +76,6 @@
 		//base view
 		function redrawBase(){
 			var period;
-
 			if(this.viewData.processed){
 				data = this.viewData.processed;
 			}
@@ -91,23 +88,23 @@
 						data.table[prop][propName] = A[i];
 					}
 				}
-				putInTable(this.viewData.raw.measures.growth.overall, "gr0");
-				putInTable(this.viewData.raw.measures.growth.detailed, "gr1");
-				putInTable(this.viewData.raw.measures.prosperity.overall, "pro0");
-				putInTable(this.viewData.raw.measures.prosperity.detailed, "pro1");
-				putInTable(this.viewData.raw.measures.inclusion.overall, "inc0");
-				putInTable(this.viewData.raw.measures.inclusion.detailed, "inc1");
+				putInTable(this.viewData("raw").measures.growth.overall, "gr0");
+				putInTable(this.viewData("raw").measures.growth.detailed, "gr1");
+				putInTable(this.viewData("raw").measures.prosperity.overall, "pro0");
+				putInTable(this.viewData("raw").measures.prosperity.detailed, "pro1");
+				putInTable(this.viewData("raw").measures.inclusion.overall, "inc0");
+				putInTable(this.viewData("raw").measures.inclusion.detailed, "inc1");
 
-				data.universe = this.viewData.raw.measures.growth.overall.map(function(d,i){return d.CBSA+""});
-				this.viewData.processed = data;
+				data.universe = this.viewData("raw").measures.growth.overall.map(function(d,i){return d.CBSA+""});
+				this.viewData("processed",data);
 			}
 
-			drawTable();
+			drawTable.call(this);
 
 			//calculate svg height
-
-			var box = table.node().getBoundingClientRect();
-			d3.select(table.node().parentNode).style("height", (Math.round(box.bottom-box.top)+25)+"px")
+			var tnode = this.storage("table").node();
+			var box = tnode.getBoundingClientRect();
+			d3.select(tnode.parentNode).style("height", (Math.round(box.bottom-box.top)+25)+"px")
 
 		}
 		var setupBase = function(){
@@ -115,8 +112,8 @@
 			var table = this.container.append("svg").style("width","100%").append("g").attr("id","core-svg-table");
 			var map = this.container.append("svg").attr("id","core-svg-map");
 
-			this.attr("table", table); //store these in the view state
-			this.attr("map", map); 
+			this.storage("table", table); //store these in the view state
+			this.storage("map", map); 
 		}
 
 		var view1 = MI.addView(redrawBase, "coreIndicators.json", setupBase);

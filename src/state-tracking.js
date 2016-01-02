@@ -81,7 +81,7 @@ function MetroInteractive(appWrapperElement){
 		viewOps.firstDraw = true; //useful for determining if particular information should be shown on first view
 		viewOps.getMetro = function(){return S.metro;}
 		viewOps.dataState = 0; // 0: empty, 1: loading, 2: ready, -1: error
-		viewOps.dataStore = {raw:null, processed:null, state:{}}; //placeholder for the view data
+		viewOps.dataStore = {raw:null, processed:null, storage:{}}; //placeholder for the view data
 		viewOps.container = slide;
 		viewOps.header = slideHeader;
 		viewOps.lookup = S.metroLookup;
@@ -109,13 +109,13 @@ function MetroInteractive(appWrapperElement){
 			}
 		}
 
-		//get or set arbitrary name-value pairs in dataStore.state.
-		viewOps.attr = function(name, value){
+		//get or set arbitrary name-value pairs in dataStore.storage.
+		viewOps.storage = function(name, value){
 			if(arguments.length===1){
-				return viewOps.dataStore.state[name];
+				return viewOps.dataStore.storage[name];
 			}
 			else if(arguments.length===2){
-				viewOps.dataStore.state[name] = value;
+				viewOps.dataStore.storage[name] = value;
 				return value;
 			}
 		}
