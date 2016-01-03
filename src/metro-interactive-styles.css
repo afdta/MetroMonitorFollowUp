@@ -99,6 +99,7 @@
 	position:relative;
 	min-height:20px;
 	width:100%;
+	box-sizing:border-box;
 	padding:5px 15px;
 	z-index:15;
 	margin-bottom:20px;

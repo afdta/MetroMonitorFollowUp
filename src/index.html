@@ -61,7 +61,7 @@
 
 			rows.exit().remove("g");
 			rows.attr("transform",function(d,i){
-				return "translate(0," + ((i*50)+25) + ")";
+				return "translate(15," + ((i*50)+25) + ")";
 			})
 
 			rows.select("text").text(function(d,i){return VO.lookup[d][0].CBSA_Title});
@@ -73,13 +73,9 @@
 			});
 		}
 
-		//base view
+		//redraw -- setup is just to add html
 		function redrawBase(){
-			var period;
-			if(this.viewData.processed){
-				data = this.viewData.processed;
-			}
-			else{
+			if(!this.viewData("processed")){
 				data.table = {};
 				function putInTable(A,propName){
 					for(var i=0; i<A.length; i++){
@@ -104,9 +100,9 @@
 			//calculate svg height
 			var tnode = this.storage("table").node();
 			var box = tnode.getBoundingClientRect();
-			d3.select(tnode.parentNode).style("height", (Math.round(box.bottom-box.top)+25)+"px")
-
+			d3.select(tnode.parentNode).style("height", (Math.round(box.bottom-box.top)+25)+"px");
 		}
+
 		var setupBase = function(){
 			this.header.append("p").text("Core data section");
 			var table = this.container.append("svg").style("width","100%").append("g").attr("id","core-svg-table");
