@@ -1,5 +1,5 @@
 /*core styles*/
-.metro-interactive-wrap p, .metro-interactive-wrap a, .metro-interactive-wrap text, .metro-interactive-wrap i, .metro-interactive-wrap li{
+.metro-interactive-wrap p, .metro-interactive-wrap a, .metro-interactive-wrap i, .metro-interactive-wrap li{
 	font-family:arial;
 	font-size:15px;
 	color:#333333;
@@ -7,6 +7,10 @@
 	margin:0em 0px 0.5em 0px;
 	padding:0px;
 	line-height:1.3em;
+}
+.metro-interactive-wrap text{
+	fill:#333333;
+	font-family:arial;
 }
 
 .metro-interactive-wrap hr{
@@ -24,7 +28,7 @@
 
 .metro-interactive-menu-wrap{
 	background-color:#ffffff;
-	margin-bottom:0px;
+	margin-bottom:5px;
 	margin-left:15px;
 }
 
@@ -45,8 +49,8 @@
 	background-color:#ffffff;
 }
 .metro-interactive-menu-wrap .nav-menu-button p{margin:0px 0px 0px 0px;line-height:1em;}
-.metro-interactive-menu-wrap .nav-menu-button:hover p{color:#CE7E00;}
-.metro-interactive-menu-wrap .nav-menu-button-selected p, .metro-interactive-menu-wrap .nav-menu-button-selected:hover p{color:#2879FF;}
+.metro-interactive-menu-wrap .nav-menu-button:hover p{color:rgb(255, 166, 38);}
+.metro-interactive-menu-wrap .nav-menu-button-selected p, .metro-interactive-menu-wrap .nav-menu-button-selected:hover p{color:#20558a;}
 /*.metro-interactive-menu-wrap .nav-menu-button-selected p::before{content:"• ";position:absolute; left:-10px;}*/
 
 
@@ -93,14 +97,14 @@
 
 .metro-interactive-view-header{
 	border:0px solid #053769;
-	background-color: #074187;
+	background-color: #053769;
 	border-width:0px 0px 0px 0px;
 	left:0px;
 	position:relative;
 	min-height:20px;
 	width:100%;
 	box-sizing:border-box;
-	padding:5px 15px;
+	padding:3px 15px;
 	z-index:15;
 	margin-bottom:20px;
 }

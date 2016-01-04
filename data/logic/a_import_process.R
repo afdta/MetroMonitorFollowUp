@@ -299,8 +299,9 @@ json <- toJSON(list(measures=ALL, values=VALUES), digits=5)
 writeLines(json, "coreIndicators.json")
 
 
-
-
+##ggplotting
+grgg <- ggplot(data=GRCHG_WIDE, aes(y=0))
+grgg + geom_point(aes(x=Wages_FiveV),alpha=0.2)
 
 
 organize <- function(code){
