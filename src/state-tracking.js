@@ -237,6 +237,7 @@ function MetroInteractive(appWrapperElement){
 	//args
 	//{1 & 2} metroCode and viewCode: metro/view code to change to. if not a valid code, no-op. 
 	//{3} setHash: optional, if truthy, this method will also set the page hash value to metroCode (assuming valid metro code)
+	var viewMenuCtrl = {bilt:false};
 	function changeView(viewCode, metroCode, setHash){
 		var V = validate(viewCode, metroCode)
 
@@ -251,6 +252,9 @@ function MetroInteractive(appWrapperElement){
 			//state must be updated before show is called because it relies on the current state -- if the user changes metro while the redraw method is called asynchronously, you want that callback to use the new metro. It might redraw twice, but it will do so with the right data.
 			//because the data
 			viewRegister[viewCode].show();
+			if(viewMenuCtrl.bilt){
+				viewMenuCtrl.syncButtons();
+			}
 		} 
 		else{
 			//no-op
@@ -263,25 +267,24 @@ function MetroInteractive(appWrapperElement){
 	function qcRedraw(){changeView(S.view, S.metro, false);} //redraw the current view -- for resize events
 
 	//build_view_nav can only be called once everything has been registered -- i.e. in S.cap
-	function build_view_nav(){
+	viewMenuCtrl.build = function(){
 		var buttons = S.menu.selectAll("div.nav-menu-button").data(viewList);
 		buttons.enter().append("div").classed("nav-menu-button",true).append("p");
 		buttons.exit().remove();
 		buttons.select("p").text(function(d,i){return viewRegister[d].name()});
 		buttons.on("mousedown", function(d,i){
-			buttons.classed("nav-menu-button-selected",false);
-			d3.select(this).classed("nav-menu-button-selected",true);
+			//buttons.classed("nav-menu-button-selected",false);
+			//d3.select(this).classed("nav-menu-button-selected",true);
 			qcView(d);
 		});
-		buttons.classed("nav-menu-button-selected",function(d,i){
-			return d===S.view;
-		})
 
-		//buttons
-
-		window.addEventListener("keypress",function(e){
-			console.log(e);
-		});
+		this.bilt = true;
+		this.syncButtons = function(){
+			buttons.classed("nav-menu-button-selected",function(d,i){
+				return d===S.view;
+			});		
+		}
+		return this;
 	}
 
 	//"cap off" the app: load the default view/metro, otherwise no setup is performed
@@ -311,7 +314,7 @@ function MetroInteractive(appWrapperElement){
 			changeView(VD, metro, true);
 		}
 
-		build_view_nav();
+		viewMenuCtrl.build().syncButtons();
 	}
 
 	//hash changes -- need to test the hash changes in wide variety of browsers
@@ -364,7 +367,7 @@ function MetroInteractive(appWrapperElement){
 		var bar1 = svg.selectAll("rect.base").data([0,1,2]).enter().append("rect").attr({width:14, height:15, y:15}).attr("x",function(d,i){return i*20});
 		var bar2 = svg.selectAll("rect.base").data([0,1,2]).enter().append("rect").attr({width:14, height:15, y:15}).attr("x",function(d,i){return i*20});
 
-		bar2.append("animateTransform")
+		/*bar2.append("animateTransform")
 			.attr({attributeType:"xml", attributeName:"transform", type:"translate", dur:"0.7s", repeatCount:"indefinite"})
 			.attr("values",function(d,i){
 				if(i===0){var vals = "0 0; 0 -13; 0 0"}
@@ -375,7 +378,7 @@ function MetroInteractive(appWrapperElement){
 			.attr("begin",function(d,i){
 				var b = ["0s","0.2s","0.4s"];
 				return b[i];
-			});
+			});*/
 
 		svg.append("text").style({"font-family":"arial","font-size":"13px"}).attr({x:"27",y:"43","text-anchor":"middle"}).text("LOADING");
 
