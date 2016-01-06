@@ -76,17 +76,6 @@
 			var data = this.viewData("processed");
 			var period = this.storage("period");
 
-			var hr = table.selectAll("g.header-row").data([["Growth (G)", "Prosperity (P)", "Inclusion (I)"]]);
-			hr.enter().append("g").classed("header-row",true);
-			hr.exit().remove();
-
-			var hg = hr.selectAll("g.header-swatch").data(function(d,i){return d});
-			var hge = hg.enter().append("g").classed("header-swatch",true);
-			//hge.append("rect").attr({"width":"30%","height":20,"y":5}).style("shape-rendering","crispEdges").attr("x",function(d,i){return ((i*33)+1.5)+"%"});
-			hge.append("text").attr({"y":20,"text-anchor":"middle"}).style({"font-size":"13px","line-height":"13px","fill":"#666666"}).attr("x",function(d,i){return ((i*33)+15+1.5)+"%"}).text(function(d,i){return d});
-			hg.exit().remove();
-
-
 			var rows = table.selectAll("g.table-row").data(data.universe);
 			var rowenter = rows.enter().append("g").style("pointer-events","all").classed("table-row",true);
 			//rowenter.append("rect").attr({"x":-15, "y":0, "width":"400px", "height":"60px", "fill":"#ffffff"}).classed("pointer-rect",true)
@@ -96,7 +85,7 @@
 
 			rows.exit().remove("g");
 			rows.attr("transform",function(d,i){
-				return "translate(0," + ((i*61)+30) + ")";
+				return "translate(0," + ((i*61)+35) + ")";
 			})
 
 			var shiftTimer;
@@ -108,8 +97,10 @@
 				thiz.select("line").attr({"y1":160, "y2":160});
 				rows.attr("transform",function(d,j){
 					var buffer = j > i ? 100 : 0;
-					return "translate(0," + ((j*61)+30+buffer) + ")";
+					return "translate(0," + ((j*61)+35+buffer) + ")";
 				})
+
+				//hr.attr("transform","translate(0,0)");
 			});
 			rows.on("mouseleave",function(d,i){
 				clearTimeout(shiftTimer);
@@ -119,9 +110,10 @@
 				thiz.select("line").attr({"y1":60, "y2":60});
 				rows.attr("transform",function(d,j){
 					var buffer = 0;
-					return "translate(0," + ((j*61)+30+buffer) + ")";
+					return "translate(0," + ((j*61)+35+buffer) + ")";
 				})
 
+				//hr.attr("transform","translate(0,0)");
 
 			});
 
@@ -131,7 +123,7 @@
 				var metro = data.table[d];
 				var keyR = period+"R";
 				var keyV = period+"V";
-				return [{r:metro.gr0[keyR], l:"Growth"}, {r:metro.pro0[keyR], l:"Prosperity"}, {r:metro.inc0[keyR], l:"Inclusion"}];
+				return [{r:metro.gr0[keyR], l:"G: "}, {r:metro.pro0[keyR], l:"P: "}, {r:metro.inc0[keyR], l:"I: "}];
 			});
 			var eSwatches = swatches.enter().append("g").classed("swatch",true);
 			eSwatches.append("rect").attr({"width":"30%","height":20,"y":30}).style("shape-rendering","crispEdges").attr("x",function(d,i){return ((i*33)+1.5)+"%"});
@@ -141,9 +133,21 @@
 			//swatches.attr("transform", function(d,i){return "translate("+"(15,26)"});
 
 			swatches.select("rect").attr("fill",function(d,i){return (r2c(d.r)).fill});
-			swatches.select("text").text(function(d,i){return d.r}).style("fill",function(d,i){return (r2c(d.r)).text});
+			swatches.select("text").text(function(d,i){return d.l + d.r}).style("fill",function(d,i){return (r2c(d.r)).text});
 
-			//this.storage("centerLabels")();
+			var hr = table.selectAll("g.header-row").data([["Growth (G)", "Prosperity (P)", "Inclusion (I)"]]);
+			hr.enter().append("g").classed("header-row",true).append("rect").attr({"height":"40px","width":"100%","fill":"#ffffff"});
+			hr.exit().remove();
+
+			var hg = hr.selectAll("g.header-swatch").data(function(d,i){return d});
+			var hge = hg.enter().append("g").classed("header-swatch",true);
+			hge.append("rect").attr({"width":"30%","height":1,"y":28, "fill":"#aaaaaa", "stroke":"#ffffff", "stroke-width":0}).style("shape-rendering","crispEdges").attr("x",function(d,i){return ((i*33)+1.5)+"%"});
+			hge.append("text").attr({"y":22,"text-anchor":"middle"}).style({"font-size":"13px","line-height":"13px","fill":"#666666"}).attr("x",function(d,i){return ((i*33)+15+1.5)+"%"}).text(function(d,i){return d});
+			hg.exit().remove();
+
+
+			this.storage("tableRows",rows);
+			this.storage("headerRow",hr);
 		}
 
 		//redraw -- setup is just to add html
@@ -176,6 +180,34 @@
 			var tnode = this.storage("table").node();
 			var box = tnode.getBoundingClientRect();
 			d3.select(tnode.parentNode).style("height", (Math.round(box.bottom-box.top)+125)+"px");
+
+			var self = this;
+			var scrollTimer; //need to fix the header appearance
+			function scrollToTop(){
+				var rows = self.storage("tableRows");
+				var metro = self.getMetro();
+				var tableScroll = self.storage("tableOuter");
+				var metRow = rows.filter(function(d,i){return d==metro})
+				var translate = metRow.attr("transform").replace(/translate\(.*,/g,"").replace(/\D/g,"");
+				try{
+					var T = translate-35;
+					if(T < 0){throw T}
+				}
+				catch(e){
+					var T = 0;
+				}
+
+				var headerRow = self.storage("headerRow")
+				headerRow.attr("transform","translate(0,"+ T +")");
+				tableScroll.node().scrollTop = T; 
+				setTimeout(function(){
+					tableScroll.on("scroll",function(){
+						headerRow.attr("transform","translate(0,0)");
+					});					
+				},0);
+
+			}
+			scrollToTop();
 		}
 
 		var alignTimer;
@@ -225,10 +257,19 @@
 			catMenu.selectAll("div").data(["Growth", "Prosperity", "Inclusion"]).enter().append("div").classed("generic-button",true).append("p").text(function(d,i){return d});
 
 			var mapWrap = this.container.append("div").classed("three-fifths no-mobile-display",true).append("div").style({"padding":"0px 30px 0px 0px","position":"relative"});
-			var smallMaps = mapWrap.append("div").classed("c-fix",true).selectAll("div").data([0,1,2]).enter().append("div")
-								   .style({"width":"50%","padding-left":"0px","float":"left"}).style("clear",function(d,i){return i <= 1 ? "none" :"both"});
+			var smallMapWrap = mapWrap.append("div").classed("c-fix",true)
+			smallMapWrap.append("div").style("min-height","50px");
+			var smallMaps = smallMapWrap.selectAll("div.small-map").data([1,2,3]).enter().append("div").classed("small-map",true);
+
+			smallMapWrap.selectAll("div").style({"width":"48%","padding-right":"2%","float":"left"});
 			smallMaps.each(function(d,i){
-				var map = new dotMap(this).drawMap().makeResponsive();
+				var addNumber = function(){
+					console.log(this);
+					this.svg.append("circle").attr({"cx":"73%","cy":"20px","r":"10","fill":"#e0e0e0"});
+					this.svg.append("text").attr({"x":"73%","y":"24px"}).text(function(d,i){return d}).style({"fill":"#666666","font-size":"13px"}).attr("text-anchor","middle");
+
+				}
+				var map = new dotMap(this).drawMap(addNumber).makeResponsive();
 			})
 
 
@@ -253,7 +294,7 @@
 			//map0.setData(DAT).drawMap(callback).makeResponsive().showTooltips(textData);
 
 			this.storage("table", table); //store these in the view state
-			this.storage("tableWrap", tableWrap);
+			this.storage("tableOuter", tableOuter);
 
 			this.storage("mapWrap", mapWrap);
 			this.storage("period","Five");
@@ -271,19 +312,11 @@
 		this.container.append("p").text("Metro Index");
 	}, null, function(){this.header.append("p").text("Outcomes by race")})
 
-	var view3 = MI.addView(function(){}, null, function(){
-		this.header.append("p").text("Stay tuned for...");
-		this.container.append("p").text("Industrial structure... [February 2016]");
-		this.container.append("p").text("Lorem ipsum [February 2016]");
-		this.container.append("p").text("Lorem ipsum [March 2016]");
-	})
-
 	//MI.metro = "10140" //can set the default
 	
 	view0.name("About");
 	
-	view2.name("Inclusion by race");
-	view3.name("Upcoming Metro Monitor research")
+	view2.name("Inclusion outcomes by race");
 
 	MI.cap(); //tell the app to try and auto-draw based on hash and defaults
 </script>
