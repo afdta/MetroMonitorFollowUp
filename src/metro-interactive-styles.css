@@ -53,6 +53,22 @@
 .metro-interactive-menu-wrap .nav-menu-button-selected p, .metro-interactive-menu-wrap .nav-menu-button-selected:hover p{color:#20558a;}
 /*.metro-interactive-menu-wrap .nav-menu-button-selected p::before{content:"• ";position:absolute; left:-10px;}*/
 
+.metro-interactive-wrap .generic-button{
+	float:left;
+	margin:4px 8px 4px 0px;
+	border:1px solid #aaaaaa;
+	background-color: #ffffff;
+	cursor:pointer;
+}
+.metro-interactive-wrap .generic-button:hover{border-color:#666666;}
+.metro-interactive-wrap .generic-button.generic-button-selected{background-color:rgb(5,55,105);}
+.metro-interactive-wrap .generic-button p{font-size:13px;text-align:center;line-height:1em;padding:4px 8px;margin:0px;}
+.metro-interactive-wrap .generic-button.generic-button-selected p{color:#ffffff;}
+
+.metro-interactive-wrap .striped-background{
+	background-image: linear-gradient(to left, #fbfbfb, #ffffff);
+}
+
 
 .metro-interactive-views{
 	height:1000px;
@@ -87,25 +103,25 @@
   	box-sizing: border-box;
 
   	border:1px solid #aaaaaa;
-  	border-width:0px 0px 0px 0px;
+  	border-width:0px 0px 1px 0px;
 
-  	padding:0px 0px 0px 0px;
+  	padding:0px 0px 20px 0px;
   	z-index:10;
 
   	background: #ffffff;
 }
 
 .metro-interactive-view-header{
-	border:1px solid #666666;
+	border:1px solid rgb(164, 199, 242);
 	background-color: #053769;
-	border-width:0px 0px 0px 0px;
+	border-width:0px 0px 3px 0px;
 	left:0px;
 	position:relative;
 	width:100%;
 	box-sizing:border-box;
-	padding:0px 15px;
+	padding:3px 15px 0px 15px;
 	z-index:15;
-	margin-bottom:20px;
+	margin-bottom:0px;
 }
 
 .metro-interactive-view-header p{color:#ffffff; line-height:1em; font-size:18px; font-weight:normal; margin:0px;}
@@ -182,15 +198,25 @@
 	overflow-y:auto;
 }
 
+.metro-interactive-view .one-half{
+	width:50%;
+	float:left;
+	overflow-x:hidden;
+	overflow-y:auto;
+}
+
 .metro-interactive-view .no-mobile-display{
 
 }
+
+
 
 @media (min-width:0px){
 	.metro-interactive-view .two-fifths{width:100%;}
 	.metro-interactive-view .three-fifths{width:100%;}
 	.metro-interactive-view .one-quarter{width:100%;}
 	.metro-interactive-view .three-quarters{width:100%;}
+	.metro-interactive-view .one-half{width:100%;}
 	.metro-interactive-view .no-mobile-display{display:none;}
 }
 @media (min-width:640px){
@@ -198,5 +224,6 @@
 	.metro-interactive-view .three-fifths{width:60%;}
 	.metro-interactive-view .one-quarter{width:25%;}
 	.metro-interactive-view .three-quarters{width:75%;}
+	.metro-interactive-view .one-half{width:50%;}
 	.metro-interactive-view .no-mobile-display{display:block;}
 }
