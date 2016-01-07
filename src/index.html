@@ -73,6 +73,7 @@
 		function drawTable(){
 			var VO = this;
 			var table = this.storage("table");
+			var tableOuter = this.storage("tableOuter");
 			var data = this.viewData("processed");
 			var period = this.storage("period");
 
@@ -145,9 +146,47 @@
 			hge.append("text").attr({"y":22,"text-anchor":"middle"}).style({"font-size":"13px","line-height":"13px","fill":"#666666"}).attr("x",function(d,i){return ((i*33)+15+1.5)+"%"}).text(function(d,i){return d});
 			hg.exit().remove();
 
+			//calculate svg height
+			var tnode = table.node();
+			var box = tnode.getBoundingClientRect();
+			d3.select(tnode.parentNode).style("height", (Math.round(box.bottom-box.top)+125)+"px");
 
-			this.storage("tableRows",rows);
-			this.storage("headerRow",hr);
+			var headerPinned = this.storage("headerPinned");
+			var metro = this.getMetro();
+			var self = this;
+			function scrollToTop(){
+				var metRow = rows.filter(function(d,i){return d==metro})
+				var translate = metRow.attr("transform").replace(/translate\(.*,/g,"").replace(/\D/g,"");
+				try{
+					var T = translate-35;
+					if(T < 0){throw T}
+				}
+				catch(e){
+					var T = 0;
+				}
+
+				console.log(tableOuter.node());
+				console.log(tableOuter.node().scrollTop);
+				hr.attr("transform","translate(0,"+ T +")");
+				var justPinned = true;
+				tableOuter.node().scrollTop = T; 
+				/*tableOuter.on("scroll",function(){
+					console.log("SCROLL");
+					if(!justPinned){
+						hr.attr("transform","translate(0,0)");
+					}
+					else{
+						justPinned = false;
+					}
+					
+				});	*/				
+			}
+			scrollToTop();
+
+		}
+
+		function drawMap(){
+
 		}
 
 		//redraw -- setup is just to add html
@@ -162,72 +201,32 @@
 						data.table[prop][propName] = A[i];
 					}
 				}
-				putInTable(this.viewData("raw").measures.growth.overall, "gr0");
-				putInTable(this.viewData("raw").measures.growth.detailed, "gr1");
-				putInTable(this.viewData("raw").measures.prosperity.overall, "pro0");
-				putInTable(this.viewData("raw").measures.prosperity.detailed, "pro1");
-				putInTable(this.viewData("raw").measures.inclusion.overall, "inc0");
-				putInTable(this.viewData("raw").measures.inclusion.detailed, "inc1");
+				var rawData = this.viewData("raw");
+				putInTable(rawData.measures.growth.overall, "gr0");
+				putInTable(rawData.measures.growth.detailed, "gr1");
+				putInTable(rawData.measures.prosperity.overall, "pro0");
+				putInTable(rawData.measures.prosperity.detailed, "pro1");
+				putInTable(rawData.measures.inclusion.overall, "inc0");
+				putInTable(rawData.measures.inclusion.detailed, "inc1");
 
 				data.universe = this.viewData("raw").measures.growth.overall.map(function(d,i){return d.CBSA+""});
+
+				console.log(data);
+
 				this.viewData("processed",data);
 			}
 
 			drawTable.call(this);
 			//vAlign(this.storage("mapWrap"), this.container);
 
-			//calculate svg height
-			var tnode = this.storage("table").node();
-			var box = tnode.getBoundingClientRect();
-			d3.select(tnode.parentNode).style("height", (Math.round(box.bottom-box.top)+125)+"px");
 
-			var self = this;
-			var scrollTimer; //need to fix the header appearance
-			function scrollToTop(){
-				var rows = self.storage("tableRows");
-				var metro = self.getMetro();
-				var tableScroll = self.storage("tableOuter");
-				var metRow = rows.filter(function(d,i){return d==metro})
-				var translate = metRow.attr("transform").replace(/translate\(.*,/g,"").replace(/\D/g,"");
-				try{
-					var T = translate-35;
-					if(T < 0){throw T}
-				}
-				catch(e){
-					var T = 0;
-				}
 
-				var headerRow = self.storage("headerRow")
-				headerRow.attr("transform","translate(0,"+ T +")");
-				tableScroll.node().scrollTop = T; 
-				setTimeout(function(){
-					tableScroll.on("scroll",function(){
-						headerRow.attr("transform","translate(0,0)");
-					});					
-				},0);
 
-			}
-			scrollToTop();
-		}
 
-		var alignTimer;
-		function vAlign(mapWrap, container){
-			//var mBox = mapWrap.getBoundingClientRect();
-			var cBox = container.node().getBoundingClientRect();
-			var top = cBox.top;
-			//clearTimeout(alignTimer);
-			//alignTimer = setTimeout(function(){
-				if(top >= 0){
-					mapWrap.style({"position":"relative","top":"0px","margin-top":"0px"});
-				}
-				else if(1==2){
+			//map drawing
+			var mapData = this.storage("mapData");
+			console.log(mapData);
 
-				}
-				else{
-					var off = 0-top;
-					mapWrap.style({"position":"fixed","top":"0px","margin-top":"0px"});
-				}
-			//},300);
 		}
 
 		var setupBase = function(){
@@ -256,24 +255,33 @@
 			catMenu.append("p").html("Map data / Table sort order").style({"margin":"0px","font-size":"11px","text-transform":"uppercase"});
 			catMenu.selectAll("div").data(["Growth", "Prosperity", "Inclusion"]).enter().append("div").classed("generic-button",true).append("p").text(function(d,i){return d});
 
+			//MAPS SETUP
 			var mapWrap = this.container.append("div").classed("three-fifths no-mobile-display",true).append("div").style({"padding":"0px 30px 0px 0px","position":"relative"});
+			var bigMap = mapWrap.append("div");
+
 			var smallMapWrap = mapWrap.append("div").classed("c-fix",true)
-			smallMapWrap.append("div").style("min-height","50px");
+			var mapsAnno = smallMapWrap.append("div").style("min-height","50px");
 			var smallMaps = smallMapWrap.selectAll("div.small-map").data([1,2,3]).enter().append("div").classed("small-map",true);
 
 			smallMapWrap.selectAll("div").style({"width":"48%","padding-right":"2%","float":"left"});
+
+			var sMaps = [];
 			smallMaps.each(function(d,i){
 				var addNumber = function(){
-					console.log(this);
 					this.svg.append("circle").attr({"cx":"73%","cy":"20px","r":"10","fill":"#e0e0e0"});
 					this.svg.append("text").attr({"x":"73%","y":"24px"}).text(function(d,i){return d}).style({"fill":"#666666","font-size":"13px"}).attr("text-anchor","middle");
 
 				}
 				var map = new dotMap(this).drawMap(addNumber).makeResponsive();
+				sMaps.push(map);
 			})
 
 
-			//table
+			var bMap = new dotMap(mapWrap.node()).drawMap().makeResponsive();
+
+			this.storage("mapData",{large:bMap, small:sMaps, mapsAnno:mapsAnno});
+
+			//TABLE SETUP
 			var rightSide = this.container.append("div").classed("two-fifths",true);
 
 			var tableOuter = rightSide.append("div").style({"clear":"both","border":"1px solid #aaaaaa", "border-width":"1px 0px 1px 0px", "padding":"0px", "max-height":"750px", "overflow-y":"auto"});
@@ -288,20 +296,13 @@
 			//window.addEventListener("resize",centerLabels);
 			//this.storage("centerLabels",centerLabels);
 
-			var map0 = new dotMap(mapWrap.node()).drawMap().makeResponsive();
-			map0.showOverlay();
-			setTimeout(function(){map0.hideOverlay()},5000);
-			//map0.setData(DAT).drawMap(callback).makeResponsive().showTooltips(textData);
 
 			this.storage("table", table); //store these in the view state
 			this.storage("tableOuter", tableOuter);
+			this.storage("tableHeaderPinned", true);
 
 			this.storage("mapWrap", mapWrap);
 			this.storage("period","Five");
-
-			/*window.addEventListener("scroll",function(){
-				vAlign(mapWrap, container);
-			})*/
 		}
 
 		var view1 = MI.addView(redrawBase, "coreIndicators.json", setupBase);
@@ -319,6 +320,32 @@
 	view2.name("Inclusion outcomes by race");
 
 	MI.cap(); //tell the app to try and auto-draw based on hash and defaults
+
+
+
+
+
+
+		/*
+		var alignTimer;
+		function vAlign(mapWrap, container){
+			//var mBox = mapWrap.getBoundingClientRect();
+			var cBox = container.node().getBoundingClientRect();
+			var top = cBox.top;
+			//clearTimeout(alignTimer);
+			//alignTimer = setTimeout(function(){
+				if(top >= 0){
+					mapWrap.style({"position":"relative","top":"0px","margin-top":"0px"});
+				}
+				else if(1==2){
+
+				}
+				else{
+					var off = 0-top;
+					mapWrap.style({"position":"fixed","top":"0px","margin-top":"0px"});
+				}
+			//},300);
+		}*/
 </script>
 
 
