@@ -10,6 +10,8 @@ function MetroInteractive(appWrapperElement){
 	S.menu = S.wrap.append("div").classed("metro-interactive-menu-wrap",true);
 	S.viewWrap = S.wrap.append("div").classed("metro-interactive-views",true);
 
+	S.changeEvent = {view:false, metro:false, resize:false} //keep track of what is triggering redraws
+
 	//keep track of selected metro area and view
 	S.metro = null; //no defaults
 	S.view = null;
@@ -78,6 +80,7 @@ function MetroInteractive(appWrapperElement){
 
 		//hold parameters for the current view redrawView will be drawn with this object as the this
 		var viewOps = {};
+		viewOps.changeEvent = S.changeEvent;
 		viewOps.firstDraw = true; //useful for determining if particular information should be shown on first view
 		viewOps.getMetro = function(){return S.metro;}
 		viewOps.dataState = 0; // 0: empty, 1: loading, 2: ready, -1: error
@@ -145,11 +148,21 @@ function MetroInteractive(appWrapperElement){
 
 		//TWO FUNCTIONS FOR SHOWING DATA: 1) IF DATA ALREADY LOADED: JUST DRAW IT, 2) DATA NOT LOADED: LOAD DATA AND JUST DRAW IT
 		//switch to the selected view and redraw
+		//Levels: [TOP] changeView() calls [validate() and viewOps.show()]
+		//				viewOps.show() calls draw_view() and show_this_slide() OR get_data() and show_this_slide() OR just show_this_slide()
+		//				draw_view()--run as a callback by get_data()--actually calls the redrawView() callback
+		//ALL VIEW CHANGES RUN THROUGH changeView() -- it also handles all validation through validate() -- need to add more to make potential errors more visible to user
+
 		function draw_view(){
 			viewLoading();
-
 			//redraw this view -- viewOps available as this (e.g. this.data, this.getMetro, etc...)
-			redrawView.call(viewOps); //must be a synchronous fn
+			try{
+				redrawView.call(viewOps); //must be a synchronous fn
+			}
+			catch(e){
+				slide.classed("bad-view",true);
+			}
+			
 			viewOps.firstDraw = false; //it's been drawn
 
 			viewLoaded();
@@ -246,6 +259,25 @@ function MetroInteractive(appWrapperElement){
 			//update state
 			var newhash = viewCode + "G" + metroCode;
 			if(!!setHash){set_hash(newhash)}
+
+			//Record change event -- reset then record
+			S.changeEvent.view = false;
+			S.changeEvent.metro = false;
+			S.changeEvent.resize = false;
+			if(S.view != viewCode && S.metro != metroCode){
+				S.changeEvent.view = true;
+				S.changeEvent.metro = true;
+			}
+			else if(S.view != viewCode){
+				S.changeEvent.view = true;
+			}
+			else if(S.metro != metroCode){
+				S.changeEvent.metro = true;
+			}
+			else{
+				S.changeEvent.resize = true;
+			}
+
 			S.view = viewCode;
 			S.metro = metroCode;
 
@@ -366,19 +398,6 @@ function MetroInteractive(appWrapperElement){
 
 		var bar1 = svg.selectAll("rect.base").data([0,1,2]).enter().append("rect").attr({width:14, height:15, y:15}).attr("x",function(d,i){return i*20});
 		var bar2 = svg.selectAll("rect.base").data([0,1,2]).enter().append("rect").attr({width:14, height:15, y:15}).attr("x",function(d,i){return i*20});
-
-		/*bar2.append("animateTransform")
-			.attr({attributeType:"xml", attributeName:"transform", type:"translate", dur:"0.7s", repeatCount:"indefinite"})
-			.attr("values",function(d,i){
-				if(i===0){var vals = "0 0; 0 -13; 0 0"}
-				else if(i===1){var vals = "0 -10; 0 -7; 0 -10"}
-				else if(i===2){var vals = "0 -5; 0 -10; 0 -5"}
-				return vals;
-			})
-			.attr("begin",function(d,i){
-				var b = ["0s","0.2s","0.4s"];
-				return b[i];
-			});*/
 
 		svg.append("text").style({"font-family":"arial","font-size":"13px"}).attr({x:"27",y:"43","text-anchor":"middle"}).text("LOADING");
 

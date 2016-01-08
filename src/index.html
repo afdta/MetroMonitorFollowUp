@@ -164,29 +164,25 @@
 				catch(e){
 					var T = 0;
 				}
-
-				console.log(tableOuter.node());
-				console.log(tableOuter.node().scrollTop);
 				hr.attr("transform","translate(0,"+ T +")");
 				var justPinned = true;
 				tableOuter.node().scrollTop = T; 
 				tableOuter.on("scroll",function(){
-					console.log("SCROLL");
 					if(!justPinned){
 						hr.attr("transform","translate(0,0)");
 					}
 					else{
 						justPinned = false;
 					}
-					
 				});				
 			}
 			scrollToTop();
-
 		}
 
-		function drawMap(){
-
+		function drawMaps(){
+			var period = this.storage("period");
+			var mapData = this.storage("mapData");
+			console.log(mapData);
 		}
 
 		//redraw -- setup is just to add html
@@ -211,12 +207,16 @@
 
 				data.universe = this.viewData("raw").measures.growth.overall.map(function(d,i){return d.CBSA+""});
 
-				console.log(data);
-
 				this.viewData("processed",data);
 			}
 
 			drawTable.call(this);
+
+			//if redraw is being called because of achange in view or metro, redraw map, otherwise the map-class handles responsiveness
+			if(this.changeEvent.view || this.changeEvent.metro){
+				drawMaps.call(this);
+			};
+			
 			//vAlign(this.storage("mapWrap"), this.container);
 
 
@@ -225,14 +225,13 @@
 
 			//map drawing
 			var mapData = this.storage("mapData");
-			console.log(mapData);
 
 		}
 
 		var setupBase = function(){
 			this.header.append("p").text("Growth, prosperity, and inclusion in the 100 largest U.S. metro areas");
 			//var tableWrap = this.container.append("div").style({"padding":"5px 0px 5px 0px", "border":"1px solid #dddddd", "border-width":"1px 0px 1px 0px"}).classed("two-fifths",true).append("div").style("max-height","600px");
-			var headerWrap = this.container.append("div").classed("c-fix",true).style({"margin-bottom":"15px", "border-bottom":"1px solid #aaaaaa", "background-color":"#ffffff", "padding":"15px"});
+			var headerWrap = this.container.append("div").classed("c-fix",true).style({"margin-bottom":"15px", "border":"1px solid #aaaaaa", "border-width":"0px 1px 1px 1px", "background-color":"#ffffff", "padding":"15px"});
 			var header0 = headerWrap.append("div").classed("three-fifths",true).append("div").style({"padding":"0px 15% 0px 0px", "margin":"0px 0px"});
 			header0.append("p").html('<b>Successful economic development should support:</b>');
 			header0.append("p").html('&nbsp; &nbsp;<b style="color:#20558a">Growth</b>: Economic expansion').style({"margin":"0px"});
@@ -244,7 +243,7 @@
 			
 			//CONTROLS
 			var header1wrap = headerWrap.append("div").classed("two-fifths",true);
-			var header1 = header1wrap.append("div").style({"padding":"5px 10px 10px 15px", "margin":"0px 0px", "background-color":"#ffffff", "border":"1px solid #aaaaaa"});
+			var header1 = header1wrap.append("div").style({"padding":"5px 10px 10px 15px", "margin":"0px 0px", "background-color":"#fbfbfb", "border":"1px solid #aaaaaa"});
 			header1.append("p").text("Make a selection").style("font-style","italic");
 
 			var timeMenu = header1.append("div").classed("c-fix",true)
