@@ -1,4 +1,5 @@
 //DEPENDS: d3 
+//Restructure data binding so original data is NOT mutated
 
 //-------------------------------------------------{0}
 //dotMap class definition
@@ -101,13 +102,13 @@ dotMap.prototype.setDim = function(){
 //(2) name of the property in each object that contains the cbsa code, and 
 //(3) the name of the property to add to each object to hold geo information (note: original data is mutated)
 dotMap.prototype.setData = function(dat, geoVarName, newVarName){
-  this.lookup = {}; //set the lookup property
-
+  
   var geoVar = !geoVarName ? "CBSA_Code" : geoVarName;
   var newVar = !newVarName ? "Coord" : newVarName;
 
   //eventually move lookup to a prototype prop
   if(!this.lookup){
+    this.lookup = {}; //set the lookup property
     var all = this.lonlat.t100.concat(this.lonlat.rest);
     for(var i=0; i<all.length; i++){
       this.lookup[(all[i].CBSA_Code)] = all[i];

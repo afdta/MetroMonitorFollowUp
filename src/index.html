@@ -179,10 +179,52 @@
 			scrollToTop();
 		}
 
+		//drawMaps won't be called until processed data is loaded
 		function drawMaps(){
 			var period = this.storage("period");
+			var category = this.storage("category");
+			if(category==="gr"){
+				var indicators = ["Emp_", "GMP", "Wages"];
+			}
+			else if(category==="pro"){
+				var indicators = ["AvgWage_", "GMPCap_", "GMPJob_"];
+			}
+			else if(category==="inc"){
+				var indicators = ["EmpRatio_", "MedEarn_", "RelPov_"];
+			}
 			var mapData = this.storage("mapData");
-			console.log(mapData);
+
+			//bind map data
+			if(!mapData.dataBound){
+				var data = this.viewData("processed");
+				var addNumber = function(){
+					this.svg.append("circle").attr({"cx":"73%","cy":"20px","r":"10","fill":"#e0e0e0"});
+					this.svg.append("text").attr({"x":"73%","y":"24px"}).text(function(d,i){return d}).style({"fill":"#666666","font-size":"13px"}).attr("text-anchor","middle");
+					this.metros.attr("r",3);
+				}
+				mapData.large.setData(data.universe.map(function(d,i){return {geo:d, dat:data.table[d]}}), "geo").drawMap();
+				for(var i=0; i<mapData.small.length; i++){
+					mapData.small[i].setData(data.universe.map(function(d,i){return {geo:d, dat:data.table[d]}}), "geo")
+						.drawMap(addNumber);
+				}
+				mapData.dataBound = true;
+			}
+
+			function refill(){
+				this.metros.attr("fill", function(d,i){
+					console.log(d);
+					var col = r2c(d.dat.gr0.FiveR).fill;
+					console.log(col);
+					return col;
+				}).attr("r", function(d,i){
+					return 3;
+				});
+			}
+			mapData.large.drawMap(refill);
+			for(var j=0; j<mapData.small.length; j++){
+				mapData.small[j].drawMap(refill);
+			}
+
 		}
 
 		//redraw -- setup is just to add html
@@ -261,24 +303,19 @@
 			var smallMapWrap = mapWrap.append("div").classed("c-fix",true)
 			var mapsAnno = smallMapWrap.append("div").style("min-height","50px");
 			var smallMaps = smallMapWrap.selectAll("div.small-map").data([1,2,3]).enter().append("div").classed("small-map",true);
-
 			smallMapWrap.selectAll("div").style({"width":"48%","padding-right":"2%","float":"left"});
 
+			//small maps
 			var sMaps = [];
 			smallMaps.each(function(d,i){
-				var addNumber = function(){
-					this.svg.append("circle").attr({"cx":"73%","cy":"20px","r":"10","fill":"#e0e0e0"});
-					this.svg.append("text").attr({"x":"73%","y":"24px"}).text(function(d,i){return d}).style({"fill":"#666666","font-size":"13px"}).attr("text-anchor","middle");
-
-				}
-				var map = new dotMap(this).drawMap(addNumber).makeResponsive();
+				var map = new dotMap(this);
+				map.makeResponsive();
 				sMaps.push(map);
 			})
-
-
-			var bMap = new dotMap(mapWrap.node()).drawMap().makeResponsive();
-
-			this.storage("mapData",{large:bMap, small:sMaps, mapsAnno:mapsAnno});
+			//big map
+			var bMap = new dotMap(mapWrap.node());
+			bMap.makeResponsive();
+			this.storage("mapData",{large:bMap, small:sMaps, mapsAnno:mapsAnno, dataBound:false});
 
 			//TABLE SETUP
 			var rightSide = this.container.append("div").classed("two-fifths",true);
@@ -302,6 +339,7 @@
 
 			this.storage("mapWrap", mapWrap);
 			this.storage("period","Five");
+			this.storage("category","gr")
 		}
 
 		var view1 = MI.addView(redrawBase, "coreIndicators.json", setupBase);
