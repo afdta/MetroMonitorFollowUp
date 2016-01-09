@@ -50,7 +50,7 @@
 		var colors = ['#d7191c','#fdae61','#ffffbf','#abd9e9','#2c7bb6'];
 		var colors = ['#e66101','#fdb863','#f7f7f7','#b2abd2','#5e3c99'];
 		var colors = ['#d01c8b','#f1b6da','#f7f7f7','#b8e186','#4dac26'];
-		var colors = ['#053769', '#a4c7f2', '#dddddd', '#ffa626', '#ff5e1a'];
+		var colors = ['#053769', '#a4c7f2', '#cccccc', '#ffa626', '#ff5e1a'];
 		//colors.reverse();
 
 		function r2c(r){
@@ -184,7 +184,7 @@
 			var period = this.storage("period");
 			var category = this.storage("category");
 			if(category==="gr"){
-				var indicators = ["Emp_", "GMP", "Wages"];
+				var indicators = ["Emp_", "GMP_", "Wages_"];
 			}
 			else if(category==="pro"){
 				var indicators = ["AvgWage_", "GMPCap_", "GMPJob_"];
@@ -194,36 +194,59 @@
 			}
 			var mapData = this.storage("mapData");
 
-			//bind map data
+			var bigMap = mapData.large;
+			var smallMap0 = mapData.small[0];
+			var smallMap1 = mapData.small[1];
+			var smallMap2 = mapData.small[2];
+
+			//bind map data -- only once
 			if(!mapData.dataBound){
-				var data = this.viewData("processed");
+				var data = this.viewData("processed"); //drawMaps is only called after processed data has been created
+				var data2bind = data.universe.map(function(d,i){return {geo:d, dat:data.table[d]}});
+
 				var addNumber = function(){
-					this.svg.append("circle").attr({"cx":"73%","cy":"20px","r":"10","fill":"#e0e0e0"});
-					this.svg.append("text").attr({"x":"73%","y":"24px"}).text(function(d,i){return d}).style({"fill":"#666666","font-size":"13px"}).attr("text-anchor","middle");
+					this.svg.append("circle").attr({"cx":"73%","cy":"20px","r":"8","fill":"rgb(5,55,105)"});
+					this.svg.append("text").attr({"x":"73%","y":"24px"}).text(function(d,i){return d}).style({"fill":"#ffffff","font-size":"11px"}).attr("text-anchor","middle");
 					this.metros.attr("r",3);
 				}
-				mapData.large.setData(data.universe.map(function(d,i){return {geo:d, dat:data.table[d]}}), "geo").drawMap();
-				for(var i=0; i<mapData.small.length; i++){
-					mapData.small[i].setData(data.universe.map(function(d,i){return {geo:d, dat:data.table[d]}}), "geo")
-						.drawMap(addNumber);
-				}
+
+				bigMap.setData(data2bind, "geo").drawMap();
+				smallMap0.setData(data2bind, "geo").drawMap(addNumber);
+				smallMap1.setData(data2bind, "geo").drawMap(addNumber);
+				smallMap2.setData(data2bind, "geo").drawMap(addNumber);
+
 				mapData.dataBound = true;
 			}
 
-			function refill(){
-				this.metros.attr("fill", function(d,i){
-					console.log(d);
-					var col = r2c(d.dat.gr0.FiveR).fill;
-					console.log(col);
-					return col;
-				}).attr("r", function(d,i){
-					return 3;
-				});
+			//function that refills the map dots based on the selection of indicator and time period
+			function refill(isComposite, indicatorIndex){
+				console.log(data);
+				var obj = !!isComposite ? category+"0" : category+"1"; //e.g. gr0 (composite indicator) vs gr1 (component indicators);
+				var r = !!isComposite ? 6 : 3;
+				var ind = !!isComposite ? period+"R" : indicators[indicatorIndex]+period+"R";
+
+				return function(){
+					this.metros.attr("r", function(d,i){
+						return r;
+					});
+
+					this.metros.attr("fill", function(d,i){
+						var dat_obj = d.data.dat[obj];
+						var col = r2c(dat_obj[ind]).fill;
+						return col;
+					});
+				}
 			}
-			mapData.large.drawMap(refill);
-			for(var j=0; j<mapData.small.length; j++){
-				mapData.small[j].drawMap(refill);
-			}
+
+			//refill large map
+			bigMap.drawMap(refill(true));
+
+			//refill small map
+			smallMap0.drawMap(refill(false,0));
+			smallMap1.drawMap(refill(false,1));
+			smallMap2.drawMap(refill(false,2));
+
+
 
 		}
 
@@ -343,7 +366,7 @@
 		}
 
 		var view1 = MI.addView(redrawBase, "coreIndicators.json", setupBase);
-		view1.name("Growth, prosperity, and inclusion");
+		view1.name("Growth / Prosperity / Inclusion");
 	})();
 
 	var view2 = MI.addView(function(){
@@ -354,7 +377,7 @@
 	
 	view0.name("About");
 	
-	view2.name("Inclusion outcomes by race");
+	view2.name("Inclusion by race");
 
 	MI.cap(); //tell the app to try and auto-draw based on hash and defaults
 

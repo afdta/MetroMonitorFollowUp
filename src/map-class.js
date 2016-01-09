@@ -1,5 +1,4 @@
 //DEPENDS: d3 
-//Restructure data binding so original data is NOT mutated
 
 //-------------------------------------------------{0}
 //dotMap class definition
@@ -41,7 +40,6 @@ function dotMap(container){
 
   this.lookup = null; //metro info
   this.getProjected = null; //accessor function to get projected coordinates for each metro data element -- enabled by setData()
-  this.getGeoName = null; //accessor function to get geo name based on cbsa code -- enabled by setData()
 
   this.data = null; //holds data, set in setData method
 
@@ -100,11 +98,9 @@ dotMap.prototype.setDim = function(){
 //set data to map. the method takes three args: 
 //(1) the array of objects, 
 //(2) name of the property in each object that contains the cbsa code, and 
-//(3) the name of the property to add to each object to hold geo information (note: original data is mutated)
-dotMap.prototype.setData = function(dat, geoVarName, newVarName){
+dotMap.prototype.setData = function(dat, geoVarName){
   
   var geoVar = !geoVarName ? "CBSA_Code" : geoVarName;
-  var newVar = !newVarName ? "Coord" : newVarName;
 
   //eventually move lookup to a prototype prop
   if(!this.lookup){
@@ -119,18 +115,20 @@ dotMap.prototype.setData = function(dat, geoVarName, newVarName){
   this.data = dat.map(function(d,i,a){
     var code = d[geoVar];
     var lu = self.lookup[code];
-    d[newVar] = [lu.lon, lu.lat];
-    return d;
+
+    //wrap data in a new object -- do not mutate original data
+    var newdat = {};
+    newdat.geo = code;
+    newdat.name = lu.CBSA_Title;
+    newdat.lonlat = [lu.lon, lu.lat];
+    newdat.data = d;
+
+    return newdat;
   });
 
-  //set accessors -- see descriptions in class definition above
+  //set accessors -- takes an observation of data -- see descriptions in class definition above
   this.getProjected = function(d){
-    return self.proj(d[newVar]);
-  }
-
-  this.getGeoName = function(d){
-    var code = d[geoVar];
-    return self.lookup[code].CBSA_Title;
+    return self.proj(d.lonlat);
   }
 
   return this;
@@ -148,7 +146,7 @@ dotMap.prototype.drawMap = function(callback){
   states.exit().remove();
   states.attr("d",function(d,i){
     return self.path(d)
-  }).attr({"stroke":"#666666","stroke-width":"0.5px","fill":"#ffffff"});
+  }).attr({"stroke":"#aaaaaa","stroke-width":"0.5px","fill":"#ffffff"});
 
   try{
     var metros = this.dotG.selectAll("circle.metro").data(self.data);
@@ -165,6 +163,7 @@ dotMap.prototype.drawMap = function(callback){
     this.metros = metros;
   }
   catch(e){
+    console.log(e);
     this.metros = null;
   }
   this.states = states;
@@ -273,7 +272,7 @@ dotMap.prototype.showTooltips = function(textAccessor){
       DOT.attr({"cx":cx, "cy":cy, "r":r, "stroke-width":sw, "stroke":col, "fill":col});
 
       //get text
-      var tdata = [self.getGeoName(d)];
+      var tdata = [d.name];
       if(!!textAccessor){
         tdata = tdata.concat(textAccessor(d))
       }

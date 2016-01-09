@@ -160,7 +160,6 @@ function MetroInteractive(appWrapperElement){
 				redrawView.call(viewOps); //must be a synchronous fn
 			}
 			catch(e){
-				console.log(e);
 				slide.classed("bad-view",true);
 			}
 			
