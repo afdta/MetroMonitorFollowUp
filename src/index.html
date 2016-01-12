@@ -51,6 +51,8 @@
 		var colors = ['#e66101','#fdb863','#f7f7f7','#b2abd2','#5e3c99'];
 		var colors = ['#d01c8b','#f1b6da','#f7f7f7','#b8e186','#4dac26'];
 		var colors = ['#053769', '#a4c7f2', '#cccccc', '#ffa626', '#ff5e1a'];
+
+		var periods = {"Five":"2009 to 2014", "One":"2013 to 2014", "Ten":"2004 to 2014"};
 		//colors.reverse();
 
 		function r2c(r){
@@ -65,16 +67,53 @@
 			else{q=null}
 			return {fill:colors[q], text:t};
 		}
+
+		function getInd(category){
+			if(category==="gr"){
+				var indicators = [{c:"Emp_", l:"Jobs"}, {c:"GMP_", l:"Gross product"}, {c:"Wages_", l:"Aggregate wages"}];
+			}
+			else if(category==="pro"){
+				var indicators = [{c:"AvgWage_", l:"Average wage"}, {c:"GMPCap_", l:"GMP per capita"}, {c:"GMPJob_", l:"GMP per job"}];
+			}
+			else if(category==="inc"){
+				var indicators = [{c:"EmpRatio_", l:"Employment-to-population ratio"}, {c:"MedEarn_", l:"Median earnings"}, {c:"RelPov_", l:"Relative poverty"}];
+			}
+			else{
+				var indicators = [];
+			}
+			return indicators;
+		}
+
 		
 		//hold svg groups -- will be defined in setupBase
 
 		var columns = [{}, {}];
+
+		function drawCurves(metro, ranges, period, g){
+			var cat = ["gr", "pro", "inc"];
+			var catmap = cat.map(function(c,i,a){
+				var subArr = getInd(c).map(function(ind,i,a){
+					var I = ind.c+period+"V";
+					var R = ranges[I];
+					var value = metro[(c+"1")][I];
+					return {cat:c, metric:I, label: ind.l, value:value, maxmin:R, absmax:d3.max(R, function(d,i){return Math.abs(d)})};
+				});
+				return subArr;
+			})
+			console.log(catmap);
+			var threeCol = g.selectAll("g.table-curve-columns").data(catmap);
+			threeG.enter().append("g").attr("transform","translate(0,0)").classed("table-curve-columns",true);
+			threeG.exit().remove();
+
+			var threeRow = threeCol.selectAll("g.table-curve-rows").data(function(d,i){return d})
+		}
 
 		function drawTable(){
 			var VO = this;
 			var table = this.storage("table");
 			var tableOuter = this.storage("tableOuter");
 			var data = this.viewData("processed");
+			var raw = this.viewData();
 			var period = this.storage("period");
 
 			var rows = table.selectAll("g.table-row").data(data.universe);
@@ -100,7 +139,7 @@
 					var buffer = j > i ? 100 : 0;
 					return "translate(0," + ((j*61)+35+buffer) + ")";
 				})
-
+				drawCurves(data.table[d], data.ranges, period, thiz);
 				//hr.attr("transform","translate(0,0)");
 			});
 			rows.on("mouseleave",function(d,i){
@@ -169,7 +208,7 @@
 				tableOuter.node().scrollTop = T; 
 				tableOuter.on("scroll",function(){
 					if(!justPinned){
-						hr.attr("transform","translate(0,0)");
+						hr.attr("transform","translate(0,0)");20302
 					}
 					else{
 						justPinned = false;
@@ -183,15 +222,7 @@
 		function drawMaps(){
 			var period = this.storage("period");
 			var category = this.storage("category");
-			if(category==="gr"){
-				var indicators = ["Emp_", "GMP_", "Wages_"];
-			}
-			else if(category==="pro"){
-				var indicators = ["AvgWage_", "GMPCap_", "GMPJob_"];
-			}
-			else if(category==="inc"){
-				var indicators = ["EmpRatio_", "MedEarn_", "RelPov_"];
-			}
+
 			var mapData = this.storage("mapData");
 
 			var bigMap = mapData.large;
@@ -210,31 +241,45 @@
 					this.metros.attr("r",3);
 				}
 
-				bigMap.setData(data2bind, "geo").drawMap();
+				bigMap.setData(data2bind, "geo").drawMap().showTooltips();
 				smallMap0.setData(data2bind, "geo").drawMap(addNumber);
 				smallMap1.setData(data2bind, "geo").drawMap(addNumber);
 				smallMap2.setData(data2bind, "geo").drawMap(addNumber);
 
 				mapData.dataBound = true;
+
+				/*bigMap.showOverlay();
+				setTimeout(function(){
+					bigMap.hideOverlay();
+				},2000);*/
 			}
 
+			var indicators = getInd(category);
 			//function that refills the map dots based on the selection of indicator and time period
 			function refill(isComposite, indicatorIndex){
-				console.log(data);
 				var obj = !!isComposite ? category+"0" : category+"1"; //e.g. gr0 (composite indicator) vs gr1 (component indicators);
 				var r = !!isComposite ? 6 : 3;
-				var ind = !!isComposite ? period+"R" : indicators[indicatorIndex]+period+"R";
+				var ind = !!isComposite ? period+"R" : (indicators[indicatorIndex].c)+period+"R";
 
 				return function(){
 					this.metros.attr("r", function(d,i){
 						return r;
 					});
 
-					this.metros.attr("fill", function(d,i){
+					this.metros.transition().duration(1000).attr("fill", function(d,i){
 						var dat_obj = d.data.dat[obj];
 						var col = r2c(dat_obj[ind]).fill;
 						return col;
 					});
+
+					//for composite maps, set textAccessor
+					if(!!isComposite){
+						var ta = function(d){
+							var overall = "Overall rank: " + d.data.dat[obj][ind] + " of 100";
+							return [overall];
+						}
+					}
+					this.textAccessor(ta);
 				}
 			}
 
@@ -252,6 +297,9 @@
 
 		//redraw -- setup is just to add html
 		function redrawBase(){
+			var self = this;
+
+			//if processed data not there, create it and do some one-time stuff
 			if(!this.viewData("processed")){
 				var data = {};
 				data.table = {};
@@ -262,17 +310,47 @@
 						data.table[prop][propName] = A[i];
 					}
 				}
-				var rawData = this.viewData("raw");
-				putInTable(rawData.measures.growth.overall, "gr0");
-				putInTable(rawData.measures.growth.detailed, "gr1");
-				putInTable(rawData.measures.prosperity.overall, "pro0");
-				putInTable(rawData.measures.prosperity.detailed, "pro1");
-				putInTable(rawData.measures.inclusion.overall, "inc0");
-				putInTable(rawData.measures.inclusion.detailed, "inc1");
+				var measures = this.viewData("raw").measures;
+				putInTable(measures.growth.overall, "gr0");
+				putInTable(measures.growth.detailed, "gr1");
+				putInTable(measures.prosperity.overall, "pro0");
+				putInTable(measures.prosperity.detailed, "pro1");
+				putInTable(measures.inclusion.overall, "inc0");
+				putInTable(measures.inclusion.detailed, "inc1");
 
 				data.universe = this.viewData("raw").measures.growth.overall.map(function(d,i){return d.CBSA+""});
 
+				data.ranges = {};
+				function getRanges(A,propName){
+					var ind = getInd(propName);
+					var years = ["One", "Five", "Ten"];
+					for(var y=0; y<3; y++){
+						for(var i=0; i<ind.length; i++){
+							var prop = ind[i].c + years[y] + "V";
+							data.ranges[prop] = d3.extent(A, function(d,i,a){return d[prop]});
+						}
+					}
+				}
+				getRanges(measures.growth.detailed,"gr");
+				getRanges(measures.prosperity.detailed,"pro");
+				getRanges(measures.inclusion.detailed,"inc");
+
 				this.viewData("processed",data);
+
+				var buttons = this.storage("buttons");
+				buttons.period.on("mousedown",function(d,i){
+					self.storage("period",d.c);
+					buttons.period.classed("generic-button-selected", function(d,j){return i===j});
+					drawTable.call(self);
+					drawMaps.call(self);
+				});
+				buttons.category.on("mousedown",function(d,i){
+					self.storage("category",d.c);
+					buttons.category.classed("generic-button-selected", function(d,j){return i===j});
+					drawTable.call(self);
+					drawMaps.call(self);
+				})
+
 			}
 
 			drawTable.call(this);
@@ -283,8 +361,6 @@
 			};
 			
 			//vAlign(this.storage("mapWrap"), this.container);
-
-
 
 
 
@@ -311,22 +387,28 @@
 			var header1 = header1wrap.append("div").style({"padding":"5px 10px 10px 15px", "margin":"0px 0px", "background-color":"#fbfbfb", "border":"1px solid #aaaaaa"});
 			header1.append("p").text("Make a selection").style("font-style","italic");
 
-			var timeMenu = header1.append("div").classed("c-fix",true)
-			timeMenu.append("p").text("Time period of analysis").style({"margin":"0px","font-size":"11px","text-transform":"uppercase"});
-			timeMenu.selectAll("div").data(["One-year", "Five-year", "Ten-year"]).enter().append("div").classed("generic-button",true).append("p").text(function(d,i){return d});
+			
+			var catMenu = header1.append("div").classed("c-fix",true);
+			catMenu.append("p").html("Data to map / sort table by").style({"margin":"0px","font-size":"11px","text-transform":"uppercase"});
+			var categoryButtons = catMenu.selectAll("div").data([{c:"gr", l:"Growth"}, {c:"pro", l:"Prosperity"}, {c:"inc", l:"Inclusion"}]).enter().append("div")
+										 .classed("generic-button",true).classed("generic-button-selected",function(d,i){return i===0});
+				categoryButtons.append("p").text(function(d,i){return d.l});
 
-			var catMenu = header1.append("div").classed("c-fix",true).style("margin-top","15px");
-			catMenu.append("p").html("Map data / Table sort order").style({"margin":"0px","font-size":"11px","text-transform":"uppercase"});
-			catMenu.selectAll("div").data(["Growth", "Prosperity", "Inclusion"]).enter().append("div").classed("generic-button",true).append("p").text(function(d,i){return d});
+
+			var periodMenu = header1.append("div").classed("c-fix",true).style("margin-top","15px");
+			periodMenu.append("p").text("Time period").style({"margin":"0px","font-size":"11px","text-transform":"uppercase"});
+			var periodButtons = periodMenu.selectAll("div").data([{c:"One", l:"One-year"}, {c:"Five", l:"Five-year"}, {c:"Ten", l:"Ten-year"}]).enter().append("div")
+										  .classed("generic-button",true).classed("generic-button-selected",function(d,i){return i===1});
+				periodButtons.append("p").text(function(d,i){return d.l});
 
 			//MAPS SETUP
-			var mapWrap = this.container.append("div").classed("three-fifths no-mobile-display",true).append("div").style({"padding":"0px 30px 0px 0px","position":"relative"});
-			var bigMap = mapWrap.append("div");
+			var mapWrap = this.container.append("div").classed("three-fifths no-mobile-display",true).append("div").style({"padding":"0px 30px 0px 0px","position":"relative", "overflow":"hidden"});
+			var bigMap = mapWrap.append("div").style({"position":"relative","z-index":"5"});
 
 			var smallMapWrap = mapWrap.append("div").classed("c-fix",true)
 			var mapsAnno = smallMapWrap.append("div").style("min-height","50px");
 			var smallMaps = smallMapWrap.selectAll("div.small-map").data([1,2,3]).enter().append("div").classed("small-map",true);
-			smallMapWrap.selectAll("div").style({"width":"48%","padding-right":"2%","float":"left"});
+			smallMapWrap.selectAll("div").style({"width":"48%","padding-right":"2%","float":"left","position":"relative","z-index":"3"});
 
 			//small maps
 			var sMaps = [];
@@ -336,7 +418,7 @@
 				sMaps.push(map);
 			})
 			//big map
-			var bMap = new dotMap(mapWrap.node());
+			var bMap = new dotMap(bigMap.node());
 			bMap.makeResponsive();
 			this.storage("mapData",{large:bMap, small:sMaps, mapsAnno:mapsAnno, dataBound:false});
 
@@ -363,6 +445,8 @@
 			this.storage("mapWrap", mapWrap);
 			this.storage("period","Five");
 			this.storage("category","gr")
+
+			this.storage("buttons", {period:periodButtons, category:categoryButtons});
 		}
 
 		var view1 = MI.addView(redrawBase, "coreIndicators.json", setupBase);

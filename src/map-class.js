@@ -30,7 +30,7 @@ function dotMap(container){
             });
 
   this.overlay = this.currentMap.append("div")
-      .style({"position":"absolute", "width":"100%", "height":"100%", "background-color":"rgba(255,255,255,0.8)", "left":"-105%", "top":"0px"})
+      .style({"position":"absolute", "width":"100%", "height":"100%", "background-color":"rgba(255,255,255,0.85)", "left":"0px", "top":"0px", "display":"none", "opacity":"0"})
 
   this.proj = d3.geo.albersUsa().scale(this.width*this.proj_scale).translate([this.width/2, this.height/2]);  
   this.path = d3.geo.path().projection(this.path);
@@ -45,8 +45,10 @@ function dotMap(container){
 
   this.onResize = []; 
 
+  this.getText = function(code){return "No data available."}
+
   //basic styles
-  this.currentMap.style({"position":"relative", "overflow":"hidden", "height":(this.height)+"px", "width":"auto"});
+  this.currentMap.style({"position":"relative", "overflow":"visible", "height":(this.height)+"px", "width":"auto"});
 }
 
 dotMap.prototype.aspect = 0.7; //determines the height of the svg container
@@ -58,9 +60,10 @@ dotMap.prototype.lonlat = {"t100":[{"CBSA_Code":"10420","CBSA_Title":"Akron, OH"
 dotMap.prototype.lookup = null;
 dotMap.prototype.padding = {top:0, right:0, bottom:0, left:0};
 
-dotMap.prototype.showOverlay = function(){this.overlay.transition().duration(1000).style("left","0%").each("start",function(){d3.select(this).style("display","block")});}
-dotMap.prototype.hideOverlay = function(){this.overlay.transition().duration(1000).style("left","-105%").each("end",function(){d3.select(this).style("display","none")});}
+dotMap.prototype.showOverlay = function(){this.overlay.transition().duration(1000).style("opacity","1").each("start",function(){d3.select(this).style("display","block")});}
+dotMap.prototype.hideOverlay = function(){this.overlay.transition().duration(1000).style("opacity","0").each("end",function(){d3.select(this).style("display","none")});}
 
+dotMap.prototype.textAccessor = function(fn){if(!!fn){this.getText = fn}}
 
 //Overview of class and method usage
 //{1} create new dotMap object
@@ -131,6 +134,19 @@ dotMap.prototype.setData = function(dat, geoVarName){
     return self.proj(d.lonlat);
   }
 
+  this.getText = function(d){
+    try{
+      var text = d.name;
+    }
+    catch(e){
+      var text = " ... ";
+    }
+    finally{
+      return text;
+    }
+    
+  }
+
   return this;
 }
 
@@ -150,9 +166,9 @@ dotMap.prototype.drawMap = function(callback){
 
   try{
     var metros = this.dotG.selectAll("circle.metro").data(self.data);
-    metros.enter().append("circle").classed("metro",true);
+    metros.enter().append("circle").classed("metro",true).attr("fill","#cccccc");
     metros.exit().remove();
-    metros.attr({"fill":"#eeeeee", "stroke":"#ffffff", "stroke-width":"1px", "r":"5"})
+    metros.attr({"stroke":"#ffffff", "stroke-width":"1px", "r":"5"})
       .attr("cx", function(d,i){
         return self.getProjected(d)[0];
       })
@@ -238,6 +254,8 @@ dotMap.prototype.showTooltips = function(textAccessor){
 
   var DOT = self.dotG.append("circle").attr({"cx":"-100", "cy":"-100", "r":"0"}).style("pointer-events","none");
 
+  if(!!textAccessor){this.getText = textAccessor}
+
   if(self.metros){
     var timer;
     
@@ -273,9 +291,8 @@ dotMap.prototype.showTooltips = function(textAccessor){
 
       //get text
       var tdata = [d.name];
-      if(!!textAccessor){
-        tdata = tdata.concat(textAccessor(d))
-      }
+
+      tdata = tdata.concat(self.getText(d))
 
       var textStyle = {"font-size":"15px", "margin":"2px 0px 2px 0px", "padding":"0px", "pointer-events":"none"}
 

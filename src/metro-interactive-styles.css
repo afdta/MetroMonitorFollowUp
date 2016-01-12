@@ -20,6 +20,7 @@
 	margin:8px 0px 8px 0px;
 	padding:0px;
 }
+
 /*end core styles*/
 
 
@@ -61,7 +62,7 @@
 	cursor:pointer;
 }
 .metro-interactive-wrap .generic-button:hover{border-color:#666666;}
-.metro-interactive-wrap .generic-button.generic-button-selected{background-color:rgb(5,55,105);}
+.metro-interactive-wrap .generic-button.generic-button-selected, .metro-interactive-wrap .generic-button.generic-button-selected:hover{background-color:rgb(5,55,105);border-color:rgb(5,55,105);}
 .metro-interactive-wrap .generic-button p{font-size:13px;text-align:center;line-height:1em;padding:4px 8px;margin:0px;}
 .metro-interactive-wrap .generic-button.generic-button-selected p{color:#ffffff;}
 
