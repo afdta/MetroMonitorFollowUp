@@ -21,6 +21,11 @@
 	padding:0px;
 }
 
+.metro-interactive-wrap ul{
+	margin:0px;
+	padding:0px;
+}
+
 /*end core styles*/
 
 
@@ -170,6 +175,48 @@
 	clear:both;
 }
 
+.metro-interactive-wrap .as-table p{
+	margin:0px;
+}
+
+.metro-interactive-wrap .as-table{
+	display:table;
+	table-layout:fixed;
+	width:100%;
+	border-collapse:collapse;
+}
+
+.metro-interactive-wrap .as-table .as-table-row{
+	display:table-row;
+	width:100%;
+}
+
+.metro-interactive-wrap .as-table .as-table-row .as-table-cell{
+	display:table-cell;
+	vertical-align:bottom;
+	padding:5px 5px 5px 2px;
+	border-bottom:1px dotted #aaaaaa;
+}
+.metro-interactive-wrap .as-table .as-table-row:last-child .as-table-cell{border-bottom:none;}
+
+.metro-interactive-wrap .table-row .row-detail{display:none; min-height:200px;}
+
+.metro-interactive-wrap .table-row{
+	background-color:#ffffff;
+	cursor:pointer;
+	pointer-events:all;
+	border:1px solid #ffffff;
+	border-width:0px 1px 1px 1px; 
+	border-bottom-color:#aaaaaa;
+	padding:10px 10px;
+}
+.metro-interactive-wrap .table-row.row-is-pinned, .metro-interactive-wrap .table-row.row-is-highlighted{
+	background-color:#fbfbfb;
+	border-right-color:#aaaaaa;
+	border-left-color:#aaaaaa;
+}
+
+.metro-interactive-wrap .table-row.row-is-pinned .row-detail{display:block;}
 
 .metro-interactive-view .two-fifths{
 	width:40%;

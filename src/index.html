@@ -30,13 +30,13 @@
 		header.append("p").text("About the Metro Monitor");
 		//header.append("p").text("Tracking progress towards an advanced economy that works for all").style({"font-style":"italic","margin-bottom":"0px"});
 		//slide.append("hr").style("margin-bottom","20px");
-		slide.append("p").style({"font-weight":"bold","color":"#4285f4","margin-bottom":"25px"}).text("[This is space for the opening view. It could be used to convey: 1) What the Monitor is and/or what it measures, 2) Why the Monitor is valuable, and/or 3) A high level overview of the data. It should be snappier than what is here now, and should include at least one graphic. The text here can link to other views in the interactive.]")
+		slide.append("p").style({"font-weight":"bold","color":"#4285f4","margin-bottom":"25px"}).text("[INSERT SOME SNAPPY GRAPHICS, VARIABLE DEFINITIONS]")
 		
 		slide.append("div").style({"float":"left","width":"56%","padding":"0% 2% 0px 0px"})
-			.html("<p>THE METRO MONITOR MEASURES A NEW STANDARD FOR ASSESSING THE SUCCESS OF REGIONAL ECONOMIES</p>")
+			.html("<p>THE METRO MONITOR SETS A NEW STANDARD FOR ASSESSING THE SUCCESS OF REGIONAL ECONOMIES</p>")
 
 		slide.append("div").style({"float":"left","width":"56%","padding":"0% 2% 0px 0px"})
-			.html("<p>SUCCESS HAS BEEN LIMITED AND VARIED - WE HAVE THE MEASURES</p>")
+			.html("<p>SUCCESS HAS BEEN LIMITED AND VARIED - USE THIS TOOL TO SEE HOW</p>")
 
 		slide.append("div").style({"float":"left","width":"56%","padding":"0% 2% 0px 0px"})
 			.html("<p>ECONOMIC DEVELOPMENT EFFORTS SHOULD TO CHANGE TO REFLECT THIS</p>")
@@ -70,13 +70,13 @@
 
 		function getInd(category){
 			if(category==="gr"){
-				var indicators = [{c:"Emp_", l:"Jobs"}, {c:"GMP_", l:"Gross product"}, {c:"Wages_", l:"Aggregate wages"}];
+				var indicators = [{c:"Emp_", l:"Jobs", b:"gr", ls:"Jobs"}, {c:"GMP_", l:"Gross product", b:"gr", ls:"GMP"}, {c:"Wages_", l:"Aggregate wages", b:"gr", ls:"Agg. wages"}];
 			}
 			else if(category==="pro"){
-				var indicators = [{c:"AvgWage_", l:"Average wage"}, {c:"GMPCap_", l:"GMP per capita"}, {c:"GMPJob_", l:"GMP per job"}];
+				var indicators = [{c:"AvgWage_", l:"Average wage", b:"pro", ls:"Avg. wage"}, {c:"GMPCap_", l:"GMP per capita", b:"pro", ls:"GMP / person"}, {c:"GMPJob_", l:"GMP per job", b:"pro", ls:"GMP / job"}];
 			}
 			else if(category==="inc"){
-				var indicators = [{c:"EmpRatio_", l:"Employment-to-population ratio"}, {c:"MedEarn_", l:"Median earnings"}, {c:"RelPov_", l:"Relative poverty"}];
+				var indicators = [{c:"EmpRatio_", l:"Employment-to-population ratio", b:"inc", ls:"Emp. / pop."}, {c:"MedEarn_", l:"Median earnings", b:"inc", ls:"Med. earn."}, {c:"RelPov_", l:"Relative poverty", b:"inc", ls:"Rel. poverty"}];
 			}
 			else{
 				var indicators = [];
@@ -90,130 +90,185 @@
 		var columns = [{}, {}];
 
 		function drawCurves(metro, ranges, period, g){
-			var cat = ["gr", "pro", "inc"];
-			var catmap = cat.map(function(c,i,a){
-				var subArr = getInd(c).map(function(ind,i,a){
+			var grI = getInd("gr");
+			var proI = getInd("pro");
+			var incI = getInd("inc");
+			
+			var zot = [0,1,2];
+
+			var catmap = zot.map(function(n,i,a){
+				var sa = [grI[n], proI[n], incI[n]];
+				return sa.map(function(ind, i, a){
 					var I = ind.c+period+"V";
 					var R = ranges[I];
-					var value = metro[(c+"1")][I];
-					return {cat:c, metric:I, label: ind.l, value:value, maxmin:R, absmax:d3.max(R, function(d,i){return Math.abs(d)})};
+					var value = metro[(ind.b+"1")][I];
+					return {cat:ind.b, metric:I, label: ind.ls, value:value, maxmin:R, absmax:d3.max(R, function(d,i){return Math.abs(d)})};
 				});
-				return subArr;
+			});
+
+			/*var headerRow = g.selectAll("div.as-table-header-row").data([["Growth", "Prosperity", "Inclusion"]]);
+			headerRow.enter().append("div").classed("as-table-header-row as-table-row",true);
+			headerRow.exit().remove();
+			
+			headerRow.selectAll("div.as-table-cell").data(function(d,i){return d}).enter().append("div").classed("as-table-cell",true)
+			.style("width",function(d,i){
+				return i==2 ? "32%" :"34%";
+			}).append("p").text(function(d,i){return d}).style({"font-size":"11px", "color":"#666666", "padding-bottom":"5px"});*/
+
+			var threeRows = g.selectAll("div.as-table-row").data(catmap);
+			threeRows.enter().append("div").classed("as-table-row",true);
+			threeRows.exit().remove();
+
+			var threeCells = threeRows.selectAll("div.as-table-cell").data(function(d,i){return d});
+			threeCells.enter().append("div").classed("as-table-cell",true).style("width",function(d,i){
+				return i==2 ? "32%" :"34%";
 			})
-			console.log(catmap);
-			var threeCol = g.selectAll("g.table-curve-columns").data(catmap);
+
+			threeCells.exit().remove();
+
+			var cell_labels = threeCells.selectAll("div.value-label").data(function(d,i){
+				return [d.label];
+			});
+			cell_labels.enter().append("div").classed("value-label",true).append("p");
+			cell_labels.exit().remove();
+			cell_labels.select("p").text(function(d,i){return d}).style({"font-size":"11px","text-transform":"uppercase"});
+
+			var cell_vals = threeCells.selectAll("div.value-actual").data(function(d,i){
+				return [d.value];
+			});
+			cell_vals.enter().append("div").classed("value-actual",true).append("p");
+			cell_vals.exit().remove();
+			cell_vals.select("p").text(function(d,i){return d}).style({"font-size":"13px","font-weight":"bold"});
+
+			/*var threeCol = g.selectAll("g.table-curve-columns").data(catmap);
 			threeG.enter().append("g").attr("transform","translate(0,0)").classed("table-curve-columns",true);
 			threeG.exit().remove();
 
-			var threeRow = threeCol.selectAll("g.table-curve-rows").data(function(d,i){return d})
+			var threeRow = threeCol.selectAll("g.table-curve-rows").data(function(d,i){return d});
+			var threeRowEnter = threeRow.enter().append("g").classed("table-curve-rows",true);
+			threeRowEnter.append("text").classed("table-curve-label",true);
+			threeRowEnter.append("text").classed("table-curve-value",true);
+			threeRowEnter.append("line")*/
+
 		}
 
 		function drawTable(){
-			var VO = this;
+			var self = this;
+
 			var table = this.storage("table");
 			var tableOuter = this.storage("tableOuter");
+			var tableHeader = this.storage("tableHeader");
+
 			var data = this.viewData("processed");
 			var raw = this.viewData();
 			var period = this.storage("period");
 
-			var rows = table.selectAll("g.table-row").data(data.universe);
-			var rowenter = rows.enter().append("g").style("pointer-events","all").classed("table-row",true);
-			//rowenter.append("rect").attr({"x":-15, "y":0, "width":"400px", "height":"60px", "fill":"#ffffff"}).classed("pointer-rect",true)
-			rowenter.append("rect").attr({"x":0, "y":0, "width":"100%", "height":"60px", "fill":"#ffffff"}).classed("back-rect",true).style("shape-rendering","crispEdges");
-			rowenter.append("text").attr({"x":"1.5%", "y":24}).style("font-size","15px");
-			rowenter.append("line").attr({"x1":0, "x2":"100%", "y1":60, "y2":60, "stroke":"#aaaaaa", "stroke-width":"1px"}).style("shape-rendering","crispEdges");
+			var headerPinned = this.storage("headerPinned");
+			var metro = this.getMetro();
+			var self = this;
 
-			rows.exit().remove("g");
-			rows.attr("transform",function(d,i){
-				return "translate(0," + ((i*61)+35) + ")";
-			})
+			var rows = table.selectAll("div.table-row").data(data.universe);
+			var rowEnter = rows.enter().append("div").classed("table-row",true);
 
-			var shiftTimer;
+			rowEnter.append("p").classed("row-label",true).style({"pointer-events":"none","margin":"0px 0px 5px 0px","line-height":"1em"});
+			rowEnter.append("div").classed("c-fix row-swatches",true);
+			rowEnter.append("div").classed("c-fix row-detail",true);
+			rows.exit().remove();
+
 			rows.on("mouseenter",function(d,i){
-				clearTimeout(shiftTimer);
-				var thiz = d3.select(this);
-				//thiz.select("rect.pointer-rect").attr("height","160px");
-				thiz.select("rect.back-rect").attr({"height":"160px","fill":"#ffffff"});
-				thiz.select("line").attr({"y1":160, "y2":160});
-				rows.attr("transform",function(d,j){
-					var buffer = j > i ? 100 : 0;
-					return "translate(0," + ((j*61)+35+buffer) + ")";
-				})
-				drawCurves(data.table[d], data.ranges, period, thiz);
-				//hr.attr("transform","translate(0,0)");
+				var thiz = d3.select(this).classed("row-is-highlighted",true);				
 			});
 			rows.on("mouseleave",function(d,i){
-				clearTimeout(shiftTimer);
 				var thiz = d3.select(this);
-				//thiz.select("rect.pointer-rect").attr("height","60px");
-				thiz.select("rect.back-rect").attr({"height":"60px", "fill":"#ffffff"});
-				thiz.select("line").attr({"y1":60, "y2":60});
-				rows.attr("transform",function(d,j){
-					var buffer = 0;
-					return "translate(0," + ((j*61)+35+buffer) + ")";
-				})
-
-				//hr.attr("transform","translate(0,0)");
-
+				thiz.classed("row-is-highlighted", false);
+			});
+			rows.on("mousedown",function(d,i){
+				rows.classed("row-is-pinned",false);
+				var thiz = d3.select(this).classed("row-is-pinned",true);
+				self.setMetro(d);
 			});
 
-			rows.select("text").text(function(d,i){return VO.lookup[d][0].CBSA_Title});
+			rows.select("p.row-label").text(function(d,i){return self.lookup[d][0].CBSA_Title});
 
-			var swatches = rows.selectAll("g.swatch").data(function(d,i){
+			var swatchContainers = rows.select("div.row-swatches");
+			var swatches = swatchContainers.selectAll("div.swatch").data(function(d,i){
 				var metro = data.table[d];
 				var keyR = period+"R";
 				var keyV = period+"V";
 				return [{r:metro.gr0[keyR], l:"G: "}, {r:metro.pro0[keyR], l:"P: "}, {r:metro.inc0[keyR], l:"I: "}];
 			});
-			var eSwatches = swatches.enter().append("g").classed("swatch",true);
-			eSwatches.append("rect").attr({"width":"30%","height":20,"y":30}).style("shape-rendering","crispEdges").attr("x",function(d,i){return ((i*33)+1.5)+"%"});
-			eSwatches.append("text").attr({"y":45,"text-anchor":"middle"}).style({"font-size":"13px","line-height":"13px"}).attr("x",function(d,i){return ((i*33)+15+1.5)+"%"});
-
+			swatches.enter().append("div").classed("swatch",true).append("p").style({"margin":"0px","text-align":"center"});
 			swatches.exit().remove();
-			//swatches.attr("transform", function(d,i){return "translate("+"(15,26)"});
 
-			swatches.select("rect").attr("fill",function(d,i){return (r2c(d.r)).fill});
-			swatches.select("text").text(function(d,i){return d.l + d.r}).style("fill",function(d,i){return (r2c(d.r)).text});
+			swatches.style("background-color",function(d,i){return (r2c(d.r)).fill})
+					.style("margin-left",function(d,i){return i==0 ? "0%" : "2%"}).style("margin-right",function(d,i){return i===2 ? "-30px" : "0px"})
+					.style({"float":"left", "width":"32%", "pointer-events":"none"});
+			swatches.select("p").text(function(d,i){return d.r}).style("color",function(d,i){return (r2c(d.r)).text});
 
-			var hr = table.selectAll("g.header-row").data([["Growth (G)", "Prosperity (P)", "Inclusion (I)"]]);
-			hr.enter().append("g").classed("header-row",true).append("rect").attr({"height":"40px","width":"100%","fill":"#ffffff"});
-			hr.exit().remove();
+			//draw the detail in each cell
+			var detailTitle = rows.select("div.row-detail").selectAll("p.row-title").data(["The changes that determine overall rankings in growth, prosperity, and inclusion (last <b>" + period.toLowerCase() + " years</b>)"]);
+			detailTitle.enter().append("p").classed("row-title",true).style({"font-size":"13px","line-height":"1.3em","margin":"12px 0px 5px 0px","border-bottom":"1px solid #aaaaaa", "padding-bottom":"4px"});
+			detailTitle.exit().remove();
+			detailTitle.html(function(d,i){return d});
 
-			var hg = hr.selectAll("g.header-swatch").data(function(d,i){return d});
-			var hge = hg.enter().append("g").classed("header-swatch",true);
-			hge.append("rect").attr({"width":"30%","height":1,"y":28, "fill":"#aaaaaa", "stroke":"#ffffff", "stroke-width":0}).style("shape-rendering","crispEdges").attr("x",function(d,i){return ((i*33)+1.5)+"%"});
-			hge.append("text").attr({"y":22,"text-anchor":"middle"}).style({"font-size":"13px","line-height":"13px","fill":"#666666"}).attr("x",function(d,i){return ((i*33)+15+1.5)+"%"}).text(function(d,i){return d});
-			hg.exit().remove();
+			var detailWrap = rows.select("div.row-detail").selectAll("div.as-table").data(function(d,i){return [d]});
+			detailWrap.enter().append("div").classed("as-table",true);
+			detailWrap.exit().remove();
 
-			//calculate svg height
-			var tnode = table.node();
-			var box = tnode.getBoundingClientRect();
-			d3.select(tnode.parentNode).style("height", (Math.round(box.bottom-box.top)+125)+"px");
+			detailWrap.each(function(d,i){
+				drawCurves(data.table[d], data.ranges, period, d3.select(this));
+			})
 
-			var headerPinned = this.storage("headerPinned");
-			var metro = this.getMetro();
-			var self = this;
+			try{
+				var swatchBox = swatchContainers.node().getBoundingClientRect();
+				var swatchWidth = Math.round(swatchBox.right - swatchBox.left);
+				if(swatchWidth < 50 || swatchWidth > 800){
+					throw "bad width";
+				}
+				var SW = swatchWidth+"px";
+			}
+			catch(e){
+				var SW = "100%";
+			}
+			finally{
+				tableHeader.style("width",SW);
+			}
+
 			function scrollToTop(){
-				var metRow = rows.filter(function(d,i){return d==metro})
-				var translate = metRow.attr("transform").replace(/translate\(.*,/g,"").replace(/\D/g,"");
 				try{
-					var T = translate-35;
-					if(T < 0){throw T}
+					rows.classed("row-is-pinned",false);
+					var metRow = rows.filter(function(d,i){return d==metro});
+					metRow.classed("row-is-pinned",true);
+
+					var metNode = metRow.node();
+					var parNode = metNode.parentNode;
+
+					var outerT = parNode.getBoundingClientRect().top;
+					var rowT = metNode.getBoundingClientRect().top;
+					var T = rowT - outerT; 
+
+					var tweenGen = function(){
+						var current = this.scrollTop; //get current amount
+						var interpolate = d3.interpolateNumber(current, T);
+						return function(t){
+							this.scrollTop = interpolate(t);
+						}
+					}
 				}
 				catch(e){
-					var T = 0;
 				}
-				hr.attr("transform","translate(0,"+ T +")");
+
 				var justPinned = true;
-				tableOuter.node().scrollTop = T; 
-				tableOuter.on("scroll",function(){
+				tableOuter.transition().duration(1000).tween("scrollTopTween", tweenGen); 
+
+				/*tableOuter.on("scroll",function(){
 					if(!justPinned){
-						hr.attr("transform","translate(0,0)");20302
+						
 					}
 					else{
 						justPinned = false;
 					}
-				});				
+				});*/				
 			}
 			scrollToTop();
 		}
@@ -230,6 +285,8 @@
 			var smallMap1 = mapData.small[1];
 			var smallMap2 = mapData.small[2];
 
+			var self = this;
+
 			//bind map data -- only once
 			if(!mapData.dataBound){
 				var data = this.viewData("processed"); //drawMaps is only called after processed data has been created
@@ -241,7 +298,11 @@
 					this.metros.attr("r",3);
 				}
 
-				bigMap.setData(data2bind, "geo").drawMap().showTooltips();
+				bigMap.setData(data2bind, "geo").drawMap(function(){
+					this.metros.on("mousedown",function(d,i){
+						self.setMetro(d.geo);
+					})
+				}).showTooltips();
 				smallMap0.setData(data2bind, "geo").drawMap(addNumber);
 				smallMap1.setData(data2bind, "geo").drawMap(addNumber);
 				smallMap2.setData(data2bind, "geo").drawMap(addNumber);
@@ -373,13 +434,22 @@
 			this.header.append("p").text("Growth, prosperity, and inclusion in the 100 largest U.S. metro areas");
 			//var tableWrap = this.container.append("div").style({"padding":"5px 0px 5px 0px", "border":"1px solid #dddddd", "border-width":"1px 0px 1px 0px"}).classed("two-fifths",true).append("div").style("max-height","600px");
 			var headerWrap = this.container.append("div").classed("c-fix",true).style({"margin-bottom":"15px", "border":"1px solid #aaaaaa", "border-width":"0px 1px 1px 1px", "background-color":"#ffffff", "padding":"15px"});
-			var header0 = headerWrap.append("div").classed("three-fifths",true).append("div").style({"padding":"0px 15% 0px 0px", "margin":"0px 0px"});
-			header0.append("p").html('<b>Successful economic development should support:</b>');
-			header0.append("p").html('&nbsp; &nbsp;<b style="color:#20558a">Growth</b>: Economic expansion').style({"margin":"0px"});
-			header0.append("p").html('&nbsp; &nbsp;<b style="color:#20558a">Prosperity</b>: A rising standard of living').style({"margin":"0px"});
-			header0.append("p").html('&nbsp; &nbsp;<b style="color:#20558a">Inclusion</b>: Broadly shared prosperity');
+			var header0 = headerWrap.append("div").classed("three-fifths",true).append("div").style({"padding":"0px 5% 0px 0px", "margin":"0px 0px"});
 			
-			header0.append("p").html('<span>Explore the data below to find out which large metro areas have improved most on these metrics over time.</span>').style({"font-style":"italic","line-height":"1.4em","padding-top":"5px"});
+			//left side of header -- includes logo
+			header0.append("p").html('<b>Successful economic development</b> should support:').style("margin-bottom","0px");
+			var header01 = header0.append("div").classed("as-table",true).append("div").classed("as-table-row",true);
+			
+
+			header01.append("div").classed("as-table-cell",true).style({"width":"22%","height":"22%","vertical-align":"middle"}).append("img").attr("src", "./assets/circlelogo.png").style({"width":"80%","height":"auto"});
+
+			var header011 = header01.append("div").classed("as-table-cell",true).style({"width":"78%","vertical-align":"middle"})
+
+			header011.append("p").html('<b style="color:#20558a">Growth</b>: Economic expansion').style({"margin":"0px"});
+			header011.append("p").html('<b style="color:#20558a">Prosperity</b>: A rising standard of living').style({"margin":"0px"});
+			header011.append("p").html('<b style="color:#20558a">Inclusion</b>: Broadly shared prosperity');
+			
+			header0.append("p").html('<span>Explore the data below to find out which large metro areas have improved most on these metrics over time.</span>').style({"font-style":"normal","line-height":"1.4em","padding":"5px 10px 0px 0px", "margin":"5px 20px 0px 0px", "border-top":"1px dotted #aaaaaa", "clear":"both", "font-size":"13px"});
 			
 			
 			//CONTROLS
@@ -403,9 +473,11 @@
 
 			//MAPS SETUP
 			var mapWrap = this.container.append("div").classed("three-fifths no-mobile-display",true).append("div").style({"padding":"0px 30px 0px 0px","position":"relative", "overflow":"hidden"});
-			var bigMap = mapWrap.append("div").style({"position":"relative","z-index":"5"});
+			var bigMapOuter = mapWrap.append("div").style({"position":"relative","z-index":"5"});
+			bigMapOuter.append("p").classed("map-title",true).text("Metro area map").style({"font-weight":"bold", "line-height":"1em", "margin":"0px 15px"});
+			var bigMap = bigMapOuter.append("div");
 
-			var smallMapWrap = mapWrap.append("div").classed("c-fix",true)
+			var smallMapWrap = mapWrap.append("div").classed("c-fix",true);
 			var mapsAnno = smallMapWrap.append("div").style("min-height","50px");
 			var smallMaps = smallMapWrap.selectAll("div.small-map").data([1,2,3]).enter().append("div").classed("small-map",true);
 			smallMapWrap.selectAll("div").style({"width":"48%","padding-right":"2%","float":"left","position":"relative","z-index":"3"});
@@ -424,22 +496,34 @@
 
 			//TABLE SETUP
 			var rightSide = this.container.append("div").classed("two-fifths",true);
+			var tableHeaderWrap = rightSide.append("div");
+			tableHeaderWrap.append("p").classed("table-title",true).text("Metro area rankings").style({"font-weight":"bold", "line-height":"1em", "margin":"0px 15px 10px 10px"});
+
+			var tableHeader = tableHeaderWrap.append("div").style({"background-color":"#dddddd", "padding":"7px 10px 5px 10px"}).append("div").classed("c-fix",true);
+			
+			tableHeader.selectAll("div.th").data(["GROWTH","PROSPERITY","INCLUSION"]).enter().append("div")
+				.style("margin-left",function(d,i){return i==0 ? "0%" : "2%"})
+				.style("margin-right",function(d,i){return i===2 ? "-30px" : "0px"})
+				.style({"float":"left", "width":"32%"})
+				.append("p").style({"line-height":"1em","margin":"0px","font-size":"11px","text-align":"center"})
+				.text(function(d,i){return d});
 
 			var tableOuter = rightSide.append("div").style({"clear":"both","border":"1px solid #aaaaaa", "border-width":"1px 0px 1px 0px", "padding":"0px", "max-height":"750px", "overflow-y":"auto"});
-			var tableWrap = tableOuter.append("div").style("padding","0px 10px 0px 0px");
-			var table = tableWrap.append("svg").style("width","100%").append("g").attr("id","core-svg-table");
+			var tableWrap = tableOuter.append("div").style("padding","0px 10px 500px 0px");
+			var table = tableWrap.append("div").style("width","100%"); //.append("g").attr("id","core-svg-table");
 
-			var centerLabels = function(){
+			/*var centerLabels = function(){
 				var b = table.node().getBoundingClientRect();
 				var w = Math.round(b.right - b.left);
 				tableColumnWrap.style("width",w+"px");				
-			}
+			}*/
 			//window.addEventListener("resize",centerLabels);
 			//this.storage("centerLabels",centerLabels);
 
 
 			this.storage("table", table); //store these in the view state
 			this.storage("tableOuter", tableOuter);
+			this.storage("tableHeader", tableHeader);
 			this.storage("tableHeaderPinned", true);
 
 			this.storage("mapWrap", mapWrap);
