@@ -32,9 +32,9 @@ GrChg <- read.csv("Growth Change.csv", stringsAsFactors=FALSE, na.strings=nastr)
 GrRnk <- read.csv("Growth Ranks.csv", stringsAsFactors=FALSE, na.strings=nastr)
 GrVal <- read.csv("Growth Values.csv", stringsAsFactors=FALSE, na.strings=nastr)
 
-IncRaceChg <- read.csv("Inclusion by Race MAD Change.csv", stringsAsFactors=FALSE, na.strings=nastr)
-IncRaceRnk <- read.csv("Inclusion by Race MAD Ranks.csv", stringsAsFactors=FALSE, na.strings=nastr)
-IncRaceVal <- read.csv("Inclusion by Race MAD Values.csv", stringsAsFactors=FALSE, na.strings=nastr)
+IncRaceChg <- read.csv("Inclusion by Race AD Change.csv", stringsAsFactors=FALSE, na.strings=nastr)
+IncRaceRnk <- read.csv("Inclusion by Race AD Ranks.csv", stringsAsFactors=FALSE, na.strings=nastr)
+IncRaceVal <- read.csv("Inclusion by Race AD Values.csv", stringsAsFactors=FALSE, na.strings=nastr)
 
 IncChg <- read.csv("Inclusion Change.csv", stringsAsFactors=FALSE, na.strings=nastr)
 IncRnk <- read.csv("Inclusion Ranks.csv", stringsAsFactors=FALSE, na.strings=nastr)

@@ -53,6 +53,67 @@ function MetroInteractive(appWrapperElement){
 		
 	}
 	
+
+	//NUMBER FORMATTING
+	S.formats = {};
+	//basic numeric formatting -- add in comma, round to x decimal places
+	S.formats.num0 = d3.format(",.0f");
+	S.formats.num1 = d3.format(",.1f");
+	S.formats.num2 = d3.format(",.2f");
+	S.formats.num3 = d3.format(",.3f");
+	//numeric change formatting
+	S.formats.numch0 = d3.format("+,.0f");
+	S.formats.numch1 = d3.format("+,.1f");
+	S.formats.numch2 = d3.format("+,.2f");
+	S.formats.numch3 = d3.format("+,.3f");
+	//percent formatting -- x100 + %
+	S.formats.pct0 = d3.format(",.0%");
+	S.formats.pct1 = d3.format(",.1%");
+	S.formats.pct2 = d3.format(",.2%");
+	S.formats.pct3 = d3.format(",.3%");
+	//percent change
+	S.formats.pctch0 = d3.format("+,.0%");
+	S.formats.pctch1 = d3.format("+,.1%");
+	S.formats.pctch2 = d3.format("+,.2%");
+	S.formats.pctch3 = d3.format("+,.3%");
+	//dollars
+	S.formats.doll0 = d3.format("$,.0f");
+	S.formats.doll1 = d3.format("$,.1f");
+	S.formats.doll2 = d3.format("$,.2f");
+	S.formats.doll3 = d3.format("$,.3f");
+	//dollar change
+	S.formats.dollch0 = d3.format("+$,.0f");
+	S.formats.dollch1 = d3.format("+$,.1f");
+	S.formats.dollch2 = d3.format("+$,.2f");
+	S.formats.dollch3 = d3.format("+$,.3f");
+
+	//ranks
+	S.formats.rankth = function(r){
+		if(r === undefined || r === null){return "N/A"}
+		try{
+			//keep int versions
+			var num = r;
+			var mod = r%100; //for ranks beyond 100
+
+			//coerce to string
+			var s = r + "";
+			var f = +(s.substring(s.length-1)); //take last char and coerce to an integer
+
+			//typical suffixes
+			var e = ["th","st","nd","rd","th","th","th","th","th","th"];
+
+			var rth = (mod>10 && mod<20) ? r + "th" : (r + e[f]); //handles exceptions for X11th, X12th, X13th, X14th
+		}
+		catch(e){
+			var rth = "N/A";
+		}
+		finally{
+			return rth;
+		}
+	}
+
+
+
 	//view listeners need to:
 	// draw a view for a selected metro
 	// each listener should take 
@@ -84,6 +145,7 @@ function MetroInteractive(appWrapperElement){
 
 		//hold parameters for the current view redrawView will be drawn with this object as the this
 		var viewOps = {};
+		viewOps.formats = S.formats;
 		viewOps.changeEvent = S.changeEvent;
 		viewOps.firstDraw = true; //useful for determining if particular information should be shown on first view
 		viewOps.getMetro = function(){return S.metro;}

@@ -13,6 +13,18 @@ function dotMap(container){
   this.svg = this.currentMap.append("svg").style({"width":"100%", "height":"100%"});
   this.stateG = this.svg.append("g").attr("transform","translate(0,0)");
   this.dotG = this.svg.append("g").attr("transform","translate(0,0)");
+  
+  //DOT HIGHLIGHTING
+  this.annoG = this.svg.append("g").attr("transform","translate(0,0)");
+  //4 dots total:
+  //the 2 "pin" dots are meant to indicate a (persistent) metro selection; the 2 "hover" dots are meant to signal a (temporary) metro highlight/selection/hover
+  //within each pair, the "match" dot is meant to match the underlying dot attrs, while the other ("loc") dot serves to indicate location--it defaults to an oversized, empty circle
+  //set sensible defaults for "loc" ("highlight") attributes
+  this.dotHL = {pin:{geo:null, r:2, stroke:"#333333"}, hover:{geo:null, r:2, stroke:"#333333"}}; 
+  this.dotHL.pin.match = this.annoG.append("circle").attr({"cx":"-100","cy":"-100","r":"0","fill":"#ffffff"}).style("pointer-events","none");
+  this.dotHL.pin.loc = this.annoG.append("circle").attr({"cx":"-100","cy":"-100","r":"0","fill":"#ffffff"}).style("pointer-events","none");
+  this.dotHL.hover.match = this.annoG.append("circle").attr({"cx":"-100","cy":"-100","r":"0","fill":"#ffffff"}).style("pointer-events","none");
+  this.dotHL.hover.loc = this.annoG.append("circle").attr({"cx":"-100","cy":"-100","r":"0","fill":"#ffffff"}).style("pointer-events","none");
 
   this.tooltip = this.currentMap.append("div")
       .style({"position":"absolute", "display":"block", "visibility":"hidden",
@@ -64,6 +76,63 @@ dotMap.prototype.showOverlay = function(){this.overlay.transition().duration(100
 dotMap.prototype.hideOverlay = function(){this.overlay.transition().duration(1000).style("opacity","0").each("end",function(){d3.select(this).style("display","none")});}
 
 dotMap.prototype.textAccessor = function(fn){if(!!fn){this.getText = fn}}
+
+var setHighlight = function(geoCode, pin, color_override, radius_scalar){
+ try{
+  //dots: an object holding the (permanent) pinned dot or the (temporary) hover dot and stateful parameters
+  var dots = pin ? this.dotHL.pin : this.dotHL.hover;
+  dots.geo = geoCode; //record selected geo, even if undefined
+    
+  if(!geoCode){
+    dots.match.attr({"cx":"-100","cy":"-100","r":"0","fill":"#ffffff","stroke-width":"0","stroke":"#ffffff"});
+    dots.loc.attr({"cx":"-100","cy":"-100","r":"0","fill":"#ffffff","stroke-width":"0","stroke":"#ffffff"});
+  }
+  else if(this.metros){
+    var metDot = this.metros.filter(function(d,i){
+      return d.geo==geoCode;
+    });
+    var X = metDot.attr("cx");
+    var Y = metDot.attr("cy");
+    var fill = metDot.attr("fill");
+    var r = parseInt(metDot.attr("r"));
+    var stroke = metDot.attr("stroke");
+    var strokeW = metDot.attr("stroke-width");
+
+    var locDA = pin ? "none" : "2,2";
+
+    var rScale = !!radius_scalar ? radius_scalar : dots.r;
+
+    var newStroke = !!color_override ? color_override : dots.stroke;
+    try{var newR = r*rScale;}
+    catch(e){var newR = r;}
+
+    dots.match.attr({"cx":X, "cy":Y, "fill":fill, "r":r, "stroke":stroke, "stroke-width":strokeW});
+    dots.loc.attr({"cx":X, "cy":Y, "fill":"none", "r":newR, "stroke":newStroke, "stroke-width":"1", "stroke-dasharray":locDA});
+
+    //record parameters for the "loc" dot
+    dots.r = rScale;
+    dots.stroke = newStroke;
+  }
+ }
+ catch(e){
+  console.log(e);
+ }
+}
+//pin a hightlight dot
+dotMap.prototype.select = function(geoCode, stroke_override, radius_scalar){
+  setHighlight.call(this, geoCode, true, stroke_override, radius_scalar);
+}
+//pin a hightlight dot
+dotMap.prototype.highlight = function(geoCode, stroke_override, radius_scalar){
+  setHighlight.call(this, geoCode, false, stroke_override, radius_scalar);
+}
+//refresh the pin and hover dots based on the last metro pinned/hovered (often undefined which removes the dot)
+dotMap.prototype.refreshHighlights = function(){
+  var pDots = this.dotHL.pin;
+  var hDots = this.dotHL.hover;
+  this.select(pDots.geo, pDots.stroke, pDots.r);
+  this.highlight(hDots.geo, hDots.stroke, hDots.r);
+}
 
 //Overview of class and method usage
 //{1} create new dotMap object
@@ -229,6 +298,8 @@ dotMap.prototype.makeResponsive = function(callback){
           }
           return coord[1];
       });
+
+      self.refreshHighlights(); //redraw pin/hover dots based on last parameters
     }
     
     //Unlock callback feature in future update
@@ -251,8 +322,6 @@ dotMap.prototype.makeResponsive = function(callback){
 //textAccessor is a function that returns an array of data based from each element of data -- it shouldn't include name
 dotMap.prototype.showTooltips = function(textAccessor){
   var self = this;
-
-  var DOT = self.dotG.append("circle").attr({"cx":"-100", "cy":"-100", "r":"0"}).style("pointer-events","none");
 
   if(!!textAccessor){this.getText = textAccessor}
 
@@ -278,16 +347,14 @@ dotMap.prototype.showTooltips = function(textAccessor){
 
     var showTip = function(d, i){
       clearTimeout(timer);
-
       //get dot attributes
       var thisDot = d3.select(this);
       var cx = thisDot.attr("cx");
       var cy = thisDot.attr("cy");
       var r = thisDot.attr("r");
-      var sw = thisDot.attr("stroke-width");
-      var col = thisDot.attr("fill");
+
       //show hover dot immediately
-      DOT.attr({"cx":cx, "cy":cy, "r":r, "stroke-width":sw, "stroke":col, "fill":col});
+      self.highlight(d.geo);
 
       //get text
       var tdata = [d.name];
@@ -324,11 +391,13 @@ dotMap.prototype.showTooltips = function(textAccessor){
     var hideTip = function(){
       clearTimeout(timer);
 
-      DOT.attr({"cx":"-100", "cy":"-100", "r":"0", "stroke-width":"0px", "stroke":"#ffffff", "fill":"#ffffff"});
+
       
       //hide tooltip on a timer
       timer = setTimeout(function(){
         self.tooltip.style("visibility","hidden");
+        //remove hover dot
+        self.highlight();
       }, 1000);
     }
 
