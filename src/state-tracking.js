@@ -76,6 +76,11 @@ function MetroInteractive(appWrapperElement){
 	S.formats.pctch1 = d3.format("+,.1%");
 	S.formats.pctch2 = d3.format("+,.2%");
 	S.formats.pctch3 = d3.format("+,.3%");
+	//percentage points change
+	S.formats.ppch0 = function(v){return S.formats.numch0(v*100) + " p.p."};
+	S.formats.ppch1 = function(v){return S.formats.numch1(v*100) + " p.p."};
+	S.formats.ppch2 = function(v){return S.formats.numch2(v*100) + " p.p."};
+	S.formats.ppch3 = function(v){return S.formats.numch3(v*100) + " p.p."};
 	//dollars
 	S.formats.doll0 = d3.format("$,.0f");
 	S.formats.doll1 = d3.format("$,.1f");

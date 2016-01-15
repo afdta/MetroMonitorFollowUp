@@ -66,73 +66,61 @@
 				}
 			}
 
-			try{
-				var data = []
-			}
-			catch(e){
-
-			}
-
-			var zot = [0,1,2];
-
+		try{
+			var ch_NW_ER = (end.NonWhite_EmpRatioV - start.NonWhite_EmpRatioV)*1;
+			var ch_W_ER = (end.White_EmpRatioV - start.White_EmpRatioV)*1;
 			
-			return null;
+			var ch_NW_ME = (end.NonWhite_MedEarnV/start.NonWhite_MedEarnV)-1;
+			var ch_W_ME = (end.White_MedEarnV/start.White_MedEarnV)-1;
 
+			var ch_NW_RP = (end.NonWhite_RelPovV - start.NonWhite_RelPovV)*1;
+			var ch_W_RP = (end.White_RelPovV - start.White_RelPovV)*1;
 
-			//instead ov curves, 
-			var catmap = zot.map(function(n,i,a){
-				var sa = [grI[n], proI[n], incI[n]];
-				return sa.map(function(ind, i, a){
-					var I = ind.c+period+"V";
-					var R = ranges[I];
-					var value = metro[(ind.b+"1")][I];
-					return {cat:ind.b, metric:I, label: ind.ls, value:value, maxmin:R, absmax:d3.max(R, function(d,i){return Math.abs(d)})};
-				});
-			});
+			var r0 = [{text:""}, {text:"Emp.-to-pop. ratio"}, {text:"Median earnings"}, {text:"Relative poverty"}]
 
-			/*var headerRow = g.selectAll("div.as-table-header-row").data([["Growth", "Prosperity", "Inclusion"]]);
-			headerRow.enter().append("div").classed("as-table-header-row as-table-row",true);
-			headerRow.exit().remove();
+			var r1 = [{text:start.Year},
+					  {nw:start.NonWhite_EmpRatioV, w:start.White_EmpRatioV, fmt:formats.pct1},
+					  {nw:start.NonWhite_MedEarnV, w:start.White_MedEarnV, fmt:formats.doll0},
+					  {nw:start.NonWhite_RelPovV, w:start.White_RelPovV, fmt:formats.pct1}
+					 ]
 			
-			headerRow.selectAll("div.as-table-cell").data(function(d,i){return d}).enter().append("div").classed("as-table-cell",true)
-			.style("width",function(d,i){
-				return i==2 ? "32%" :"34%";
-			}).append("p").text(function(d,i){return d}).style({"font-size":"11px", "color":"#666666", "padding-bottom":"5px"});*/
+			var r2 = [{text:end.Year},
+					  {nw:end.NonWhite_EmpRatioV, w:end.White_EmpRatioV, fmt:formats.pct1},
+					  {nw:end.NonWhite_MedEarnV, w:end.White_MedEarnV, fmt:formats.doll0},
+					  {nw:end.NonWhite_RelPovV, w:end.White_RelPovV, fmt:formats.pct1}
+					 ]
 
-			var threeRows = g.selectAll("div.as-table-row").data(catmap);
+			var r3 = [{text:"Change"},
+					  {nw:ch_NW_ER, w:ch_W_ER, fmt:formats.ppch1},
+					  {nw:ch_NW_ME, w:ch_W_ME, fmt:formats.pctch1},
+					  {nw:ch_NW_RP, w:ch_W_RP, fmt:formats.ppch1}
+					 ]
+
+			var threeRows = g.selectAll("div.as-table-row").data([r0,r1,r2,r3]);
 			threeRows.enter().append("div").classed("as-table-row",true);
 			threeRows.exit().remove();
 
-			var threeCells = threeRows.selectAll("div.as-table-cell").data(function(d,i){return d});
-			threeCells.enter().append("div").classed("as-table-cell",true).style("width",function(d,i){
-				return i==2 ? "32%" :"34%";
-			})
+			var fourCells = threeRows.selectAll("div.as-table-cell").data(function(d,i){return d});
+			fourCells.enter().append("div").classed("as-table-cell",true).style("width",function(d,i){
+				return i==0 ? "22%" :"26%";
+			}).style("vertical-align", function(d,i){return i===0 ? "top" : "middle"});
+			fourCells.exit().remove();
 
-			threeCells.exit().remove();
-
-			var cell_labels = threeCells.selectAll("div.value-label").data(function(d,i){
-				return [d.label];
-			});
-			cell_labels.enter().append("div").classed("value-label",true).append("p");
-			cell_labels.exit().remove();
-			cell_labels.select("p").text(function(d,i){return d}).style({"font-size":"11px","text-transform":"uppercase"});
-
-			var cell_vals = threeCells.selectAll("div.value-actual").data(function(d,i){
-				return [d.value];
+			var cell_vals = fourCells.selectAll("div.value-actual").data(function(d,i){
+				var ta = i%4 ===0 ? "right" : "center";
+				var label = [{v:d.text, w:"normal", ta:ta}]; //[{v:"non-white", w:"bold", ta:ta}, {v:"white", w:"normal", ta:ta}] : 
+				return d.hasOwnProperty("fmt") ? [{v: d.fmt(d.nw), w:"bold", ta:ta}, {v:d.fmt(d.w), w:"normal", ta:ta}] : label;
 			});
 			cell_vals.enter().append("div").classed("value-actual",true).append("p");
 			cell_vals.exit().remove();
-			cell_vals.select("p").text(function(d,i){return formats.pctch1(d)}).style({"font-size":"13px","font-weight":"bold"});
+			cell_vals.select("p").text(function(d,i){return d.v})
+				.style({"font-size":"13px","margin":"0px","padding":"3px","line-height":"1em", "text-align":"center"})
+				.style("font-weight",function(d,i){return d.w});
+				//.style("text-align",function(d,i){return d.ta});
+		}
+		catch(e){
 
-			/*var threeCol = g.selectAll("g.table-curve-columns").data(catmap);
-			threeG.enter().append("g").attr("transform","translate(0,0)").classed("table-curve-columns",true);
-			threeG.exit().remove();
-
-			var threeRow = threeCol.selectAll("g.table-curve-rows").data(function(d,i){return d});
-			var threeRowEnter = threeRow.enter().append("g").classed("table-curve-rows",true);
-			threeRowEnter.append("text").classed("table-curve-label",true);
-			threeRowEnter.append("text").classed("table-curve-value",true);
-			threeRowEnter.append("line")*/
+		}
 
 		}
 
@@ -157,25 +145,26 @@
 			rowEnter.append("p").classed("row-label",true).style({"pointer-events":"none","margin":"0px 0px 5px 0px","line-height":"1em"});
 			rowEnter.append("div").classed("c-fix row-swatches",true);
 			rowEnter.append("div").classed("c-fix row-detail",true);
+			
 			rows.exit().remove();
 
 			
 			rows.on("mouseenter",function(d,i){
 				var thiz = d3.select(this).classed("row-is-highlighted",true);
 				//highlight on map
-				/*var mapData = self.storage("mapData");
+				var mapData = self.storage("mapData");
 				if(!!mapData){
 					mapData.large.highlight(d,null,2);
-				}	*/			
+				}		
 			});
 			rows.on("mouseleave",function(d,i){
 				var thiz = d3.select(this);
 				thiz.classed("row-is-highlighted", false);
 				//remove highlight on map
-				/*var mapData = self.storage("mapData");
+				var mapData = self.storage("mapData");
 				if(!!mapData){
 					mapData.large.highlight();
-				}	*/
+				}
 			});
 			rows.on("mousedown",function(d,i){
 				rows.classed("row-is-pinned",false);
@@ -190,8 +179,6 @@
 			var swatches = swatchContainers.selectAll("div.swatch").data(function(d,i){
 				var metro = data.table[d];
 				var keyR = period+"R";
-				console.log(metro);
-				console.log(keyR);
 				return [{r:metro.rank[keyR], l:"G"}];
 				return [{r:metro.gr0[keyR], l:"G: "}];
 			});
@@ -203,7 +190,7 @@
 			swatches.select("p").text(function(d,i){return self.formats.rankth(d.r)}).style("color",function(d,i){return (r2c(d.r)).text});
 
 			//draw the detail in each cell
-			var detailTitle = rows.select("div.row-detail").selectAll("p.row-title").data(["Underlying detail (last <b>" + period.toLowerCase() + " years</b>)"]);
+			var detailTitle = rows.select("div.row-detail").selectAll("p.row-title").data(["Inclusion by race measures the extent to which the gap between whites and non-whites is narrowing. The data for <b>non-whites is bolded</b> in the table below."]);
 			detailTitle.enter().append("p").classed("row-title",true).style({"font-size":"13px","line-height":"1.3em","margin":"12px 0px 5px 0px","border-bottom":"1px solid #aaaaaa", "padding-bottom":"4px"});
 			detailTitle.exit().remove();
 			detailTitle.html(function(d,i){return d});
@@ -268,97 +255,57 @@
 		//drawMaps won't be called until processed data is loaded
 		function drawMaps(){
 			var period = this.storage("period");
-			var category = this.storage("category");
-
 			var mapData = this.storage("mapData");
-
 			var bigMap = mapData.large;
-			var smallMap0 = mapData.small[0];
-			var smallMap1 = mapData.small[1];
-			var smallMap2 = mapData.small[2];
 
 			var self = this;
 
 			//bind map data -- only once
 			if(!mapData.dataBound){
 				var data = this.viewData("processed"); //drawMaps is only called after processed data has been created
-				var data2bind = data.universe.map(function(d,i){return {geo:d, dat:data.table[d]}});
-
-				var addNumber = function(){
-					this.svg.append("circle").attr({"cx":"73%","cy":"20px","r":"8","fill":"#dddddd"});
-					this.svg.append("text").attr({"x":"73%","y":"24px"}).text(function(d,i){return d}).style({"fill":"#333333","font-size":"11px"}).attr("text-anchor","middle");
-					this.metros.attr("r",3);
-				}
+				var data2bind = data.universe.map(function(d,i){return {geo:d, inclusion:data.table[d]}});
 
 				bigMap.setData(data2bind, "geo").drawMap(function(){
 					this.metros.on("mousedown",function(d,i){
 						self.setMetro(d.geo);
 					})
 				}).showTooltips();
-				smallMap0.setData(data2bind, "geo").drawMap(addNumber);
-				smallMap1.setData(data2bind, "geo").drawMap(addNumber);
-				smallMap2.setData(data2bind, "geo").drawMap(addNumber);
-
 				mapData.dataBound = true;
-
-				/*bigMap.showOverlay();
-				setTimeout(function(){
-					bigMap.hideOverlay();
-				},2000);*/
 			}
 
-			var indicators = getInd(category);
 			//function generator
-			function refill(isComposite, indicatorIndex){
-				var obj = !!isComposite ? category+"0" : category+"1"; //e.g. gr0 (composite indicator) vs gr1 (component indicators);
-				var r = !!isComposite ? 6 : 3;
-				var ind = !!isComposite ? period+"R" : (indicators[indicatorIndex].c)+period+"R";
+			function refill(){
 
+				var key = period+"R";
 				//fn to refill the map dots based on the selection of indicator and time period -- the thisArg will be the map object
-				return function(){
-					this.metros.attr("r", function(d,i){
-						return r;
-					});
+				
+				this.metros.attr("r", function(d,i){
+					return 6;
+				});
 
-					var self = this;
+				var self = this;
 
-					//no transitions -- the select and highlight methods match the parameters of the underlying dots at the start of the transition causing erroneous results
-					this.metros.attr("fill", function(d,i){
-						var dat_obj = d.data.dat[obj];
-						var col = r2c(dat_obj[ind]).fill;
-						return col;
-					});
+				//no transitions -- the select and highlight methods match the parameters of the underlying dots at the start of the transition causing erroneous results
+				this.metros.attr("fill", function(d,i){
+					var rank = d.data.inclusion.rank[key];
+					console.log(rank);
+					var col = r2c(rank).fill;
+					return col;
+				});
 
-					//for composite maps, set textAccessor
-					if(!!isComposite){
-						var ta = function(d){
-							var overall = "Overall rank: " + d.data.dat[obj][ind] + " of 100";
-							return [overall];
-						}
-					}
-					this.textAccessor(ta);
+				//set text accessor for hover boxes
+				var ta = function(d){
+					var rank = d.data.inclusion.rank[key]
+					var overall = "Overall rank: " + rank + " of 100";
+					return [overall];
 				}
+				this.textAccessor(ta);
+
 			}
 
 			var metro = this.getMetro();
 			//refill large map
-			bigMap.drawMap(refill(true)).select(metro, null, 2);
-
-			//refill small map
-			smallMap0.drawMap(refill(false,0)).select(metro, null, 2.5);
-			smallMap1.drawMap(refill(false,1)).select(metro, null, 2.5);
-			smallMap2.drawMap(refill(false,2)).select(metro, null, 2.5);
-
-			var anno = mapData.mapsAnno.selectAll("div.small-map-anno-wrap").data(indicators);
-			var annoE = anno.enter().append("div").classed("c-fix small-map-anno-wrap",true).style({"float":"left"});
-			annoE.append("div").style({"background-color":"#dddddd", "float":"left", "height":"16px", "width":"16px", "border-radius":"8px"})
-				 .append("p").style({"font-size":"11px", "line-height":"11px", "padding":"3px 0px 2px 0px" ,"margin":"0px","text-align":"center"});
-			annoE.append("p").classed("small-map-anno-text",true).style({"float":"left","font-size":"13px", "line-height":"15px","margin":"1px 0px 0px 4px"});
-			anno.exit().remove();
-			anno.style({"margin":"5px 10px 5px 0px"})
-
-			anno.select("div").select("p").text(function(d,i){return d.i+1});
-			anno.select("p.small-map-anno-text").text(function(d,i){return d.l})
+			bigMap.drawMap(refill).select(metro, null, 2);
 
 		}
 
@@ -390,14 +337,12 @@
 					self.storage("period",d.c);
 					buttons.period.classed("generic-button-selected", function(d,j){return i===j});
 					drawTable.call(self);
-					//drawMaps.call(self);
+					drawMaps.call(self);
 				});
 
 			}
 
 			drawTable.call(this);
-
-			return 1;
 
 			//if redraw is being called because of achange in view or metro, redraw map, otherwise the map-class handles responsiveness
 			if(this.changeEvent.view || this.changeEvent.metro){
@@ -436,12 +381,13 @@
 
 
 						//MAPS SETUP
-						var mapWrap = this.container.append("div").classed("three-fifths no-mobile-display",true).append("div").style({"padding":"0px 30px 0px 0px","position":"relative", "overflow":"hidden"});
+						var mapWrap = this.container.append("div").style("overflow","visible").classed("three-fifths no-mobile-display",true).append("div").style({"padding":"0px 30px 0px 0px","position":"relative"});
 						var bigMapOuter = mapWrap.append("div").style({"position":"relative","z-index":"5"});
 						bigMapOuter.append("div").style({"padding":"0px 0px 10px 0px", "margin":"0px 10px 10px 0px", "border-bottom":"1px solid #aaaaaa"})
 								   .append("p").classed("map-title",true).text("Metro area maps").style({"font-weight":"bold", "line-height":"1em", "margin":"0px 15px"});
 						var bigMap = bigMapOuter.append("div");
 
+						/*
 						var smallMapWrap = mapWrap.append("div").classed("c-fix",true);
 							var mapsAnno = smallMapWrap.append("div").classed("c-fix",true)
 													   .style({"border-bottom":"1px dotted #aaaaaa","padding":"0px 0px 5px 0px","margin":"0px 10px 15px 0px"})
@@ -458,15 +404,15 @@
 							var map = new dotMap(this);
 							map.makeResponsive();
 							sMaps.push(map);
-						})
+						})*/
 						//big map
+
 						var bMap = new dotMap(bigMap.node());
 						bMap.makeResponsive();
-						this.storage("mapData",{large:bMap, small:sMaps, mapsAnno:mapsAnno, dataBound:false});
+						this.storage("mapData",{large:bMap, dataBound:false});
 
 						this.storage("mapWrap", mapWrap);
 						this.storage("period","Five");
-						this.storage("category","gr")
 
 
 						//TABLE SETUP
