@@ -148,9 +148,14 @@
 	text-align:center;
 }
 
-.metro-interactive-view.out-left{left:-110%; opacity:0; z-index:1;}
-.metro-interactive-view.out-right{left:110%; opacity:0; z-index:1;}
-.metro-interactive-view.out-of-view{}
+.metro-interactive-view.out-left{left:-110%; opacity:1; z-index:1;}
+.metro-interactive-view.out-right{left:110%; opacity:1; z-index:1;}
+.metro-interactive-view.out-of-view{
+	-webkit-transition:none;
+	-moz-transition:none;
+	-o-transition:none;
+	transition:none;
+}
 .metro-interactive-view.bad-view{opacity:0.3;}
 .metro-interactive-view.bad-view::before{content:"An error occured while retrieving your data. Please reload the page"; position:absolute; top:50px; left:30px;}
 

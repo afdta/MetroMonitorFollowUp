@@ -160,7 +160,7 @@ dotMap.prototype.setDim = function(){
   this.height = Math.round(this.width*this.aspect);
   this.currentMap.style("height",(this.height+"px")); //set SVG wrapper height
 
-  this.proj = d3.geo.albersUsa().scale(this.width*this.proj_scale).translate([this.width/2, this.height/2]);  
+  this.proj = d3.geo.albersUsa().scale(this.width*this.proj_scale).translate([this.width/2, (this.height/2)]);  
   this.path = d3.geo.path().projection(this.proj);
 
   return this; //return map object to enable method chaining

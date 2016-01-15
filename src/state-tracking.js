@@ -118,8 +118,8 @@ function MetroInteractive(appWrapperElement){
 	// draw a view for a selected metro
 	// each listener should take 
 	// view listeners will 1) change views and draw selected metro version. if the view is already shown, it just draws the selected metro version of the view.
-	viewRegister = {};
-	viewList = [];
+	var viewRegister = {};
+	var viewList = [];
 
 	//view listener that will be called when the view is changed
 
@@ -198,9 +198,26 @@ function MetroInteractive(appWrapperElement){
 
 		//handle the swapping of slides -- bring this slide into view
 		function show_this_slide(){
-			//var index = S.currentSlide ? S.currentSlide.datum() : viewNum;
 			var index_to_show = viewNum;
+			var current = !!S.currentSlide ? S.currentSlide.datum() : 0;
 
+			//don't allow slides in between the current view and next view to transition (apply out-of-view class)
+			S.allSlides.classed("out-of-view", function(d,i){
+				try{
+					var inBetween = false; //we don't want these to animate
+					if(d > current && d < index_to_show){
+						var inBetween = true;
+					}
+					else if(d < current && d > index_to_show){
+						var inBetween = true
+					}
+				}
+				catch(e){
+					var inBetween = false;
+				}
+
+				return inBetween;
+			});
 			S.allSlides.classed("out-right", function(d,i){
 				return d > index_to_show;
 			});
@@ -244,7 +261,6 @@ function MetroInteractive(appWrapperElement){
 		function get_data(){
 			viewOps.dataState = 1; //now loading
 			viewLoading();
-
 			if(!dataURI){
 				draw_view(); //if no URI set, just draw the view
 				viewOps.dataState = 3; //no data

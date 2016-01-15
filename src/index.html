@@ -44,25 +44,15 @@
 			.html("<p>ECONOMIC DEVELOPMENT EFFORTS SHOULD TO CHANGE TO REFLECT THIS</p>")
 
 	});
-</script>
-<script src="coreIndicatorsView.js"></script>		
-
-<script>
-	var view2 = MetroMonitorVersion2.addView(function(){
-		this.container.append("p").text("Metro Index");
-	}, null, function(){this.header.append("p").text("Outcomes by race")})
-
-	//MetroMonitorVersion2.metro = "10140" //can set the default
-	
 	view0.name("About");
+</script>
+
+<script src="coreIndicatorsView.js"></script>
+<script src="inclusionByRaceView.js"></script>	
 	
-	view2.name("Inclusion by race");
-</script>
 
 
-<script>
-	MetroMonitorVersion2.cap(); //tell the app to try and auto-draw based on hash and defaults
-</script>
+<script>MetroMonitorVersion2.cap(); //tell the app to try and auto-draw based on hash and defaults</script>
 
 </body>
 </html>

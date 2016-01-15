@@ -3,12 +3,11 @@
 #index values are 0 in 2000
 #are percentage points used
 
-
-
 library("reshape2")
 library("ggplot2")
 library("GGally")
 library("metromonitor")
+library("jsonlite")
 
 #IMPORT
 tryCatch(
@@ -46,6 +45,7 @@ ProVal <- read.csv("Prosperity Values.csv", stringsAsFactors=FALSE, na.strings=n
 
 ProIdx <- read.csv("Prosperity Index.csv", stringsAsFactors=FALSE, na.strings=nastr)
 
+#look at variables
 listIndicators <- function(...){
   args <- list(...)
 
@@ -78,137 +78,33 @@ listIndicators(IncChg,IncVal,IncRnk)
 listIndicators(ProChg,ProVal,ProRnk)
 listIndicators(ProIdx)
 
+#get metro ID
 metID <- metropops(TRUE, "2013")[c("CBSA_Code","CBSA_Title")]
 metID$Geo <- factor(metID$CBSA_Code, levels=metID$CBSA_Code, labels=metID$CBSA_Title)
 sum(metID$Geo == metID$CBSA_Title)
 
-##LOOK AT THE OVERALLS
-
+#fn to combine 3 data frames
 merge3 <- function(df1, df2, df3, by, all, suffixes=c(".df1", ".df2", ".df3")){
   m1 <- merge(df1, df2, by=by, all=all, suffixes=suffixes[1:2])
   m2 <- merge(m1, df3, by=by, all=all, suffixes=c("",suffixes[3]))
   return(m2)
 }
 
-GrRnk$Year_ <- GrRnk$Year
+#DO SOME CLEAN UP / FILTERING FOR EXPORT
+GrRnk$Year_ <- GrRnk$year
+GrRnk$Composite = "Growth" #Jan2016 data update -- need to do some renaming
 ProRnk$Year_ <- ProRnk$Year
 IncRnk$Year_ <- IncRnk$Year
 IncRnk[IncRnk$Year=="2000-2014","Year"] <- "2004-2014"
 
-overall <- rbind(GrRnk, ProRnk, IncRnk)
-overall <- merge(metID, overall, by.x="CBSA_Code", by.y="CBSA")
-overall$quintile <- cut(overall$Rank, breaks=c(0, 20, 40, 60, 80, 100), labels=c("First", "Second", "Third", "Fourth", "Fifth"))
-
-overall$orderByGrowth <- reorder(overall$Geo, overall$Score)
-
-hm_theme <- theme_bw() + theme(panel.border = element_blank() ) + theme(axis.text.x=element_text(angle = 45, hjust = 1)) + theme(text=element_text(size=12), panel.grid.major = element_line(colour="#dddddd"))
-pdf(file="~/Desktop/MMScores.pdf", width=11, height=8.5, useDingbats=FALSE)
-
-#FIG 1
-p <- ggplot(data=overall)
-p + geom_tile(aes(x=Composite, y=Geo, fill=quintile)) + 
-  scale_fill_manual(values=c('#2c7bb6','#abd9e9','#ffffbf','#fdae61','#d7191c')) + 
-  facet_wrap(~ Year, ncol=3) +
-  hm_theme
-
-overall_wide <- dcast(overall, CBSA_Code + CBSA_Title + Geo ~ Composite + Year, value.var="Score")
-names(overall_wide) <- gsub("-","_",names(overall_wide))
-
-mat <- as.matrix(overall_wide[-1:-3])
-source("https://raw.githubusercontent.com/briatte/ggcorr/master/ggcorr.R")
-
-#FIGS 2&3
-pairs(mat[,c(2,5,8)])
-ggpairs(mat[,c(2,5,8)])
-ggcorr(mat[,c(2,5,8)], label=TRUE, hjust=1, angle=-35, size=4)
-
-##assemble underlying growth rates
-ProChg100 <- ProChg[ProChg$CBSA %in% metID$CBSA_Code, ]
-IncChg100 <- IncChg[IncChg$CBSA %in% metID$CBSA_Code & IncChg$Race=="Total", c("Year", "CBSA", "CBSA.Name", "Indicator", "Value", "SE")]
-IncChg100$rank <- as.numeric(NA)
-names(IncChg100) <- c("year", "CBSA", "CBSA_name", "indicator", "value", "SE", "rank")
-
-GrChg$SE <- as.numeric(NA)
-ProChg100$SE <- as.numeric(NA)
-
-underlying <- rbind(GrChg, ProChg100, IncChg100)
-underlying_wide <- dcast(underlying, CBSA ~ year + indicator, value.var = "value")
-names(underlying_wide) <- paste0("y", gsub("\\s+|-", "_", names(underlying_wide)))
-
-underlying_wide_5yr <- underlying_wide[,c(1,11:19)]
-names(underlying_wide_5yr) <-c("CBSA","AggWages", "AvgWage", "Emp", "EmpPop", "MedEarn", "GMP", "GMPJob", "GMPCap","RelPov")
-#check names
-data.frame(long=names(underlying_wide[,c(1,11:19)]), short=names(underlying_wide_5yr))
-underlying_wide_5yr_ordered <- underlying_wide_5yr[c(1,4,7,2,8,9,3,5,6,10)]
-underlying_wide_5yr_id <- merge(metID, underlying_wide_5yr_ordered, by.x="CBSA_Code", by.y="CBSA")
-ifscale <- function(v){
-  if(is.numeric(v)){
-    return(scale(v))
-  } else{
-    return(v)
-  }
-}
-underlying_std <- do.call(data.frame,lapply(underlying_wide_5yr_id, ifscale))
-row.names(underlying_std) <- as.character(underlying_std$Geo)
-underlying_std <- underlying_std[4:12]
-
-#FIGS 4&5
-#use standardized variables -- now beta on regression line is correlation coefficent
-
-#ggpairs(underlying_wide_5yr_ordered, axisLabels="internal", size=3)
-ggpairs(underlying_std, axisLabels="internal", size=3)
-#ggcorr(underlying_wide_5yr_ordered, label=TRUE, hjust=1, size=4)
-ggcorr(underlying_std, label=TRUE, hjust=1, size=4)
-
-dev.off()
-
-#why don't names match? -- truncation!
-#nomatch <- overall[overall$CBSA.Name.df1!=overall$CBSA.Name.df2, c("CBSA.Name", "CBSA.Name.df1", "CBSA.Name.df2")]
-
-#overall_melted <- melt(overall, id.vars=c("CBSA", "CBSA.Name", "Year"), measure.vars=c("Rank.df1", "Rank.df2", "Rank", "Score.df1", "Score.df2", "Score"))
-
-#clustering (http://www.statmethods.net/advstats/cluster.html)
-
-# Ward Hierarchical Clustering
-distances <- dist(underlying_std, method = "euclidean") # distance matrix
-fit <- hclust(distances, method="ward.D") 
-plot(fit) # display dendogram
-groups <- cutree(fit, k=5) # cut tree into 5 clusters
-# draw dendogram with red borders around the 5 clusters 
-rect.hclust(fit, k=5, border="red")
-
-#K means
-# Determine number of clusters
-wss <- (nrow(underlying_std)-1)*sum(apply(underlying_std,2,var))
-for (i in 2:15) wss[i] <- sum(kmeans(underlying_std, centers=i)$withinss)
-plot(1:15, wss, type="b", xlab="Number of Clusters",ylab="Within groups sum of squares")
-
-# K-Means Cluster Analysis
-fit <- kmeans(underlying_std, 7) # 7 cluster solution
-# get cluster means 
-clusterMeans <- aggregate(underlying_std,by=list(fit$cluster),FUN=mean)
-# append cluster assignment
-mydata <- data.frame(underlying_std, cluster=fit$cluster)
-clusters <- split(underlying_std, fit$cluster)
-lapply(clusters, function(g){
-  cat("CLUSTER MEANS\n")
-  print(colMeans(g))
-  cat(paste(nrow(g), "metro areas:\n"))
-  cat(paste0(row.names(g), collapse="\n"))
-  cat("\n\n")
-})
-
-#figure out some kind of grouping --- maybe just the high here, high there, high there...
-
+#names(GrRnk) <- c("Year", "CBSA", "CBSA.Name", "Rank", "Score", "Year_", "Composite")
 
 #EXPORT
-library(reshape2)
-library(jsonlite)
-
 GRR <- GrRnk
-GRCHG <- GrChg
-GRVAL <- GrVal
-GRR$Period <- ifelse(GRR$Year=="2013-2014", "One", ifelse(GRR$Year=="2009-2014", "Five", "Ten"))
+GRCHG <- GrChg[GrChg$CBSA %in% metID$CBSA_Code, ]
+GRCHG$SE <- as.numeric(NA) #add in to match inclusion structure
+GRVAL <- GrVal[GrVal$CBSA %in% metID$CBSA_Code, ]
+GRR$Period <- ifelse(GRR$year=="2013-2014", "One", ifelse(GRR$year=="2009-2014", "Five", "Ten"))
 GRCHG$Period <- ifelse(GRCHG$year=="2013-2014", "One", ifelse(GRCHG$year=="2009-2014", "Five", "Ten"))
 GRCHG$IND <- ifelse(GRCHG$indicator=="Percent Change in Aggregate Wages", "Wages", ifelse(GRCHG$indicator=="Percent Change in Employment", "Emp", "GMP"))
 GRVAL$IND <- ifelse(GRVAL$indicator=="Aggregate Wages, indexed to 2000", "Wages", ifelse(GRVAL$indicator=="Employment, indexed to 2000", "Emp", "GMP"))
@@ -217,11 +113,12 @@ table(GRCHG$Period, GRCHG$year)
 table(GRCHG$IND, GRCHG$indicator)
 table(GRVAL$IND, GRVAL$indicator)
 
-GRR_WIDE <- merge(dcast(GRR, CBSA~Period, value.var="Rank"), dcast(GRR, CBSA~Period, value.var="Score"), by="CBSA", suffixes=c("R", "Z"))
+GRR_WIDE <- merge(dcast(GRR, CBSA~Period, value.var="rank"), dcast(GRR, CBSA~Period, value.var="score"), by="CBSA", suffixes=c("R", "Z"))
 GRCHG_WIDE <- merge(dcast(GRCHG, CBSA~IND+Period, value.var="rank"), dcast(GRCHG, CBSA~IND+Period, value.var="value"), by="CBSA", suffixes=c("R","V"))
 
 PROR <- ProRnk
-PROCHG <- ProChg100
+PROCHG <- ProChg[ProChg$CBSA %in% metID$CBSA_Code, ]
+PROCHG$SE <- as.numeric(NA) #add in to match inclusion structure
 PROVAL <- ProVal[ProVal$CBSA %in% metID$CBSA_Code, ]
 PROIDX <- ProIdx[ProIdx$CBSA %in% metID$CBSA_Code, ]
 PROR$Period <- ifelse(PROR$Year=="2013-2014", "One", ifelse(PROR$Year=="2009-2014", "Five", "Ten"))
@@ -239,29 +136,30 @@ PROR_WIDE <- merge(dcast(PROR, CBSA~Period, value.var="Rank"), dcast(PROR, CBSA~
 PROCHG_WIDE <- merge(dcast(PROCHG, CBSA~IND+Period, value.var="rank"), dcast(PROCHG, CBSA~IND+Period, value.var="value"), by="CBSA", suffixes=c("R","V"))
 
 INCR <- IncRnk
-INCCHG <- IncChg100
+INCCHG <- IncChg[IncChg$CBSA %in% metID$CBSA_Code & IncChg$Race=="Total", c("Year", "CBSA", "CBSA.Name", "Indicator", "Value", "SE")]
+INCCHG$rank <- as.numeric(NA) #placeholder for later
 INCVAL <- IncVal[IncVal$CBSA %in% metID$CBSA_Code & IncVal$Race=="Total", ]
 INCR$Period <- ifelse(INCR$Year=="2013-2014", "One", ifelse(INCR$Year=="2009-2014", "Five", "Ten"))
-INCCHG$Period <- ifelse(INCCHG$year=="2013-2014", "One", ifelse(INCCHG$year=="2009-2014", "Five", "Ten"))
-INCCHG$IND <- ifelse(INCCHG$indicator=="Percent Change in Employment-to-Population Ratio", "EmpRatio", ifelse(INCCHG$indicator=="Percent Change in Median Earnings", "MedEarn", "RelPov"))
+INCCHG$Period <- ifelse(INCCHG$Year=="2013-2014", "One", ifelse(INCCHG$Year=="2009-2014", "Five", "Ten"))
+INCCHG$IND <- ifelse(INCCHG$Indicator=="Percent Change in Employment-to-Population Ratio", "EmpRatio", ifelse(INCCHG$Indicator=="Percent Change in Median Earnings", "MedEarn", "RelPov"))
 INCVAL$IND <- ifelse(INCVAL$Indicator=="Employment-to-Population Ratio", "EmpRatio", ifelse(INCVAL$Indicator=="Median Earnings", "MedEarn", "RelPov"))
 table(INCR$Period, INCR$Year)
-table(INCCHG$Period, INCCHG$year)
+table(INCCHG$Period, INCCHG$Year)
 table(INCCHG$IND, INCCHG$Indicator)
 table(INCVAL$IND, INCVAL$Indicator)
 
 INCR_WIDE <- merge(dcast(INCR, CBSA~Period, value.var="Rank"), dcast(INCR, CBSA~Period, value.var="Score"), by="CBSA", suffixes=c("R","Z"))
-INCCHG1_WIDE <- merge(dcast(INCCHG, CBSA~IND+Period, value.var="value"), dcast(INCCHG, CBSA~IND+Period, value.var="SE"), by="CBSA", suffixes=c("V","SE"))
+INCCHG1_WIDE <- merge(dcast(INCCHG, CBSA~IND+Period, value.var="Value"), dcast(INCCHG, CBSA~IND+Period, value.var="SE"), by="CBSA", suffixes=c("V","SE"))
 
-INCCHG_LIST <- split(INCCHG[c("CBSA", "Period", "IND", "value")], list(INCCHG$Period, INCCHG$IND))
+INCCHG_LIST <- split(INCCHG[c("CBSA", "Period", "IND", "Value")], list(INCCHG$Period, INCCHG$IND))
 INCCHG2 <- do.call(rbind, lapply(INCCHG_LIST, function(d){
   if(d[1,"IND"]=="RelPov"){
-    rvalues <- d$value
+    rvalues <- d$Value
   } else{
-    rvalues <- -d$value
+    rvalues <- -d$Value
   }
   d$rank <- rank(rvalues, ties.method="min")
-  d$Z <- (d$value-mean(d$value))/sd(d$value)
+  d$Z <- (d$Value-mean(d$Value))/sd(d$Value)
   return(d)
 }))
 INCCHG2_WIDE <- merge(dcast(INCCHG2, CBSA~IND+Period, value.var="rank"), dcast(INCCHG2, CBSA~IND+Period, value.var="Z"), by="CBSA", suffixes=c("R","Z"))
@@ -298,56 +196,48 @@ VALUES <- list(growth=getVals(GRVAL), prosperity=getVals(PROVAL), prosperity2=ge
 json <- toJSON(list(measures=ALL, values=VALUES), digits=5)
 writeLines(json, "coreIndicators.json")
 
+##INCLUSION BY RACE
+#high-level
+INCRACECH <- IncRaceChg[IncRaceChg$CBSA %in% metID$CBSA_Code, ]
+INCRACEVAL <- IncRaceVal[IncRaceVal$CBSA %in% metID$CBSA_Code, ]
+INCRACERNK <- IncRaceRnk
 
-##ggplotting
-grgg <- ggplot(data=GRCHG_WIDE, aes(y=0))
-grgg + geom_point(aes(x=Wages_FiveV),alpha=0.2)
+INCRACECH$Period <- ifelse(INCRACECH$Year=="2013-2014", "One", ifelse(INCRACECH$Year=="2009-2014", "Five", "Ten"))
+INCRACECH$IND <- ifelse(INCRACECH$Indicator=="Employment Ratio, Percent Change in Absolute Difference", "EmpRatio", ifelse(INCRACECH$Indicator=="Median Income, Percent Change in Absolute Difference", "MedEarn", "RelPov"))
+INCRACERNK$Period <- ifelse(INCRACERNK$Year=="2013-2014", "One", ifelse(INCRACERNK$Year=="2009-2014", "Five", "Ten"))
+with(INCRACECH, table(Year, Period))
+with(INCRACECH, table(IND, Indicator))
+with(INCRACERNK, table(Year, Period))
 
-
-organize <- function(code){
-  #growth ranks/scores
-  gr1 <- GrRnk[GrRnk$Year=="2013-2014" & GrRnk$CBSA==code, ]
-  gr5 <- GrRnk[GrRnk$Year=="2009-2014" & GrRnk$CBSA==code, ]
-  gr10 <- GrRnk[GrRnk$Year=="2004-2014" & GrRnk$CBSA==code, ]
-  #growth values
-  grch1 <- GrChg[GrChg$year=="2013-2014" & GrChg$CBSA==code, ]
-  grch5 <- GrChg[GrChg$year=="2009-2014" & GrChg$CBSA==code, ]
-  grch10 <- GrChg[GrChg$year=="2004-2014" & GrChg$CBSA==code, ]
-  
-  
-  grOverall <- list(one=list(score=gr1[1,"Score"], rank=gr1[1,"Rank"]),
-                    five=list(score=gr5[1,"Score"], rank=gr5[1,"Rank"]),
-                    ten=list(score=gr10[1,"Score"], rank=gr10[1,"Rank"]))
-  
-  pro1 <- ProRnk[ProRnk$Year=="2013-2014" & ProRnk$CBSA==code, ]
-  pro5 <- ProRnk[ProRnk$Year=="2009-2014" & ProRnk$CBSA==code, ]
-  pro10 <- ProRnk[ProRnk$Year=="2004-2014" & ProRnk$CBSA==code, ]
-  proOverall <- list(one=list(score=pro1[1,"Score"], rank=pro1[1,"Rank"]),
-                     five=list(score=pro5[1,"Score"], rank=pro5[1,"Rank"]),
-                     ten=list(score=pro10[1,"Score"], rank=pro10[1,"Rank"]))
-  
-  inc1 <- IncRnk[IncRnk$Year=="2013-2014" & IncRnk$CBSA==code, ]
-  inc5 <- IncRnk[IncRnk$Year=="2009-2014" & IncRnk$CBSA==code, ]
-  inc10 <- IncRnk[IncRnk$Year=="2004-2014" & IncRnk$CBSA==code, ]
-  incOverall <- list(one=list(score=inc1[1,"Score"], rank=inc1[1,"Rank"]),
-                     five=list(score=inc5[1,"Score"], rank=inc5[1,"Rank"]),
-                     ten=list(score=inc10[1,"Score"], rank=inc10[1,"Rank"]))
-  
-  return(grch1)
-}
-ex <- list()
-for(i in metID$CBSA_Code){
-  
-}
+INCRACERNK_WIDE <- merge(dcast(INCRACERNK, CBSA~Period, value.var="Rank"), dcast(INCRACERNK, CBSA~Period, value.var="Score"), by="CBSA", suffixes=c("R","Z"))
+INCRACECH_WIDE <- merge(dcast(INCRACECH, CBSA~IND+Period, value.var="Value"), dcast(INCRACECH, CBSA~IND+Period, value.var="SE"), by="CBSA", suffixes=c("V","SE"))
 
 
+#detailed
+INCCHGd <- IncChg[IncChg$CBSA %in% metID$CBSA_Code, c("Year", "CBSA", "CBSA.Name", "Indicator", "Race", "Value", "SE")]
+INCVALd <- IncVal[IncVal$CBSA %in% metID$CBSA_Code, ]
+INCCHGd$race <- ifelse(INCCHGd$Race=="People of Color", "NonWhite", INCCHGd$Race)
+INCVALd$race <- ifelse(INCVALd$Race=="People of Color", "NonWhite", INCVALd$Race)
+INCCHGd$IND <- ifelse(INCCHGd$Indicator=="Percent Change in Employment-to-Population Ratio", "EmpRatio", ifelse(INCCHGd$Indicator=="Percent Change in Median Earnings", "MedEarn", "RelPov"))
+INCVALd$IND <- ifelse(INCVALd$Indicator=="Employment-to-Population Ratio", "EmpRatio", ifelse(INCVALd$Indicator=="Median Earnings", "MedEarn", "RelPov"))
+INCCHGd$Period <- ifelse(INCCHGd$Year=="2013-2014", "One", ifelse(INCCHGd$Year=="2009-2014", "Five", "Ten"))
+with(INCVALd, table(race, Race))
+with(INCVALd, table(IND, Indicator))
+with(INCCHGd, table(race, Race))
+with(INCCHGd, table(IND, Indicator))
+with(INCCHGd, table(Year, Period))
 
-#testing
-a<-data.frame(a=rnorm(100), b=rnorm(100))
-a$aa <- (a$a-mean(a$a))/sd(a$a)
-a$bb <- (a$b-mean(a$b))/sd(a$b)
+INCVALd_WIDE <- merge(dcast(INCVALd, CBSA+Year~race+IND, value.var="Value"), dcast(INCVALd, CBSA+Year~race+IND, value.var="SE"), by=c("CBSA","Year"), suffixes=c("V","SE"))
+INCCHGd_Wide <- merge(dcast(INCCHGd, CBSA~race+IND+Period, value.var="Value"), dcast(INCCHGd, CBSA~race+IND+Period, value.var="SE"), by=c("CBSA"), suffixes=c("V","SE"))
 
-cat("Unstandardized\n")
-summary(lm(a~b, a))
-cat("Standardized\n")
-summary(lm(aa~bb, a))
+INCVALd_LIST <- split(INCVALd_WIDE, INCVALd_WIDE$CBSA)
+
+
+INCRACE <- list(ranks=INCRACERNK_WIDE, change=INCRACECH_WIDE, changeDetail=INCCHGd_Wide, levelsDetail=INCVALd_LIST)
+
+json2 <- toJSON(INCRACE, digits=5)
+writeLines(json2, "inclusionByRace.json")
+
+
+
+
