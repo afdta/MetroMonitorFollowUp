@@ -45,7 +45,7 @@
 
 		function getYears(period){
 			var endYear = 2014;
-			var startYear = period == "One" ? 2013 : (period == "Five" ? 2009 : 2000)
+			var startYear = period == "One" ? 2013 : (period == "Five" ? 2009 : 2000);
 			return {s:startYear, e:endYear}
 		}
 
@@ -78,7 +78,7 @@
 
 			var r0 = [{text:""}, {text:"Emp.-to-pop. ratio"}, {text:"Median earnings"}, {text:"Relative poverty"}]
 
-			var r1 = [{text:start.Year},
+			var r1 = [{text:(start.Year === 2000 ? 1999 : start.Year)},
 					  {nw:start.NonWhite_EmpRatioV, w:start.White_EmpRatioV, fmt:formats.pct1},
 					  {nw:start.NonWhite_MedEarnV, w:start.White_MedEarnV, fmt:formats.doll0},
 					  {nw:start.NonWhite_RelPovV, w:start.White_RelPovV, fmt:formats.pct1}
@@ -288,7 +288,6 @@
 				//no transitions -- the select and highlight methods match the parameters of the underlying dots at the start of the transition causing erroneous results
 				this.metros.attr("fill", function(d,i){
 					var rank = d.data.inclusion.rank[key];
-					console.log(rank);
 					var col = r2c(rank).fill;
 					return col;
 				});
