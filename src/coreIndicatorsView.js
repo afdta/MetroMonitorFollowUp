@@ -259,9 +259,6 @@
 			var mapData = this.storage("mapData");
 
 			var bigMap = mapData.large;
-			var smallMap0 = mapData.small[0];
-			var smallMap1 = mapData.small[1];
-			var smallMap2 = mapData.small[2];
 
 			var self = this;
 
@@ -281,9 +278,6 @@
 						self.setMetro(d.geo);
 					})
 				}).showTooltips();
-				smallMap0.setData(data2bind, "geo").drawMap(addNumber);
-				smallMap1.setData(data2bind, "geo").drawMap(addNumber);
-				smallMap2.setData(data2bind, "geo").drawMap(addNumber);
 
 				mapData.dataBound = true;
 
@@ -329,23 +323,6 @@
 			var metro = this.getMetro();
 			//refill large map
 			bigMap.drawMap(refill(true)).select(metro, null, 2);
-
-			//refill small map
-			smallMap0.drawMap(refill(false,0)).select(metro, null, 2.5);
-			smallMap1.drawMap(refill(false,1)).select(metro, null, 2.5);
-			smallMap2.drawMap(refill(false,2)).select(metro, null, 2.5);
-
-			var anno = mapData.mapsAnno.selectAll("div.small-map-anno-wrap").data(indicators);
-			var annoE = anno.enter().append("div").classed("c-fix small-map-anno-wrap",true).style({"float":"left"});
-			annoE.append("div").style({"background-color":"#dddddd", "float":"left", "height":"16px", "width":"16px", "border-radius":"8px"})
-				 .append("p").style({"font-size":"11px", "line-height":"11px", "padding":"3px 0px 2px 0px" ,"margin":"0px","text-align":"center"});
-			annoE.append("p").classed("small-map-anno-text",true).style({"float":"left","font-size":"13px", "line-height":"15px","margin":"1px 0px 0px 4px"});
-			anno.exit().remove();
-			anno.style({"margin":"5px 10px 5px 0px"})
-
-			anno.select("div").select("p").text(function(d,i){return d.i+1});
-			anno.select("p.small-map-anno-text").text(function(d,i){return d.l})
-
 		}
 
 		//redraw -- setup is just to add html
@@ -416,48 +393,24 @@
 		var setupBase = function(){
 			var self = this;
 			this.header.append("p").text("Growth, prosperity, and inclusion in the 100 largest U.S. metro areas");
+			
 			//var tableWrap = this.container.append("div").style({"padding":"5px 0px 5px 0px", "border":"1px solid #dddddd", "border-width":"1px 0px 1px 0px"}).classed("two-fifths",true).append("div").style("max-height","600px");
-			var headerWrap = this.container.append("div").classed("c-fix",true).style({"margin-bottom":"15px", "border":"1px solid #aaaaaa", "border-width":"0px 1px 1px 1px", "background-color":"#ffffff", "padding":"15px"});
-			var header0 = headerWrap.append("div").classed("three-fifths",true).append("div").style({"padding":"0px 5% 0px 0px", "margin":"0px 0px"});
+			var headerWrap = this.container.append("div").classed("c-fix",true).style({"padding":"15px"});
+			var header0 = headerWrap.append("div");;
+			header0.append("p").html('Successful economic development should support <b>growth</b>, <b>prosperity</b>, and <b>inclusion</b> in the form of economic expansion, a rising standard of living, and broadly shared economic gains. <span style="font-style:italic"> Explore the data below to find out which large metro areas have performed best on these metrics over time.</span>')
+							   .style({"margin":"0px"});
+			/*header0.selectAll("div").data([{cat:"Growth", def:"Economic expansion"}, 
+										   {cat:"Prosperity", def:"A rising standard of living"}, 
+										   {cat:"Inclusion", def:"Broadly shared prosperity"}]).enter().append("div")
+									.style({"float":"left", "padding":"5px 1.5%"})
+									.append("p").html(function(d,i){return "<b>"+d.cat+": "+"</b>"+d.def}).style({"margin":"0px", "text-align":"center"});*/
+
+			//header0.append("p").html('<span></span>').style({"font-style":"normal","line-height":"1.4em","padding":"5px 10px 0px 0px", "margin":"5px 20px 0px 0px", "border-top":"1px dotted #aaaaaa", "clear":"both", "font-size":"13px"});
 			
-			//left side of header -- includes logo
-			header0.append("p").html('<b>Successful economic development</b> should support:').style("margin-bottom","0px");
-			var header01 = header0.append("div").classed("as-table",true).append("div").classed("as-table-row",true);
-			
-
-			header01.append("div").classed("as-table-cell",true).style({"width":"22%","height":"22%","vertical-align":"middle"}).append("img").attr("src", "./assets/circlelogo.png").style({"width":"80%","height":"auto"});
-
-			var header011 = header01.append("div").classed("as-table-cell",true).style({"width":"78%","vertical-align":"middle"})
-
-			header011.append("p").html('<b style="color:#20558a">Growth</b>: Economic expansion').style({"margin":"0px"});
-			header011.append("p").html('<b style="color:#20558a">Prosperity</b>: A rising standard of living').style({"margin":"0px"});
-			header011.append("p").html('<b style="color:#20558a">Inclusion</b>: Broadly shared prosperity');
-			
-			header0.append("p").html('<span>Explore the data below to find out which large metro areas have improved most on these metrics over time.</span>').style({"font-style":"normal","line-height":"1.4em","padding":"5px 10px 0px 0px", "margin":"5px 20px 0px 0px", "border-top":"1px dotted #aaaaaa", "clear":"both", "font-size":"13px"});
-			
-			
-			//CONTROLS
-			var header1wrap = headerWrap.append("div").classed("two-fifths",true);
-			var header1 = header1wrap.append("div").style({"padding":"5px 10px 10px 15px", "margin":"0px 0px", "background-color":"#fbfbfb", "border":"1px solid #aaaaaa"});
-			header1.append("p").text("Make a selection").style("font-style","italic");
-
-			
-			var catMenu = header1.append("div").classed("c-fix",true);
-			catMenu.append("p").html("Data to map / sort table by").style({"margin":"0px","font-size":"11px","text-transform":"uppercase"});
-			var categoryButtons = catMenu.selectAll("div").data([{c:"gr", l:"Growth"}, {c:"pro", l:"Prosperity"}, {c:"inc", l:"Inclusion"}]).enter().append("div")
-										 .classed("generic-button",true).classed("generic-button-selected",function(d,i){return i===0});
-				categoryButtons.append("p").text(function(d,i){return d.l});
-
-
-			var periodMenu = header1.append("div").classed("c-fix",true).style("margin-top","15px");
-			periodMenu.append("p").text("Time period").style({"margin":"0px","font-size":"11px","text-transform":"uppercase"});
-			var periodButtons = periodMenu.selectAll("div").data([{c:"One", l:"One-year"}, {c:"Five", l:"Five-year"}, {c:"Ten", l:"Ten-year"}]).enter().append("div")
-										  .classed("generic-button",true).classed("generic-button-selected",function(d,i){return i===1});
-				periodButtons.append("p").text(function(d,i){return d.l});
-
 			//legend area
-			var legendWrap = this.container.append("div").style({"padding":"0px 15px 30px 15px", "margin":"0px auto", "border":"1px dotted #aaaaaa", "border-width":"0px 0px 0px 0px", "position":"relative", "display":"inline-block"}).classed("c-fix",true).append("div");
-			legendWrap.append("p").text("Metro areas rankings range from 1 to 100, with 1 indicating the best performance").style({"margin":"0px 0px 5px 0px","font-size":"13px"});
+			var legendAndTime = this.container.append("div").style({"padding-bottom":"15px", "border-bottom":"1px solid #aaaaaa", "margin-bottom":"15px"}).classed("c-fix",true);
+			var legendWrap = legendAndTime.append("div").classed("c-fix three-fifths mobile-bottom-buffer",true).append("div").style({"padding":"0px 15px 0px 15px"});
+			legendWrap.append("p").text("Metro areas are ranked from 1 to 100; 1 indicates the best performance").style({"font-size":"13px"});
 			var legendSwatches = legendWrap.append("div").classed("c-fix",true).selectAll("div").data(colors).enter().append("div").style({"float":"left","margin":"0px 15px 5px 0px"});
 			legendSwatches.append("div").style({"float":"left","width":"15px","height":"15px"}).style("background-color",function(d,i){return d})
 			legendSwatches.append("p").style({"float":"left","font-size":"13px","line-height":"15px","height":"15px","margin":"0px 0px 0px 5px", "padding":"1px"})
@@ -466,62 +419,56 @@
 									return self.formats.rankth(ii+1) + "–" + self.formats.rankth(ii+20)
 								});
 
-
-
-			//MAPS SETUP
-			var mapWrap = this.container.append("div").style("overflow","visible").classed("three-fifths no-mobile-display",true).append("div").style({"padding":"0px 30px 0px 0px","position":"relative"});
-			var bigMapOuter = mapWrap.append("div").style({"position":"relative","z-index":"5"});
-			bigMapOuter.append("div").style({"padding":"0px 0px 10px 0px", "margin":"0px 10px 10px 0px", "border-bottom":"1px solid #aaaaaa"})
-					   .append("p").classed("map-title",true).text("Metro area maps").style({"font-weight":"bold", "line-height":"1em", "margin":"0px 15px"});
-			var bigMap = bigMapOuter.append("div");
-
-			var smallMapWrap = mapWrap.append("div").classed("c-fix",true);
-				var mapsAnno = smallMapWrap.append("div").classed("c-fix",true)
-										   .style({"border-bottom":"1px dotted #aaaaaa","padding":"0px 0px 5px 0px","margin":"0px 10px 15px 0px"})
-										   .append("div").style("float","left");
-				mapsAnno.append("p").text("Detailed indicator maps 1–3").style({"margin":"0px","font-size":"13px","clear":"both"})
-				
-				var smallMaps = smallMapWrap.selectAll("div.small-map").data([1,2,3]).enter().append("div").classed("small-map",true).style({"width":"48%","padding-right":"2%","float":"left","position":"relative","z-index":"3"});
-				smallMapWrap.append("div").style({"width":"44%","padding":"2% 3%","float":"left","position":"relative","z-index":"3","margin":"auto"}).append("p").style({"font-size":"13px","color":"#666666"})
-								.text("These small maps present changes in the three indicators that together combine to make up the overall ranking for the selected category. [Describe small maps... Another opportunity to convey that each broad metric is composed of three indicators.]")
-
-			//small maps
-			var sMaps = [];
-			smallMaps.each(function(d,i){
-				var map = new dotMap(this);
-				map.makeResponsive();
-				sMaps.push(map);
-			})
-			//big map
-			var bMap = new dotMap(bigMap.node());
-			bMap.makeResponsive();
-			this.storage("mapData",{large:bMap, small:sMaps, mapsAnno:mapsAnno, dataBound:false});
+			//time period
+			var periodMenu = legendAndTime.append("div").classed("c-fix two-fifths column-right",true);
+			periodMenu.append("p").text("Select a time period to focus on").style({"font-size":"13px"});
+			var periodButtons = periodMenu.selectAll("div").data([{c:"One", l:"One-year"}, {c:"Five", l:"Five-year"}, {c:"Ten", l:"Ten-year"}]).enter().append("div")
+										  .classed("generic-button",true).classed("generic-button-selected",function(d,i){return i===1})
+										  .style({"box-sizing":"border-box", "width":"32%"}).style("margin",function(d,i){return i<2 ? "0px 2% 0px 0px" : "0px"})
+										  ;
+				periodButtons.append("p").text(function(d,i){return d.l});
 
 			//TABLE SETUP
-			var rightSide = this.container.append("div").classed("two-fifths",true);
+			var rightSide = this.container.append("div").classed("two-fifths column-right",true);
 			var tableHeaderWrap = rightSide.append("div");
 			tableHeaderWrap.append("p").classed("table-title",true).text("Metro area rankings").style({"font-weight":"bold", "line-height":"1em", "margin":"0px 15px 10px 10px"});
 
-			var tableHeader = tableHeaderWrap.append("div").style({"background-color":"#dddddd", "padding":"7px 10px 5px 10px", "border":"1px solid #aaaaaa", "border-width":"1px 1px 0px 1px"}).append("div").classed("c-fix",true);
+			var tableHeader = tableHeaderWrap.append("div").style({"background-color":"#dddddd", "padding":"9px 0px 5px 10px"}).append("div").classed("c-fix",true);
 			
 			tableHeader.selectAll("div.th").data(["GROWTH","PROSPERITY","INCLUSION"]).enter().append("div")
 				.style("margin-left",function(d,i){return i==0 ? "0%" : "2%"})
 				.style("margin-right",function(d,i){return i===2 ? "-30px" : "0px"})
 				.style({"float":"left", "width":"32%"})
-				.append("p").style({"line-height":"1em","margin":"0px","font-size":"11px","text-align":"center"})
+				.append("p").style({"line-height":"1em","margin":"0px","font-size":"11px","text-align":"center","font-weight":"bold"})
 				.text(function(d,i){return d});
 
 			var tableOuter = rightSide.append("div").style({"clear":"both","border":"1px solid #aaaaaa", "border-width":"1px 0px 1px 0px", "padding":"0px", "max-height":"750px", "overflow-y":"auto"});
-			var tableWrap = tableOuter.append("div").style("padding","0px 10px 500px 0px");
-			var table = tableWrap.append("div").style("width","100%"); //.append("g").attr("id","core-svg-table");
+			var tableWrap = tableOuter.append("div").style("padding","0px 0px 500px 0px");
+			var table = tableWrap.append("div").style("width","100%"); //.append("g").attr("id","core-svg-table")
 
-			/*var centerLabels = function(){
-				var b = table.node().getBoundingClientRect();
-				var w = Math.round(b.right - b.left);
-				tableColumnWrap.style("width",w+"px");				
-			}*/
-			//window.addEventListener("resize",centerLabels);
-			//this.storage("centerLabels",centerLabels);
+			//MAPS SETUP
+			var mapWrap = this.container.append("div").style("overflow","visible")
+							  .classed("three-fifths no-mobile-display",true).append("div")
+							  .style({"padding":"0px 30px 0px 0px","position":"relative"});
+
+			var mapTitleWrap = mapWrap.append("div").style({"position":"relative","z-index":"5"});
+			mapTitleWrap.append("p").classed("map-title",true)
+				                    .text("Metro area maps")
+				                    .style({"font-weight":"bold", "line-height":"1em", "margin":"0px 15px 10px 10px"});
+
+			var catMenu = mapTitleWrap.append("div").classed("c-fix",true).style({"float":"left", "margin-right":"20px"});
+			var categoryButtons = catMenu.selectAll("div").data([{c:"gr", l:"Growth"}, {c:"pro", l:"Prosperity"}, {c:"inc", l:"Inclusion"}]).enter().append("div")
+										 .classed("generic-button",true).classed("generic-button-selected",function(d,i){return i===0});
+			categoryButtons.append("p").text(function(d,i){return d.l});
+
+
+			//add another div and create the map within it
+			var map = new dotMap(mapWrap.append("div").node());
+			map.makeResponsive();
+
+
+			//store in view
+			this.storage("mapData",{large:map, dataBound:false});
 
 
 			this.storage("table", table); //store these in the view state
