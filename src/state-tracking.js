@@ -185,7 +185,7 @@ function MetroInteractive(appWrapperElement){
 		}
 
 		//get or set arbitrary name-value pairs in dataStore.storage.
-		viewOps.storage = function(name, value){
+		viewOps.store = function(name, value){
 			if(arguments.length===1){
 				return viewOps.dataStore.storage[name];
 			}
@@ -194,6 +194,7 @@ function MetroInteractive(appWrapperElement){
 				return value;
 			}
 		}
+		viewOps.storage = viewOps.store; //maintain for backwards compatibility
 
 		//run setup
 		if(!!setupView){setupView.call(viewOps);} //must be synchronous!!}

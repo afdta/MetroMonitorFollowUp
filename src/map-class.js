@@ -8,14 +8,16 @@ function dotMap(container){
   this.width = 950;
   this.height = this.width * this.aspect;
 
-  this.currentMap = this.wrap.insert("div",":first-child").classed("quick-map-container",true);
+  //this.currentMap = this.wrap.insert("div",":first-child").classed("quick-map-container",true);
+  this.mapTitle = this.wrap.append("p").classed("map-title",true).style("margin","0px").style("padding","0px");
+  this.currentMap = this.wrap.append("div").classed("quick-map-container",true);
   
-  this.svg = this.currentMap.append("svg").style({"width":"100%", "height":"100%"});
-  this.stateG = this.svg.append("g").attr("transform","translate(0,0)");
-  this.dotG = this.svg.append("g").attr("transform","translate(0,0)");
+  this.svg = this.currentMap.append("svg").style({"width":"100%", "height":"100%"}).append("g").attr("transform","translate(0,0)");
+  this.stateG = this.svg.append("g");
+  this.dotG = this.svg.append("g");
   
   //DOT HIGHLIGHTING
-  this.annoG = this.svg.append("g").attr("transform","translate(0,0)");
+  this.annoG = this.svg.append("g");
   //4 dots total:
   //the 2 "pin" dots are meant to indicate a (persistent) metro selection; the 2 "hover" dots are meant to signal a (temporary) metro highlight/selection/hover
   //within each pair, the "match" dot is meant to match the underlying dot attrs, while the other ("loc") dot serves to indicate location--it defaults to an oversized, empty circle
@@ -76,6 +78,8 @@ dotMap.prototype.showOverlay = function(){this.overlay.transition().duration(100
 dotMap.prototype.hideOverlay = function(){this.overlay.transition().duration(1000).style("opacity","0").each("end",function(){d3.select(this).style("display","none")});}
 
 dotMap.prototype.textAccessor = function(fn){if(!!fn){this.getText = fn}}
+
+dotMap.prototype.title = function(text, style){this.mapTitle.html(text).style((!!style ? style : {}));}
 
 var setHighlight = function(geoCode, pin, color_override, radius_scalar){
  try{
