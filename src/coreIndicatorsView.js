@@ -345,7 +345,13 @@
 			var charts = this.store("charts");
 			var xaxis = charts.xaxis;
 			var ticks = category==="inc" ? [1999, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014] : [2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014];
-			
+			var metro = this.getMetro();
+			charts.title.html("<b>Charts</b>: " + (category==="gr" ? "Growth" : (category==="inc" ? "Inclusion" : "Prosperity"))  + " indicators in the " + this.lookup[metro][0].CBSA_Title + " metro area");
+
+			var data = this.viewData();
+			console.log(data);
+			console.log(charts);
+
 			//write x, y accessors
 			//determine data range
 			//get U.S. data
@@ -366,8 +372,6 @@
 
 			var XSCALE = d3.scale.linear().domain([ticks[0], ticks[ticks.length-1]]).range([0,chartWidth]);
 			var XAXIS = d3.svg.axis().scale(XSCALE).orient("bottom").tickValues(ticks).tickFormat(function(v){return v});
-			console.log(ticks);
-
 
 			try{
 				xaxis.transition().call(XAXIS);
@@ -380,7 +384,6 @@
 			xaxis.selectAll("line").style("shape-rendering","crispEdges").attr({"stroke":"#dddddd","fill":"none"});
 			xaxis.selectAll("text").attr({"fill":"#666666","font-size":"11px"})
 				    .attr({"transform": "rotate(-45)", "dy":"8px", "dx":"-0.2em"}).style("text-anchor","end");
-			console.log(this.viewData());
 		}
 
 		//redraw -- setup is just to add html
@@ -534,7 +537,7 @@
 
 			//MAPS SETUP
 			var chartWrap = mapAndCharts.append("div").style("overflow","visible");
-			var chartHeight = 120;
+			var chartHeight = 90;
 			var chartPad = 7;
 							
 			var chartTitleWrap = chartWrap.append("div").style({"position":"relative","z-index":"5"});
