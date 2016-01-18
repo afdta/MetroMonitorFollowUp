@@ -12,7 +12,7 @@ library("jsonlite")
 #IMPORT
 tryCatch(
   {
-    setwd("/home/alec/Projects/metro-index/data/")
+    setwd("/home/alec/Projects/Brookings/metro-index/data/")
     cat("Working directory set to: /home/alec/Projects/metro-index/data/ \n")  
   },
   warning = function(w){print(w)},

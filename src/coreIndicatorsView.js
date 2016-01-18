@@ -342,13 +342,16 @@
 		function drawCurves(){
 			var period = this.store("period");
 			var category = this.store("category");
+			var catlong = category==="gr" ? "Growth" : (category==="inc" ? "Inclusion" : "Prosperity");
 			var charts = this.store("charts");
 			var xaxis = charts.xaxis;
 			var ticks = category==="inc" ? [1999, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014] : [2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014];
 			var metro = this.getMetro();
-			charts.title.html("<b>Charts</b>: " + (category==="gr" ? "Growth" : (category==="inc" ? "Inclusion" : "Prosperity"))  + " indicators in the " + this.lookup[metro][0].CBSA_Title + " metro area");
+			charts.title.html("<b>Charts</b>: " + catlong + " indicators in the " + this.lookup[metro][0].CBSA_Title + " metro area");
 
-			var data = this.viewData();
+			//left off here -- fix data so prosperity is indexed
+			var data = this.viewData().values[catlong.toLowerCase()];
+
 			console.log(data);
 			console.log(charts);
 
