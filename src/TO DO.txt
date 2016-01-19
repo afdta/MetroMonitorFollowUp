@@ -1,0 +1,16 @@
+TO DO
+<ul>
+<li><b>To dos / Issues</b></li>
+<li>Consistency. Importance of displaying percent change for inclusion indicators in one view and points in the other view</li>
+<li>Indexed data for growth and prosperity is 0.00 in 2000</li>
+<li>For inclusion change curves -- do we want to index? If so, need data.</li>
+<li>The change data John sent with stat sig indicator has level changes for median wages; need %</li>
+<li>Add in table sorting: asc, desc, off (off sorts by metro name)</li>
+<li>Add in explanatory text / variable definitions</li>
+<li>Relationship to report text</li>
+<li>Improve nav b/n views -- add arrow key functionality, create more visible menu?</li>
+<li>Hover over trend lines</li>
+<li>Stat sig</li>
+<li></li>
+<li></li>
+</ul>

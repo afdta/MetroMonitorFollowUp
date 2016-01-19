@@ -351,15 +351,20 @@
 			charts.title.html("Trends in the components of " + catlong.toLowerCase());
 			charts.legend.select("p").text(function(d,i){return i===0 ? metroName : "United States"})
 
-			var getFormat = function(ind){
+			var getFormat = function(ind, decimals){
+				var dec = !!decimals && decimals < 2 && decimals >= 0 ? decimals : 0;
+				var pct = "pct"+dec;
+				var doll = "doll"+dec;
+				var num = "num"+dec;
+
 				if(ind in {"EmpRatio":0, "RelPov":0}){
-					var fmt = self.formats.pct1;
+					var fmt = self.formats[pct];
 				}
 				else if(ind in {"MedEarn":0}){
-					var fmt = self.formats.doll0;
+					var fmt = self.formats[doll];
 				}
 				else{
-					var fmt = self.formats.num1;
+					var fmt = self.formats[num];
 				}
 				return fmt;
 			}
@@ -397,20 +402,22 @@
 				var extent2 = [extent[0]-(Math.abs(extent[0])*0.025), extent[1]+(Math.abs(extent[1])*0.025)]; 
 				//var extent2 = extent;
 				var scaleY = d3.scale.linear().domain(extent2).range([charts.height, 0]);
-				var fmt = getFormat(d.c);
-				var axis = d3.svg.axis().scale(scaleY).orient("left").ticks(3).tickFormat(fmt).outerTickSize(0);
+				var tickVals = scaleY.ticks(3);
+				var fmt = getFormat(d.c, 1);
+				var fmt0 = getFormat(d.c, 0);
+				var axis = d3.svg.axis().scale(scaleY).orient("left").tickValues(tickVals).tickFormat(fmt0).outerTickSize(0);
 				var y = function(obs){return scaleY(val(obs))}
 				var x = function(obs){return scaleX(year(obs))}
 				var line = d3.svg.line().x(x).y(y);
 				var metpath = line(data);
 				var uspath = line(usdata);
-				return {x:x, y:y, val:val, year:year, fmt:fmt, l:d.l, metpath:metpath, uspath:uspath, yaxis:axis}
+				return {x:x, y:y, val:val, year:year, fmt:fmt, l:d.l, metpath:metpath, uspath:uspath, yaxis:axis, ticks:tickVals, yscale:scaleY}
 			})
 
 			try{
 				charts.xaxis.transition().call(axisX)
 					  .selectAll("text")
-					  .attr({"transform": "rotate(-45)", "dy":"8px", "dx":"-0.2em"})
+					  .attr({"transform": "rotate(-45)", "dy":"8px", "dx":"-0.2em", "font-weight":"bold"})
 					  .style("text-anchor","end");
 
 			}
@@ -432,8 +439,18 @@
 
 
 			charts.groups.select("text.chart-title")
-						.text(function(d,i){return d.l.toUpperCase()})
-						//.attr({x:chartWidth, "text-anchor":"end"});
+						.text(function(d,i){return d.l})
+						.attr({x:chartWidth, "text-anchor":"end"});
+
+			var gridLines = charts.groups.select("g.grid-line-group").selectAll("line").data(function(d,i){
+				return d.ticks.map(function(v,i){return d.yscale(v)});
+			});
+			gridLines.enter().append("line");
+			gridLines.exit().remove();
+			gridLines.attr({"x1":0, "x2":chartWidth, "stroke":"#aaaaaa", "stroke-dasharray":"1,3"})
+					 .attr("y1",function(d,i){return d})
+					 .attr("y2",function(d,i){return d});
+
 			
 			try{
 				var yaxes = charts.groups.select("g.d3-axis-group").each(function(d,i){
@@ -597,7 +614,7 @@
 			//CHARTSS SETUP
 			var chartWrap = mapAndCharts.append("div").style("overflow","visible");
 			var chartHeight = 70;
-			var chartPad = 35;
+			var chartPad = 40;
 			var threeChartPad = 0;
 							
 			var chartTitleWrap = chartWrap.append("div").style({"position":"relative","z-index":"5"});
@@ -622,10 +639,11 @@
 				//xaxis.append("line").attr({"x1":"0%","x2":"100%","y1":"1","y2":"1","stroke":"#aaaaaa", "stroke-width":"1px"})
 				//					.style("shape-rendering","crispEdges");
 
-			chartG.append("rect").attr({"width":"100%","height":chartHeight+"px","fill":"#fbfbfb"}).classed("chart-back",true);
+			chartG.append("rect").attr({"width":"100%","height":chartHeight+"px","fill":"#ffffff"}).classed("chart-back",true);
+			chartG.append("g").classed("grid-line-group",true);
 			chartG.append("path").classed("us-trend-line",true).attr({"d":"M0,0", "stroke":"#aaaaaa"});
 			chartG.append("path").classed("metro-trend-line",true).attr({"d":"M0,0", "stroke":"#00649f"});
-			chartG.append("text").classed("chart-title",true).attr({x:"-5",y:"-7"}).attr({"font-size":"13px"}).text("...")
+			chartG.append("text").classed("chart-title",true).attr({x:"0",y:"-10"}).attr({"font-size":"13px"}).text("...")
 			//store in view
 			this.store("mapData",{large:map, dataBound:false});
 
