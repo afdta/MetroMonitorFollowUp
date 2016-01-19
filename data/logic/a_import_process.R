@@ -232,16 +232,14 @@ with(INCCHGd, table(IND, Indicator))
 with(INCCHGd, table(Year, Period))
 
 INCVALd_WIDE <- merge(dcast(INCVALd, CBSA+Year~race+IND, value.var="Value"), dcast(INCVALd, CBSA+Year~race+IND, value.var="SE"), by=c("CBSA","Year"), suffixes=c("V","SE"))
-INCCHGd_Wide <- merge(dcast(INCCHGd, CBSA~race+IND+Period, value.var="Value"), dcast(INCCHGd, CBSA~race+IND+Period, value.var="SE"), by=c("CBSA"), suffixes=c("V","SE"))
+INCCHGd_WIDE <- merge(dcast(INCCHGd, CBSA~race+IND+Period, value.var="Value"), dcast(INCCHGd, CBSA~race+IND+Period, value.var="SE"), by=c("CBSA"), suffixes=c("V","SE"))
 
 INCVALd_LIST <- split(INCVALd_WIDE, INCVALd_WIDE$CBSA)
+INCCHGd_LIST <- split(INCCHGd_WIDE, INCCHGd_WIDE$CBSA)
 
 
-INCRACE <- list(ranks=INCRACERNK_WIDE, change=INCRACECH_WIDE, changeDetail=INCCHGd_Wide, levelsDetail=INCVALd_LIST)
+INCRACE <- list(ranks=INCRACERNK_WIDE, change=INCRACECH_WIDE, changeDetail=INCCHGd_LIST, levelsDetail=INCVALd_LIST)
 
 json2 <- toJSON(INCRACE, digits=5)
 writeLines(json2, "inclusionByRace.json")
-
-
-
 

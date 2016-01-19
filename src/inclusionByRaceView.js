@@ -6,7 +6,7 @@
 		var colors = ['#d01c8b','#f1b6da','#f7f7f7','#b8e186','#4dac26'];
 		var colors = ['#053769', '#a4c7f2', '#cccccc', '#ffa626', '#ff5e1a'];
 
-		var periods = {"Five":"2009 to 2014", "One":"2013 to 2014", "Ten":"2004 to 2014"};
+		var periods = {"Five":"2009–2014", "One":"2013–2014", "Ten":"1999–2014"};
 
 		function r2c(r){
 			var q = null;
@@ -21,41 +21,16 @@
 			return {fill:colors[q], text:t};
 		}
 
-		function getInd(category){
-			if(category==="gr"){
-				var indicators = [{c:"Emp_", l:"Jobs", b:"gr", ls:"Jobs", i:0}, 
-								  {c:"GMP_", l:"Gross product", b:"gr", ls:"GMP", i:1}, 
-								  {c:"Wages_", l:"Aggregate wages", b:"gr", ls:"Agg. wages", i:2}];
-			}
-			else if(category==="pro"){
-				var indicators = [{c:"AvgWage_", l:"Average wage", b:"pro", ls:"Avg. wage", i:0}, 
-								  {c:"GMPCap_", l:"GMP per capita", b:"pro", ls:"GMP / cap.", i:1}, 
-								  {c:"GMPJob_", l:"GMP per job", b:"pro", ls:"GMP / job", i:2}];
-			}
-			else if(category==="inc"){
-				var indicators = [{c:"EmpRatio_", l:"Employment-to-population ratio", b:"inc", ls:"Emp. / pop.", i:0}, 
-								  {c:"MedEarn_", l:"Median earnings", b:"inc", ls:"Med. earn.", i:1}, 
-								  {c:"RelPov_", l:"Relative poverty", b:"inc", ls:"Rel. poverty", i:2}];
-			}
-			else{
-				var indicators = [];
-			}
-			return indicators;
-		}
-
 		function getYears(period){
 			var endYear = 2014;
 			var startYear = period == "One" ? 2013 : (period == "Five" ? 2009 : 2000);
 			return {s:startYear, e:endYear}
 		}
 
-		
-		//hold svg groups -- will be defined in setupBase
-
 		var columns = [{}, {}];
 
 		//left off here -- how to do this table
-		function drawCurves(metro, period, g, formats){
+		function drawDetailedTable(metro, period, g, formats){
 			var years = getYears(period);
 			for(i=0; i<metro.length; i++){
 				if(metro[i].Year==years.s){
@@ -129,7 +104,6 @@
 
 			var table = this.storage("table");
 			var tableOuter = this.storage("tableOuter");
-			//var tableHeader = this.storage("tableHeader");
 
 			var data = this.viewData("processed");
 			var raw = this.viewData();
@@ -145,7 +119,6 @@
 			rowEnter.append("p").classed("row-label",true).style({"pointer-events":"none","margin":"0px 0px 5px 0px","line-height":"1em"});
 			rowEnter.append("div").classed("c-fix row-swatches",true);
 			rowEnter.append("div").classed("c-fix row-detail",true);
-			
 			rows.exit().remove();
 
 			
@@ -190,7 +163,7 @@
 			swatches.select("p").text(function(d,i){return self.formats.rankth(d.r)}).style("color",function(d,i){return (r2c(d.r)).text});
 
 			//draw the detail in each cell
-			var detailTitle = rows.select("div.row-detail").selectAll("p.row-title").data(["Inclusion by race measures the extent to which the gap between whites and non-whites is narrowing. The data for <b>non-whites is bolded</b> in the table below."]);
+			var detailTitle = rows.select("div.row-detail").selectAll("p.row-title").data(["Inclusion by race measures the extent to which gaps between whites and non-whites are narrowing. The data for <b>non-whites are bolded</b> in the table below."]);
 			detailTitle.enter().append("p").classed("row-title",true).style({"font-size":"13px","line-height":"1.3em","margin":"12px 0px 5px 0px","border-bottom":"1px solid #aaaaaa", "padding-bottom":"4px"});
 			detailTitle.exit().remove();
 			detailTitle.html(function(d,i){return d});
@@ -200,23 +173,8 @@
 			detailWrap.exit().remove();
 
 			detailWrap.each(function(d,i){
-				drawCurves(data.levels[d], period, d3.select(this), self.formats);
+				drawDetailedTable(data.levels[d], period, d3.select(this), self.formats);
 			});
-
-			/*try{
-				var swatchBox = swatchContainers.node().getBoundingClientRect();
-				var swatchWidth = Math.round(swatchBox.right - swatchBox.left);
-				if(swatchWidth < 50 || swatchWidth > 800){
-					throw "bad width";
-				}
-				var SW = swatchWidth+"px";
-			}
-			catch(e){
-				var SW = "100%";
-			}
-			finally{
-				tableHeader.style("width",SW);
-			}*/
 
 			function scrollToTop(){
 				try{
@@ -259,6 +217,10 @@
 			var bigMap = mapData.large;
 
 			var self = this;
+
+			mapData.title.text("Change in inclusion by race, " + periods[period]);
+				   //.style({"margin":"20px 0px -5px 10px","font-size":"15px","line-height":"1em", "font-weight":"bold"});
+
 
 			//bind map data -- only once
 			if(!mapData.dataBound){
@@ -308,6 +270,118 @@
 
 		}
 
+
+		function drawCurves(){
+			var period = this.store("period");
+			var category = this.store("category");
+			var charts = this.store("charts");
+			var metro = this.getMetro();
+			var metroName = this.lookup[metro][0].CBSA_Title;
+			var self = this;
+			var data = this.viewData().changeDetail[metro][0];
+			console.log(JSON.stringify(data));
+
+			charts.title.html('Change in the components of inclusion by race/ethnicity, ' + periods[period]);
+
+			//set chart dimensions
+			try{
+				var box = charts.wrap.node().getBoundingClientRect();
+				var width = Math.round(box.right-box.left);
+				if(width > 700 || width < 300){throw "BadDimensions"};
+			}
+			catch(e){
+				var width = 500;
+			}
+			finally{
+				var chartWidth = width-100;
+				charts.group.attr("transform","translate(60,"+(0.75*charts.pad)+")");
+				charts.groups.select("rect.chart-back").attr("width",chartWidth);
+			}
+
+			var formats = {"EmpRatio":self.formats.pctch1, "RelPov":self.formats.pctch1, "MedEarn":self.formats.pct1};
+
+			
+
+			//scales
+			var groups = ["Total","White","NonWhite","Black","Hispanic","Asian","Other"];
+			var scaleX = d3.scale.ordinal().domain(groups).rangeRoundPoints([0,chartWidth], 0.5);
+			var axisX = d3.svg.axis().scale(scaleX).orient("bottom")
+									 .tickValues(groups).tickFormat(function(d,i){
+									 	if(d=="NonWhite"){
+									 		var g = "Non-white";
+									 	}
+									 	else if(d=="Total"){
+									 		var g = "All";
+									 	}
+									 	else{
+									 		var g = d;
+									 	}
+									 	return g;
+									 })
+									 .outerTickSize(0);
+
+			try{
+				charts.xaxis.transition().call(axisX)
+					  .selectAll("text")
+					  .attr({"transform": "rotate(-45)", "dy":"8px", "dx":"-0.2em"})
+					  .style("text-anchor","end");
+
+			}
+			catch(e)
+			{
+			
+			}
+
+			return null;
+			
+			//an array of accessors (of the data array)
+			var accessors = indicators.map(function(d,i){
+				var val = function(obs){return obs[d.c+"V"]}
+				var year = function(obs){return obs.year}
+				var extent = d3.extent(data.concat(usdata), val);
+				//pad extent for scale
+				var extent2 = [extent[0]-(Math.abs(extent[0])*0.025), extent[1]+(Math.abs(extent[1])*0.025)]; 
+				//var extent2 = extent;
+				var scaleY = d3.scale.linear().domain(extent2).range([charts.height, 0]);
+				var fmt = getFormat(d.c);
+				var axis = d3.svg.axis().scale(scaleY).orient("left").ticks(3).tickFormat(fmt).outerTickSize(0);
+				var y = function(obs){return scaleY(val(obs))}
+				var x = function(obs){return scaleX(year(obs))}
+				var line = d3.svg.line().x(x).y(y);
+				var metpath = line(data);
+				var uspath = line(usdata);
+				return {x:x, y:y, val:val, year:year, fmt:fmt, l:d.l, metpath:metpath, uspath:uspath, yaxis:axis}
+			})
+
+
+			
+			//add in y-axes
+			charts.groups = charts.groups.data(accessors); //bind accessors
+
+			//set newly bound data to trend line - no need to enter/exit above always 3
+			charts.groups.select("path.metro-trend-line").attr("d",function(d,i){
+				return d.metpath;
+			}).style({"fill":"none","stroke-width":"2px"});
+			charts.groups.select("path.us-trend-line").attr("d",function(d,i){
+				return d.uspath;
+			}).style({"fill":"none","stroke-width":"2px"});
+
+
+			charts.groups.select("text.chart-title")
+						.text(function(d,i){return d.l.toUpperCase()})
+						//.attr({x:chartWidth, "text-anchor":"end"});
+			
+			try{
+				var yaxes = charts.groups.select("g.d3-axis-group").each(function(d,i){
+					d3.select(this).transition().call(d.yaxis);
+				});
+			}catch(e){
+				console.log(e);
+			}
+
+		}
+
+
 		//redraw -- setup is just to add html
 		function redrawBase(){
 			var self = this;
@@ -337,6 +411,7 @@
 					buttons.period.classed("generic-button-selected", function(d,j){return i===j});
 					drawTable.call(self);
 					drawMaps.call(self);
+					drawCurves.call(self);
 				});
 
 			}
@@ -347,98 +422,110 @@
 			if(this.changeEvent.view || this.changeEvent.metro){
 				drawMaps.call(this);
 			};
+			drawCurves.call(self);
 		}
 
-		var setupBase = function(){
+var setupBase = function(){
 			var self = this;
-			this.header.append("p").text("Economic inclusion by race in the 100 largest U.S. metro areas");
-			//var tableWrap = this.container.append("div").style({"padding":"5px 0px 5px 0px", "border":"1px solid #dddddd", "border-width":"1px 0px 1px 0px"}).classed("two-fifths",true).append("div").style("max-height","600px");
-			var headerWrap = this.container.append("div").classed("c-fix",true).style({"margin-bottom":"15px", "border":"1px solid #aaaaaa", "border-width":"0px 1px 1px 1px", "background-color":"#ffffff", "padding":"15px"});
-			var header0 = headerWrap.append("div").classed("three-fifths",true).append("div").style({"padding":"0px 5% 0px 0px", "margin":"0px 0px"});
+			this.header.append("p").text("Growth, prosperity, and inclusion in the 100 largest U.S. metro areas");
 			
-			//left side of header --
-			header0.append("p").html('<b>Inclusion is one thing</b>... inclusion by race sheds light on... Use this area to describe what we\'re showing and why it\'s valuable').style("margin-bottom","0px");	
-			header0.append("p").html('<span>Explore the data below to find out which large metro areas have improved most on these metrics over time.</span>').style({"font-style":"normal","line-height":"1.4em","padding":"5px 10px 0px 0px", "margin":"5px 20px 0px 0px", "border-top":"1px dotted #aaaaaa", "clear":"both", "font-size":"13px"});
-						
-			var periodMenu = header0.append("div").classed("c-fix",true).style("margin-top","15px");
-			periodMenu.append("p").text("Time period").style({"margin":"0px","font-size":"11px","text-transform":"uppercase"});
+			//var tableWrap = this.container.append("div").style({"padding":"5px 0px 5px 0px", "border":"1px solid #dddddd", "border-width":"1px 0px 1px 0px"}).classed("two-fifths",true).append("div").style("max-height","600px");
+			var headerWrap = this.container.append("div").classed("c-fix",true).style({"padding":"15px"});
+			var header0 = headerWrap.append("div");;
+			header0.append("p").html('Successful economic development should support <b>growth</b>, <b>prosperity</b>, and <b>inclusion</b> in the form of economic expansion, a rising standard of living, and broadly shared economic gains. <span style="font-style:italic"> Explore the data below to find out which large metro areas have performed best on these metrics over time.</span>')
+							   .style({"margin":"0px"});
+
+			//legend area
+			var legendAndTime = this.container.append("div").style({"padding-bottom":"15px", "border-bottom":"1px solid #dddddd", "margin-bottom":"15px"}).classed("c-fix",true);
+			var legendWrap = legendAndTime.append("div").classed("c-fix three-fifths mobile-bottom-buffer",true).append("div").style({"padding":"0px 15px 0px 15px"});
+			legendWrap.append("p").text("Metro areas are ranked from 1 to 100; 1 indicates the best performance").style({"font-size":"13px"});
+			var legendSwatches = legendWrap.append("div").classed("c-fix",true).selectAll("div").data(colors).enter().append("div").style({"float":"left","margin":"0px 15px 5px 0px"});
+			legendSwatches.append("div").style({"float":"left","width":"15px","height":"15px"}).style("background-color",function(d,i){return d})
+			legendSwatches.append("p").style({"float":"left","font-size":"13px","line-height":"15px","height":"15px","margin":"0px 0px 0px 5px", "padding":"1px"})
+								.text(function(d,i){
+									var ii = i*20;
+									return self.formats.rankth(ii+1) + "–" + self.formats.rankth(ii+20)
+								});
+
+			//time period
+			var periodMenu = legendAndTime.append("div").classed("c-fix two-fifths column-right",true);
+			periodMenu.append("p").text("Select a time period to focus on").style({"font-size":"13px"});
 			var periodButtons = periodMenu.selectAll("div").data([{c:"One", l:"One-year"}, {c:"Five", l:"Five-year"}, {c:"Ten", l:"Ten-year"}]).enter().append("div")
-										  .classed("generic-button",true).classed("generic-button-selected",function(d,i){return i===1});
-			periodButtons.append("p").text(function(d,i){return d.l});		
+										  .classed("generic-button",true).classed("generic-button-selected",function(d,i){return i===1})
+										  .style({"box-sizing":"border-box", "width":"32%"}).style("margin",function(d,i){return i<2 ? "0px 2% 0px 0px" : "0px"})
+										  ;
+				periodButtons.append("p").text(function(d,i){return d.l});
 
-						//legend area
-						var legendWrap = this.container.append("div").style({"padding":"0px 15px 30px 15px", "margin":"0px auto", "border":"1px dotted #aaaaaa", "border-width":"0px 0px 0px 0px", "position":"relative", "display":"inline-block"}).classed("c-fix",true).append("div");
-						legendWrap.append("p").text("Metro areas rankings range from 1 to 100, with 1 indicating the best performance").style({"margin":"0px 0px 5px 0px","font-size":"13px"});
-						var legendSwatches = legendWrap.append("div").classed("c-fix",true).selectAll("div").data(colors).enter().append("div").style({"float":"left","margin":"0px 15px 5px 0px"});
-						legendSwatches.append("div").style({"float":"left","width":"15px","height":"15px"}).style("background-color",function(d,i){return d})
-						legendSwatches.append("p").style({"float":"left","font-size":"13px","line-height":"15px","height":"15px","margin":"0px 0px 0px 5px", "padding":"1px"})
-											.text(function(d,i){
-												var ii = i*20;
-												return self.formats.rankth(ii+1) + "–" + self.formats.rankth(ii+20)
-											});
+			//TABLE SETUP
+			var rightSide = this.container.append("div").classed("two-fifths column-right",true);
+			var tableHeaderWrap = rightSide.append("div");
+
+			var tableHeader = tableHeaderWrap.append("div").append("p").text("Inclusion by race rankings")
+												.style({"margin":"0px 0px 5px 10px", "font-weight":"bold"});
+			
+
+			var tableOuter = rightSide.append("div").style({"clear":"both","border":"1px solid #aaaaaa", "border-width":"1px 0px 1px 0px", "padding":"0px", "max-height":"800px", "overflow-y":"auto"});
+			var tableWrap = tableOuter.append("div").style("padding","0px 0px 500px 0px");
+			var table = tableWrap.append("div").style("width","100%"); //.append("g").attr("id","core-svg-table")
+
+			//MAPS SETUP
+			var mapAndCharts = this.container.append("div").style("overflow","visible").classed("three-fifths no-mobile-display",true)
+											.append("div").style({"padding":"0px 30px 0px 0px","position":"relative"});;
+
+			var mapTitle = mapAndCharts.append("div").append("p")
+								.text("Inclusion by race")
+								.style({"margin":"0px 20px -5px 0px", "padding":"0px 0px 5px 10px", "border-bottom":"1px solid #aaaaaa", "font-weight":"bold"});
 
 
+			var mapWrap = mapAndCharts.append("div").style("overflow","visible").style({"padding":"0px 0px 0px 0px","position":"relative"});
+			//add another div and create the map within it
+			var map = new dotMap(mapWrap.append("div").node());
+			map.makeResponsive();
 
-						//MAPS SETUP
-						var mapWrap = this.container.append("div").style("overflow","visible").classed("three-fifths no-mobile-display",true).append("div").style({"padding":"0px 30px 0px 0px","position":"relative"});
-						var bigMapOuter = mapWrap.append("div").style({"position":"relative","z-index":"5"});
-						bigMapOuter.append("div").style({"padding":"0px 0px 10px 0px", "margin":"0px 10px 10px 0px", "border-bottom":"1px solid #aaaaaa"})
-								   .append("p").classed("map-title",true).text("Metro area maps").style({"font-weight":"bold", "line-height":"1em", "margin":"0px 15px"});
-						var bigMap = bigMapOuter.append("div");
 
-						/*
-						var smallMapWrap = mapWrap.append("div").classed("c-fix",true);
-							var mapsAnno = smallMapWrap.append("div").classed("c-fix",true)
-													   .style({"border-bottom":"1px dotted #aaaaaa","padding":"0px 0px 5px 0px","margin":"0px 10px 15px 0px"})
-													   .append("div").style("float","left");
-							mapsAnno.append("p").text("Detailed indicator maps 1–3").style({"margin":"0px","font-size":"13px","clear":"both"})
+			//CHARTSS SETUP
+			var chartWrap = mapAndCharts.append("div").style("overflow","visible");
+			var chartHeight = 70;
+			var chartPad = 35;
+			var threeChartPad = 0;
 							
-							var smallMaps = smallMapWrap.selectAll("div.small-map").data([1,2,3]).enter().append("div").classed("small-map",true).style({"width":"48%","padding-right":"2%","float":"left","position":"relative","z-index":"3"});
-							smallMapWrap.append("div").style({"width":"44%","padding":"2% 3%","float":"left","position":"relative","z-index":"3","margin":"auto"}).append("p").style({"font-size":"13px","color":"#666666"})
-											.text("These small maps present changes in the three indicators that together combine to make up the overall ranking for the selected category. [Describe small maps... Another opportunity to convey that each broad metric is composed of three indicators.]")
-
-						//small maps
-						var sMaps = [];
-						smallMaps.each(function(d,i){
-							var map = new dotMap(this);
-							map.makeResponsive();
-							sMaps.push(map);
-						})*/
-						//big map
-
-						var bMap = new dotMap(bigMap.node());
-						bMap.makeResponsive();
-						this.storage("mapData",{large:bMap, dataBound:false});
-
-						this.storage("mapWrap", mapWrap);
-						this.storage("period","Five");
+			var chartTitleWrap = chartWrap.append("div").style({"position":"relative","z-index":"5"});
+			var chartTitle = chartTitleWrap.append("p").classed("charts-title",true)
+				                    .html('Change in the components of inclusion by race/ethnicity')
+				                    .style({"margin":"0px 15px 5px 10px","font-weight":"bold"});
 
 
-						//TABLE SETUP
-						var rightSide = this.container.append("div").classed("two-fifths",true);
-						var tableHeaderWrap = rightSide.append("div");
-						tableHeaderWrap.append("p").classed("table-title",true).text("Metro area rankings").style({"font-weight":"bold", "line-height":"1em", "margin":"0px 15px 10px 10px"});
+			var chartSVG = chartWrap.append("svg").style({"width":"100%","height":((chartHeight*3)+(chartPad*4)+35)+"px"}).append("g").attr("transform","translate(0,0)");
+			var chartG = chartSVG.selectAll("g").data([1,2,3]).enter().append("g")
+												.attr("transform",function(d,i){return "translate(0," + i*(chartHeight+chartPad) + ")"});
+			//add y-axes to each group
+			chartG.append("g").classed("d3-axis-group",true).attr("transform","translate(0,0)");
 
-						/*
-						var tableHeader = tableHeaderWrap.append("div").style({"background-color":"#dddddd", "padding":"7px 10px 5px 10px", "border":"1px solid #aaaaaa", "border-width":"1px 1px 0px 1px"}).append("div").classed("c-fix",true);
-						
-						tableHeader.selectAll("div.th").data(["GROWTH","PROSPERITY","INCLUSION"]).enter().append("div")
-							.style("margin-left",function(d,i){return i==0 ? "0%" : "2%"})
-							.style("margin-right",function(d,i){return i===2 ? "-30px" : "0px"})
-							.style({"float":"left", "width":"32%"})
-							.append("p").style({"line-height":"1em","margin":"0px","font-size":"11px","text-align":"center"})
-							.text(function(d,i){return d});*/
+			var xaxis = chartSVG.append("g").attr("transform","translate(0,"+((3*chartHeight)+(2*chartPad)+5)+")").classed("d3-axis-group",true);
+				//xaxis.append("line").attr({"x1":"0%","x2":"100%","y1":"1","y2":"1","stroke":"#aaaaaa", "stroke-width":"1px"})
+				//					.style("shape-rendering","crispEdges");
 
-						var tableOuter = rightSide.append("div").style({"clear":"both","border":"1px solid #aaaaaa", "border-width":"1px 0px 1px 0px", "padding":"0px", "max-height":"750px", "overflow-y":"auto"});
-						var tableWrap = tableOuter.append("div").style("padding","0px 10px 500px 0px");
-						var table = tableWrap.append("div").style("width","100%"); //.append("g").attr("id","core-svg-table");
+			chartG.append("rect").attr({"width":"100%","height":chartHeight+"px","fill":"#fbfbfb"}).classed("chart-back",true);
+			chartG.append("path").classed("us-trend-line",true).attr({"d":"M0,0", "stroke":"#aaaaaa"});
+			chartG.append("path").classed("metro-trend-line",true).attr({"d":"M0,0", "stroke":"#65a4e5"});
+			chartG.append("text").classed("chart-title",true).attr({x:"-5",y:"-7"}).attr({"font-size":"13px"}).text("...")
+			//store in view
+			this.store("mapData",{large:map, dataBound:false, title:mapTitle, wrap:mapWrap});
 
-						//store in view
-						this.storage("table", table); //store these in the view state
-						this.storage("tableOuter", tableOuter);
-						//this.storage("tableHeader", tableHeader);
-						this.storage("buttons", {period:periodButtons});
+
+			this.store("table", table); //store these in the view state
+			this.store("tableOuter", tableOuter);
+			this.store("tableHeader", tableHeader);
+
+			this.store("charts", {wrap:chartWrap, height:chartHeight, pad:chartPad, group:chartSVG, groups: chartG, title: chartTitle, xaxis:xaxis});
+
+			//period and category
+			this.store("period","Five");
+			this.store("category","gr")
+
+			this.store("buttons", {period:periodButtons});
 		}
+
 
 		MetroMonitorVersion2.addView(redrawBase, "inclusionByRace.json", setupBase).name("Inclusion by race");
 	})();

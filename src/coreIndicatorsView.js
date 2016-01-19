@@ -7,7 +7,6 @@
 		var colors = ['#053769', '#a4c7f2', '#cccccc', '#ffa626', '#ff5e1a'];
 
 		var periods = {"Five":"2009 to 2014", "One":"2013 to 2014", "Ten":"2004 to 2014"};
-		//colors.reverse();
 
 		function r2c(r){
 			var q = null;
@@ -270,8 +269,8 @@
 			var bigMap = mapData.large;
 
 			var titles = {"gr":"Growth in the 100 largest metro areas, "+ getTime(period, category),
-						  "pro":"Prosperity in the 100 largest metro areas, "+ getTime(period, category),
-						  "inc":"Inclusion in the 100 largest metro areas, "+ getTime(period, category)}
+						  "pro":"Prosperity change in the 100 largest metro areas, "+ getTime(period, category),
+						  "inc":"Inclusion change in the 100 largest metro areas, "+ getTime(period, category)}
 
 			bigMap.title(titles[category], {"margin":"20px 0px -5px 10px","font-size":"15px","line-height":"1em", "font-weight":"bold"});
 
@@ -349,7 +348,7 @@
 			var metroName = this.lookup[metro][0].CBSA_Title;
 			var self = this;
 
-			charts.title.html("Components of " + catlong.toLowerCase() + " over time");
+			charts.title.html("Trends in the components of " + catlong.toLowerCase());
 			charts.legend.select("p").text(function(d,i){return i===0 ? metroName : "United States"})
 
 			var getFormat = function(ind){
