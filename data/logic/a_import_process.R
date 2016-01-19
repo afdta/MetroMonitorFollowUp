@@ -4,8 +4,6 @@
 #are percentage points used
 
 library("reshape2")
-library("ggplot2")
-library("GGally")
 library("metromonitor")
 library("jsonlite")
 
@@ -44,6 +42,12 @@ ProRnk <- read.csv("Prosperity Ranks.csv", stringsAsFactors=FALSE, na.strings=na
 ProVal <- read.csv("Prosperity Values.csv", stringsAsFactors=FALSE, na.strings=nastr)
 
 ProIdx <- read.csv("Prosperity Index.csv", stringsAsFactors=FALSE, na.strings=nastr)
+
+#FIX bad 2000 values
+GrVal[GrVal$year==2000,"value"] <- 100
+ProIdx[ProIdx$year==2000,"value"] <- 100
+#For decennial census 2000 is actually 1999
+IncVal[IncVal$Year==2000, "Year"] <- 1999
 
 #look at variables
 listIndicators <- function(...){
@@ -103,7 +107,7 @@ IncRnk[IncRnk$Year=="2000-2014","Year"] <- "2004-2014"
 GRR <- GrRnk
 GRCHG <- GrChg[GrChg$CBSA %in% metID$CBSA_Code, ]
 GRCHG$SE <- as.numeric(NA) #add in to match inclusion structure
-GRVAL <- GrVal[GrVal$CBSA %in% metID$CBSA_Code, ]
+GRVAL <- GrVal[GrVal$CBSA %in% metID$CBSA_Code | GrVal$CBSA==99999, ]
 GRR$Period <- ifelse(GRR$year=="2013-2014", "One", ifelse(GRR$year=="2009-2014", "Five", "Ten"))
 GRCHG$Period <- ifelse(GRCHG$year=="2013-2014", "One", ifelse(GRCHG$year=="2009-2014", "Five", "Ten"))
 GRCHG$IND <- ifelse(GRCHG$indicator=="Percent Change in Aggregate Wages", "Wages", ifelse(GRCHG$indicator=="Percent Change in Employment", "Emp", "GMP"))
@@ -120,7 +124,7 @@ PROR <- ProRnk
 PROCHG <- ProChg[ProChg$CBSA %in% metID$CBSA_Code, ]
 PROCHG$SE <- as.numeric(NA) #add in to match inclusion structure
 PROVAL <- ProVal[ProVal$CBSA %in% metID$CBSA_Code, ]
-PROIDX <- ProIdx[ProIdx$CBSA %in% metID$CBSA_Code, ]
+PROIDX <- ProIdx[ProIdx$CBSA %in% metID$CBSA_Code | ProIdx$CBSA==99999, ]
 PROR$Period <- ifelse(PROR$Year=="2013-2014", "One", ifelse(PROR$Year=="2009-2014", "Five", "Ten"))
 PROCHG$Period <- ifelse(PROCHG$year=="2013-2014", "One", ifelse(PROCHG$year=="2009-2014", "Five", "Ten"))
 PROCHG$IND <- ifelse(PROCHG$indicator=="Percent Change in Average Annual Wage", "AvgWage", ifelse(PROCHG$indicator=="Percent Change in Output per Job", "GMPJob", "GMPCap"))
@@ -138,7 +142,7 @@ PROCHG_WIDE <- merge(dcast(PROCHG, CBSA~IND+Period, value.var="rank"), dcast(PRO
 INCR <- IncRnk
 INCCHG <- IncChg[IncChg$CBSA %in% metID$CBSA_Code & IncChg$Race=="Total", c("Year", "CBSA", "CBSA.Name", "Indicator", "Value", "SE")]
 INCCHG$rank <- as.numeric(NA) #placeholder for later
-INCVAL <- IncVal[IncVal$CBSA %in% metID$CBSA_Code & IncVal$Race=="Total", ]
+INCVAL <- IncVal[(IncVal$CBSA %in% metID$CBSA_Code | IncVal$CBSA==99999) & IncVal$Race=="Total", ]
 INCR$Period <- ifelse(INCR$Year=="2013-2014", "One", ifelse(INCR$Year=="2009-2014", "Five", "Ten"))
 INCCHG$Period <- ifelse(INCCHG$Year=="2013-2014", "One", ifelse(INCCHG$Year=="2009-2014", "Five", "Ten"))
 INCCHG$IND <- ifelse(INCCHG$Indicator=="Percent Change in Employment-to-Population Ratio", "EmpRatio", ifelse(INCCHG$Indicator=="Percent Change in Median Earnings", "MedEarn", "RelPov"))
@@ -190,7 +194,7 @@ getVals <- function(df){
   return(ss)
 }
   
-VALUES <- list(growth=getVals(GRVAL), prosperity=getVals(PROVAL), prosperity2=getVals(PROIDX), inclusion=getVals(INCVAL))
+VALUES <- list(growth=getVals(GRVAL), prosperityLevels=getVals(PROVAL), prosperity=getVals(PROIDX), inclusion=getVals(INCVAL))
 
 
 json <- toJSON(list(measures=ALL, values=VALUES), digits=5)

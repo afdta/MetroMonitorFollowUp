@@ -222,6 +222,8 @@
 	border-right-color:#aaaaaa;
 	border-left-color:#aaaaaa;
 }
+.metro-interactive-wrap .table-row.row-is-pinned .row-label, 
+.metro-interactive-wrap .table-row.row-is-highlighted .row-label{font-weight:bold;}
 
 .metro-interactive-wrap .table-row.row-is-pinned {border-style:solid;}
 .metro-interactive-wrap .table-row.row-is-pinned .row-detail{display:block;}
@@ -268,6 +270,15 @@
 .metro-interactive-view .column-right{float:right;}
 .metro-interactive-view .column-left{float:left;}
 
+.metro-interactive-view svg g.d3-axis-group text{
+	font-size:11px;
+}
+.metro-interactive-view svg g.d3-axis-group line, .metro-interactive-view svg g.d3-axis-group path{
+	fill:none;
+	stroke:#cccccc;
+	stroke-width:1px;
+	shape-rendering:crispEdges;
+}
 
 
 @media (min-width:0px){

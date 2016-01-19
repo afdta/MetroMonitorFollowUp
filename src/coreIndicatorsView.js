@@ -24,19 +24,19 @@
 
 		function getInd(category){
 			if(category==="gr"){
-				var indicators = [{c:"Emp_", l:"Jobs", b:"gr", ls:"Jobs", i:0}, 
-								  {c:"GMP_", l:"Gross product", b:"gr", ls:"GMP", i:1}, 
-								  {c:"Wages_", l:"Aggregate wages", b:"gr", ls:"Agg. wages", i:2}];
+				var indicators = [{c:"Emp", l:"Jobs", b:"gr", ls:"Jobs", i:0}, 
+								  {c:"GMP", l:"Gross product", b:"gr", ls:"GMP", i:1}, 
+								  {c:"Wages", l:"Aggregate wages", b:"gr", ls:"Agg. wages", i:2}];
 			}
 			else if(category==="pro"){
-				var indicators = [{c:"AvgWage_", l:"Average wage", b:"pro", ls:"Avg. wage", i:0}, 
-								  {c:"GMPCap_", l:"GMP per capita", b:"pro", ls:"GMP / cap.", i:1}, 
-								  {c:"GMPJob_", l:"GMP per job", b:"pro", ls:"GMP / job", i:2}];
+				var indicators = [{c:"AvgWage", l:"Average wage", b:"pro", ls:"Avg. wage", i:0}, 
+								  {c:"GMPCap", l:"GMP per capita", b:"pro", ls:"GMP / cap.", i:1}, 
+								  {c:"GMPJob", l:"GMP per job", b:"pro", ls:"GMP / job", i:2}];
 			}
 			else if(category==="inc"){
-				var indicators = [{c:"EmpRatio_", l:"Employment-to-population ratio", b:"inc", ls:"Emp. / pop.", i:0}, 
-								  {c:"MedEarn_", l:"Median earnings", b:"inc", ls:"Med. earn.", i:1}, 
-								  {c:"RelPov_", l:"Relative poverty", b:"inc", ls:"Rel. poverty", i:2}];
+				var indicators = [{c:"EmpRatio", l:"Employment-to-population ratio", b:"inc", ls:"Emp. / pop.", i:0}, 
+								  {c:"MedEarn", l:"Median earnings", b:"inc", ls:"Med. earn.", i:1}, 
+								  {c:"RelPov", l:"Relative poverty", b:"inc", ls:"Rel. poverty", i:2}];
 			}
 			else{
 				var indicators = [];
@@ -68,8 +68,8 @@
 			var catmap = zot.map(function(n,i,a){
 				var sa = [grI[n], proI[n], incI[n]];
 				return sa.map(function(ind, i, a){
-					var I = ind.c+period+"V";
-					var D = ind.c+period+"R";
+					var I = ind.c+"_"+period+"V";
+					var D = ind.c+"_"+period+"R";
 					var R = ranges[I];
 					var value = metro[(ind.b+"1")][I];
 					var rank = metro[(ind.b)+"1"][D];
@@ -196,7 +196,7 @@
 			swatches.select("p").text(function(d,i){return self.formats.rankth(d.r)}).style("color",function(d,i){return (r2c(d.r)).text});
 
 			//draw the detail in each cell
-			var detailTitle = rows.select("div.row-detail").selectAll("p.row-title").data(["Percent change over the last " + (period=="One" ? "year" : (period.toLowerCase() + " years")) + " on the indicators that determine overall rankings"]);
+			var detailTitle = rows.select("div.row-detail").selectAll("p.row-title").data(["Percent change over the last <b>" + (period=="One" ? "year" : (period.toLowerCase() + " years")) + "</b> on the indicators that determine overall rankings"]);
 			detailTitle.enter().append("p").classed("row-title",true).style({"font-size":"13px","line-height":"1.3em","margin":"12px 0px 5px 0px","border-bottom":"1px solid #aaaaaa", "padding-bottom":"4px"});
 			detailTitle.exit().remove();
 			detailTitle.html(function(d,i){return d});
@@ -273,7 +273,7 @@
 						  "pro":"Prosperity in the 100 largest metro areas, "+ getTime(period, category),
 						  "inc":"Inclusion in the 100 largest metro areas, "+ getTime(period, category)}
 
-			bigMap.title("<b>Map</b>: " + titles[category], {"margin":"20px 0px -5px 15px","font-size":"15px","line-height":"1em"});
+			bigMap.title(titles[category], {"margin":"20px 0px -5px 10px","font-size":"15px","line-height":"1em", "font-weight":"bold"});
 
 			var self = this;
 
@@ -344,21 +344,28 @@
 			var category = this.store("category");
 			var catlong = category==="gr" ? "Growth" : (category==="inc" ? "Inclusion" : "Prosperity");
 			var charts = this.store("charts");
-			var xaxis = charts.xaxis;
-			var ticks = category==="inc" ? [1999, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014] : [2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014];
+			var ticks = category==="inc" ? [1999, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014] : [2000,2001,2002,2003,2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014];
 			var metro = this.getMetro();
-			charts.title.html("<b>Charts</b>: " + catlong + " indicators in the " + this.lookup[metro][0].CBSA_Title + " metro area");
+			var metroName = this.lookup[metro][0].CBSA_Title;
+			var self = this;
 
-			//left off here -- fix data so prosperity is indexed
-			var data = this.viewData().values[catlong.toLowerCase()];
+			charts.title.html("Components of " + catlong.toLowerCase() + " over time");
+			charts.legend.select("p").text(function(d,i){return i===0 ? metroName : "United States"})
 
-			console.log(data);
-			console.log(charts);
+			var getFormat = function(ind){
+				if(ind in {"EmpRatio":0, "RelPov":0}){
+					var fmt = self.formats.pct1;
+				}
+				else if(ind in {"MedEarn":0}){
+					var fmt = self.formats.doll0;
+				}
+				else{
+					var fmt = self.formats.num1;
+				}
+				return fmt;
+			}
 
-			//write x, y accessors
-			//determine data range
-			//get U.S. data
-
+			//set chart dimensions
 			try{
 				var box = charts.wrap.node().getBoundingClientRect();
 				var width = Math.round(box.right-box.left);
@@ -368,25 +375,75 @@
 				var width = 500;
 			}
 			finally{
-				var chartWidth = width-200;
-				charts.group.attr("transform","translate(50,0)");
+				var chartWidth = width-100;
+				charts.group.attr("transform","translate(60,"+(0.75*charts.pad)+")");
 				charts.groups.select("rect.chart-back").attr("width",chartWidth);
 			}
 
-			var XSCALE = d3.scale.linear().domain([ticks[0], ticks[ticks.length-1]]).range([0,chartWidth]);
-			var XAXIS = d3.svg.axis().scale(XSCALE).orient("bottom").tickValues(ticks).tickFormat(function(v){return v});
+			//data to plot
+			var data = this.viewData().values[catlong.toLowerCase()][metro];
+			var usdata = this.viewData().values[catlong.toLowerCase()]["99999"];
+			var indicators = getInd(category);
+			var scaleX = d3.scale.linear().domain([ticks[0], ticks[ticks.length-1]]).range([0,chartWidth]);
+			var axisX = d3.svg.axis().scale(scaleX).orient("bottom")
+									 .tickValues(ticks).tickFormat(function(v){return v})
+									 .outerTickSize(0);
+			
+			//an array of accessors (of the data array)
+			var accessors = indicators.map(function(d,i){
+				var val = function(obs){return obs[d.c+"V"]}
+				var year = function(obs){return obs.year}
+				var extent = d3.extent(data.concat(usdata), val);
+				//pad extent for scale
+				var extent2 = [extent[0]-(Math.abs(extent[0])*0.025), extent[1]+(Math.abs(extent[1])*0.025)]; 
+				//var extent2 = extent;
+				var scaleY = d3.scale.linear().domain(extent2).range([charts.height, 0]);
+				var fmt = getFormat(d.c);
+				var axis = d3.svg.axis().scale(scaleY).orient("left").ticks(3).tickFormat(fmt).outerTickSize(0);
+				var y = function(obs){return scaleY(val(obs))}
+				var x = function(obs){return scaleX(year(obs))}
+				var line = d3.svg.line().x(x).y(y);
+				var metpath = line(data);
+				var uspath = line(usdata);
+				return {x:x, y:y, val:val, year:year, fmt:fmt, l:d.l, metpath:metpath, uspath:uspath, yaxis:axis}
+			})
 
 			try{
-				xaxis.transition().call(XAXIS);
+				charts.xaxis.transition().call(axisX)
+					  .selectAll("text")
+					  .attr({"transform": "rotate(-45)", "dy":"8px", "dx":"-0.2em"})
+					  .style("text-anchor","end");
+
 			}
 			catch(e)
 			{
-			console.log(e);
+			
 			}
-			xaxis.selectAll("path").style("shape-rendering","crispEdges").attr({"stroke":"#dddddd","fill":"none"});
-			xaxis.selectAll("line").style("shape-rendering","crispEdges").attr({"stroke":"#dddddd","fill":"none"});
-			xaxis.selectAll("text").attr({"fill":"#666666","font-size":"11px"})
-				    .attr({"transform": "rotate(-45)", "dy":"8px", "dx":"-0.2em"}).style("text-anchor","end");
+			
+			//add in y-axes
+			charts.groups = charts.groups.data(accessors); //bind accessors
+
+			//set newly bound data to trend line - no need to enter/exit above always 3
+			charts.groups.select("path.metro-trend-line").attr("d",function(d,i){
+				return d.metpath;
+			}).style({"fill":"none","stroke-width":"2px"});
+			charts.groups.select("path.us-trend-line").attr("d",function(d,i){
+				return d.uspath;
+			}).style({"fill":"none","stroke-width":"2px"});
+
+
+			charts.groups.select("text.chart-title")
+						.text(function(d,i){return d.l.toUpperCase()})
+						//.attr({x:chartWidth, "text-anchor":"end"});
+			
+			try{
+				var yaxes = charts.groups.select("g.d3-axis-group").each(function(d,i){
+					d3.select(this).transition().call(d.yaxis);
+				});
+			}catch(e){
+				console.log(e);
+			}
+
 		}
 
 		//redraw -- setup is just to add html
@@ -419,7 +476,7 @@
 					var years = ["One", "Five", "Ten"];
 					for(var y=0; y<3; y++){
 						for(var i=0; i<ind.length; i++){
-							var prop = ind[i].c + years[y] + "V";
+							var prop = ind[i].c + "_" + years[y] + "V";
 							data.ranges[prop] = d3.extent(A, function(d,i,a){return d[prop]});
 						}
 					}
@@ -521,7 +578,7 @@
 			var mapAndChartsTitle = mapAndCharts.append("div").style({"position":"relative","z-index":"5"})
 									.append("p").classed("map-title",true)
 				                    .text("Map and chart the data")
-				                    .style({"font-style":"italic","line-height":"1em", "margin":"0px 15px 10px 15px"});
+				                    .style({"font-style":"italic","line-height":"1em", "margin":"0px 15px 10px 0px"});
 
 
 			var catMenu = mapAndCharts.append("div").classed("c-fix",true).style({"background-color":"#dddddd", "padding":"0px 15px", "height":"25px","border-bottom":"1px solid #aaaaaa"});
@@ -538,25 +595,38 @@
 			map.makeResponsive();
 
 
-			//MAPS SETUP
+			//CHARTSS SETUP
 			var chartWrap = mapAndCharts.append("div").style("overflow","visible");
-			var chartHeight = 90;
-			var chartPad = 7;
+			var chartHeight = 70;
+			var chartPad = 35;
+			var threeChartPad = 0;
 							
 			var chartTitleWrap = chartWrap.append("div").style({"position":"relative","z-index":"5"});
 			var chartTitle = chartTitleWrap.append("p").classed("charts-title",true)
-				                    .html('<b>Charts: </b> Change in the selected metro area over time')
-				                    .style({"margin":"0px 15px 10px 15px"});
-			var chartSVG = chartWrap.append("svg").style({"width":"100%","height":((chartHeight*3)+(chartPad*3)+35)+"px"}).append("g");
+				                    .html('Change in the selected metro area over time')
+				                    .style({"margin":"0px 15px 5px 10px","font-weight":"bold"});
+			var chartLegend = chartTitleWrap.append("div").classed("c-fix",true).style({"padding":"0px 0px 10px 0px", "margin":"0px 15px 15px 0px", "border-bottom":"1px dotted #aaaaaa"})
+						  .selectAll("div").data(["Metro","U.S."]).enter()
+						  .append("div").style({float:"left", "margin":"0px 10px 0px 10px"}).classed("c-fix",true);
+			chartLegend.append("div").style({"height":"2px","width":"20px","margin":"7px 5px 6px 2px", "float":"left"})
+						.style("background-color", function(d,i){return i===0 ? "#00649f" : "#aaaaaa"});
+			chartLegend.append("p").text(function(d,i){return d}).style({"line-height":"1em","margin":"0px","float":"left"});
+
+
+			var chartSVG = chartWrap.append("svg").style({"width":"100%","height":((chartHeight*3)+(chartPad*4)+35)+"px"}).append("g").attr("transform","translate(0,0)");
 			var chartG = chartSVG.selectAll("g").data([1,2,3]).enter().append("g")
 												.attr("transform",function(d,i){return "translate(0," + i*(chartHeight+chartPad) + ")"});
-			
-			var xaxis = chartSVG.append("g").attr("transform","translate(0,"+((3*chartHeight)+(3*chartPad))+")");
+			//add y-axes to each group
+			chartG.append("g").classed("d3-axis-group",true).attr("transform","translate(0,0)");
+
+			var xaxis = chartSVG.append("g").attr("transform","translate(0,"+((3*chartHeight)+(2*chartPad)+5)+")").classed("d3-axis-group",true);
 				//xaxis.append("line").attr({"x1":"0%","x2":"100%","y1":"1","y2":"1","stroke":"#aaaaaa", "stroke-width":"1px"})
 				//					.style("shape-rendering","crispEdges");
 
 			chartG.append("rect").attr({"width":"100%","height":chartHeight+"px","fill":"#fbfbfb"}).classed("chart-back",true);
-
+			chartG.append("path").classed("us-trend-line",true).attr({"d":"M0,0", "stroke":"#aaaaaa"});
+			chartG.append("path").classed("metro-trend-line",true).attr({"d":"M0,0", "stroke":"#00649f"});
+			chartG.append("text").classed("chart-title",true).attr({x:"-5",y:"-7"}).attr({"font-size":"13px"}).text("...")
 			//store in view
 			this.store("mapData",{large:map, dataBound:false});
 
@@ -566,7 +636,7 @@
 			this.store("tableHeader", tableHeader);
 
 			this.store("mapWrap", mapWrap);
-			this.store("charts", {wrap:chartWrap, group:chartSVG, groups: chartG, title: chartTitle, xaxis:xaxis});
+			this.store("charts", {wrap:chartWrap, height:chartHeight, pad:chartPad, group:chartSVG, groups: chartG, title: chartTitle, legend:chartLegend, xaxis:xaxis});
 
 			//period and category
 			this.store("period","Five");

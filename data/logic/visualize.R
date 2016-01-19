@@ -1,3 +1,6 @@
+library("ggplot2")
+library("GGally")
+
 overall <- rbind(GrRnk, ProRnk, IncRnk)
 overall <- merge(metID, overall, by.x="CBSA_Code", by.y="CBSA")
 overall$quintile <- cut(overall$Rank, breaks=c(0, 20, 40, 60, 80, 100), labels=c("First", "Second", "Third", "Fourth", "Fifth"))

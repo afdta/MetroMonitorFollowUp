@@ -26,7 +26,7 @@ function dotMap(container){
   this.dotHL.pin.match = this.annoG.append("circle").attr({"cx":"-100","cy":"-100","r":"0","fill":"#ffffff"}).style("pointer-events","none");
   this.dotHL.pin.loc = this.annoG.append("circle").attr({"cx":"-100","cy":"-100","r":"0","fill":"#ffffff"}).style("pointer-events","none");
   this.dotHL.hover.match = this.annoG.append("circle").attr({"cx":"-100","cy":"-100","r":"0","fill":"#ffffff"}).style("pointer-events","none");
-  this.dotHL.hover.loc = this.annoG.append("circle").attr({"cx":"-100","cy":"-100","r":"0","fill":"#ffffff"}).style("pointer-events","none");
+  this.dotHL.hover.loc = this.annoG.append("circle").attr({"cx":"-100","cy":"-100","r":"0","fill":"#ffffff","stroke-width":"5px"}).style("pointer-events","none");
 
   this.tooltip = this.currentMap.append("div")
       .style({"position":"absolute", "display":"block", "visibility":"hidden",
@@ -111,7 +111,7 @@ var setHighlight = function(geoCode, pin, color_override, radius_scalar){
     catch(e){var newR = r;}
 
     dots.match.attr({"cx":X, "cy":Y, "fill":fill, "r":r, "stroke":stroke, "stroke-width":strokeW});
-    dots.loc.attr({"cx":X, "cy":Y, "fill":"none", "r":newR, "stroke":newStroke, "stroke-width":"1", "stroke-dasharray":locDA});
+    dots.loc.attr({"cx":X, "cy":Y, "fill":"none", "r":newR, "stroke":newStroke, "stroke-width":"2", "stroke-dasharray":locDA});
 
     //record parameters for the "loc" dot
     dots.r = rScale;
