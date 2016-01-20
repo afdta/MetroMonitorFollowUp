@@ -130,8 +130,9 @@
 
 		}
 
+
+		var sortProp = {prop:null, asc:true, justsorted:false};
 		function drawTable(){
-			var self = this;
 
 			var table = this.store("table");
 			var tableOuter = this.store("tableOuter");
@@ -145,13 +146,73 @@
 			var metro = this.getMetro();
 			var self = this;
 
-			var rows = table.selectAll("div.table-row").data(data.universe);
+			//sort data
+			data.universe_sort.sort(function(a,b){
+				try{
+					if(!sortProp.prop){
+						var order = a > b ? 1 : -1;
+					}
+					else{
+						if(sortProp.prop in {"gr":1, "inc":1, "pro":1}){
+							var ra = data.table[a][sortProp.prop+"0"][period+"R"];
+							var rb = data.table[b][sortProp.prop+"0"][period+"R"];
+							var order = (ra < rb && sortProp.asc) || (ra > rb && !sortProp.asc) ? -1 : (ra==rb ? 0 : 1);
+							//console.log("a: "+ra+" | b: "+rb+" | order: "+order);
+						}
+						else{
+							var order = 0;
+						}
+					}
+				}
+				catch(e){
+					var order = 0;
+				}
+				finally{
+					return order;
+				}
+			});
+
+			var rows = table.selectAll("div.table-row").data(data.universe_sort, function(d,i){return d});
 			var rowEnter = rows.enter().append("div").classed("table-row",true);
 
 			rowEnter.append("p").classed("row-label",true).style({"pointer-events":"none","margin":"0px 0px 5px 0px","line-height":"1em"});
 			rowEnter.append("div").classed("c-fix row-swatches",true);
 			rowEnter.append("div").classed("c-fix row-detail",true);
-			rows.exit().remove();
+			rows.exit().remove();	
+			
+			//determine if the selected metro is pinned at the top -- if so, it should remain at the top of the table after sorting
+			//need to do this before reordering the dom below
+			try{
+				var metBallpark = rows.filter(function(d,i){return d==metro}).node();
+				var ballPark = metBallpark.parentNode.parentNode.parentNode;
+				var ballParkDist = metBallpark.getBoundingClientRect().top-ballPark.getBoundingClientRect().top;
+				var inTheBallPark = ballParkDist > -80 && ballParkDist < 200; //snap to current
+			}
+			catch(e){
+				var inTheBallPark = false;
+			}
+			rows.order();
+
+			//after sorting, is the pinned metro above/below where it was?
+			try{
+				var newMetBallPark = rows.filter(function(d,i){return d==metro}).node();
+				var newBallParkDist = newMetBallPark.getBoundingClientRect().top-ballPark.getBoundingClientRect().top;
+				var detailNode = newMetBallPark.lastChild.getBoundingClientRect();
+
+				//if it was above and now below, you need to remove offset (and vice versa)
+				if(ballParkDist < 0 && newBallParkDist > 0){
+					var offsetDistance = detailNode.top-detailNode.bottom; //subtract this offset
+				}
+				else if(ballParkDist > 0 && newBallParkDist < 0){
+					var offsetDistance = detailNode.bottom - detailNode.top; //add
+				}
+				else{
+					var offsetDistance = 0;
+				};
+			}
+			catch(e){
+				var offsetDistance = 0;
+			}
 
 			rows.on("mouseenter",function(d,i){
 				var thiz = d3.select(this).classed("row-is-highlighted",true);
@@ -196,7 +257,7 @@
 
 			//draw the detail in each cell
 			var detailTitle = rows.select("div.row-detail").selectAll("p.row-title").data(["Percent change over the last <b>" + (period=="One" ? "year" : (period.toLowerCase() + " years")) + "</b> on the indicators that determine overall rankings"]);
-			detailTitle.enter().append("p").classed("row-title",true).style({"font-size":"13px","line-height":"1.3em","margin":"12px 0px 5px 0px","border-bottom":"1px solid #aaaaaa", "padding-bottom":"4px"});
+			detailTitle.enter().append("p").classed("row-title",true).style({"font-size":"13px","line-height":"1.3em","margin":"0px","border-bottom":"1px solid #aaaaaa", "padding-bottom":"4px"});
 			detailTitle.exit().remove();
 			detailTitle.html(function(d,i){return d});
 
@@ -225,16 +286,20 @@
 
 			function scrollToTop(){
 				try{
+
 					rows.classed("row-is-pinned",false);
 					var metRow = rows.filter(function(d,i){return d==metro});
 					metRow.classed("row-is-pinned",true);
 
 					var metNode = metRow.node();
 					var parNode = metNode.parentNode;
+					var containerT = parNode.parentNode.parentNode.getBoundingClientRect().top;
+
+					if(containerT < 0){return null};
 
 					var outerT = parNode.getBoundingClientRect().top;
 					var rowT = metNode.getBoundingClientRect().top;
-					var T = Math.round(rowT - outerT)+1; 
+					var T = Math.round(rowT - outerT)+1; 						
 
 					var tweenGen = function(){
 						var current = this.scrollTop; //get current amount
@@ -245,16 +310,28 @@
 					}
 				}
 				catch(e){
+					var T = 0;
 				}
 
 				//scrollToTop
 				if(self.changeEvent.view){
 					tableOuter.node().scrollTop = T;
 				}
-				else{
+				else if(self.changeEvent.metro){
 					tableOuter.transition().duration(1000).tween("scrollTopTween", tweenGen); 
 				}
-			
+				else if(inTheBallPark){
+					tableOuter.node().scrollTop = T; //show the metro if it's near top
+				}
+				else if(sortProp.justsorted){
+					tableOuter.node().scrollTop = 0; //if there's a sort prop--the user is interested in sort order
+				}
+				else{
+					var currentScroll = tableOuter.node().scrollTop;
+					var newScroll = currentScroll + offsetDistance;
+					if(newScroll < 0){newScroll=0}
+					tableOuter.node().scrollTop = newScroll; //so nothing changes
+				}
 			}
 			scrollToTop();
 		}
@@ -272,7 +349,7 @@
 						  "pro":"Prosperity change in the 100 largest metro areas, "+ getTime(period, category),
 						  "inc":"Inclusion change in the 100 largest metro areas, "+ getTime(period, category)}
 
-			bigMap.title(titles[category], {"margin":"20px 0px -5px 10px","font-size":"15px","line-height":"1em", "font-weight":"bold"});
+			bigMap.title(titles[category], {"margin":"15px 0px -5px 10px","font-size":"15px","line-height":"1em", "font-weight":"bold"});
 
 			var self = this;
 
@@ -280,12 +357,6 @@
 			if(!mapData.dataBound){
 				var data = this.viewData("processed"); //drawMaps is only called after processed data has been created
 				var data2bind = data.universe.map(function(d,i){return {geo:d, dat:data.table[d]}});
-
-				var addNumber = function(){
-					this.svg.append("circle").attr({"cx":"73%","cy":"20px","r":"8","fill":"#dddddd"});
-					this.svg.append("text").attr({"x":"73%","y":"24px"}).text(function(d,i){return d}).style({"fill":"#333333","font-size":"11px"}).attr("text-anchor","middle");
-					this.metros.attr("r",3);
-				}
 
 				bigMap.setData(data2bind, "geo").drawMap(function(){
 					this.metros.on("mousedown",function(d,i){
@@ -379,8 +450,8 @@
 				var width = 500;
 			}
 			finally{
-				var chartWidth = width-100;
-				charts.group.attr("transform","translate(60,"+(0.75*charts.pad)+")");
+				var chartWidth = width-95;
+				charts.group.attr("transform","translate(50,35)");
 				charts.groups.select("rect.chart-back").attr("width",chartWidth);
 			}
 
@@ -391,7 +462,7 @@
 			var scaleX = d3.scale.linear().domain([ticks[0], ticks[ticks.length-1]]).range([0,chartWidth]);
 			var axisX = d3.svg.axis().scale(scaleX).orient("bottom")
 									 .tickValues(ticks).tickFormat(function(v){return v})
-									 .outerTickSize(0);
+									 .tickSize(6,6);
 			
 			//an array of accessors (of the data array)
 			var accessors = indicators.map(function(d,i){
@@ -399,20 +470,20 @@
 				var year = function(obs){return obs.year}
 				var extent = d3.extent(data.concat(usdata), val);
 				//pad extent for scale
-				var extent2 = [extent[0]-(Math.abs(extent[0])*0.025), extent[1]+(Math.abs(extent[1])*0.025)]; 
+				var extent2 = [extent[0]-(Math.abs(extent[0])*0.05), extent[1]+(Math.abs(extent[1])*0.05)]; 
 				//var extent2 = extent;
 				var scaleY = d3.scale.linear().domain(extent2).range([charts.height, 0]);
 				var tickVals = scaleY.ticks(3);
 				var fmt = getFormat(d.c, 1);
 				var fmt0 = getFormat(d.c, 0);
-				var axis = d3.svg.axis().scale(scaleY).orient("left").tickValues(tickVals).tickFormat(fmt0).outerTickSize(0);
+				var axis = d3.svg.axis().scale(scaleY).orient("left").tickValues(tickVals).tickFormat(fmt0).tickSize(0,0);
 				var y = function(obs){return scaleY(val(obs))}
 				var x = function(obs){return scaleX(year(obs))}
 				var line = d3.svg.line().x(x).y(y);
 				var metpath = line(data);
 				var uspath = line(usdata);
 				return {x:x, y:y, val:val, year:year, fmt:fmt, l:d.l, metpath:metpath, uspath:uspath, yaxis:axis, ticks:tickVals, yscale:scaleY}
-			})
+			});
 
 			try{
 				charts.xaxis.transition().call(axisX)
@@ -438,18 +509,20 @@
 			}).style({"fill":"none","stroke-width":"2px"});
 
 
+
 			charts.groups.select("text.chart-title")
 						.text(function(d,i){return d.l})
-						.attr({x:chartWidth, "text-anchor":"end"});
+						.attr({x:0, "text-anchor":"start", "font-weight":"bold"});
 
 			var gridLines = charts.groups.select("g.grid-line-group").selectAll("line").data(function(d,i){
-				return d.ticks.map(function(v,i){return d.yscale(v)});
+				return d.ticks.map(function(v,i){return d.yscale(v) });
 			});
 			gridLines.enter().append("line");
 			gridLines.exit().remove();
-			gridLines.attr({"x1":0, "x2":chartWidth, "stroke":"#aaaaaa", "stroke-dasharray":"1,3"})
+			gridLines.attr({"x1":0, "x2":chartWidth, "stroke":"#dddddd", "stroke-width":"1", "stroke-dasharray":"2,2"})
 					 .attr("y1",function(d,i){return d})
-					 .attr("y2",function(d,i){return d});
+					 .attr("y2",function(d,i){return d})
+					 .style("shape-rendering","crispEdges");
 
 			
 			try{
@@ -459,6 +532,66 @@
 			}catch(e){
 				console.log(e);
 			}
+
+			//add hover panels
+			var verticalBlinds = charts.hover.selectAll("rect").data(ticks);
+			var vertBlindWidth = chartWidth/(ticks[ticks.length-1]-ticks[0]);
+			verticalBlinds.enter().append("rect");
+			verticalBlinds.exit().remove();
+			verticalBlinds.attr({"height":"800px", "fill":"#ffffff", "opacity":"0", "stroke":"#ffffff", "y":-40, width:vertBlindWidth}).style("pointer-events","all")
+				.attr("x",function(d,i){
+					return scaleX(d)-(0.5*vertBlindWidth);
+				})
+
+			var dotGroup;
+			verticalBlinds.on("mouseenter",function(d,i){
+				try{
+					var x = scaleX(d);
+					var obs = data.filter(function(o,i,a){
+						return o.year==d; 
+					})
+
+					//binds the chart accessors to the dot group and shows dot
+					dotGroup = charts.groups.select("g.chart-hover-dot-group");
+					dotGroup.attr("transform",function(d,i){
+								 	var y = d.y(obs[0]);
+								 	return "translate("+x+","+y+")";
+								 })
+								 .style("visibility","visible")
+								 .select("text").text(function(d,i){
+								 	var val = d.val(obs[0]);
+								 	try{
+								 		var box = this.getBoundingClientRect();
+								 		var w = Math.round(box.right-box.left)+6;
+								 		d3.select(this.parentNode).select("rect").attr("width",w).attr("fill","#ffffff");
+								 	}
+								 	catch(e){
+
+								 	}
+
+								 	return d.fmt(val);
+								 })
+								 /*.attr("text-anchor",function(d,i){
+								 	var year = d.year(obs[0]);
+								 	try{
+								 		var align = year < 2006 ? "start" : (year < 2012 ? "middle" : "end");
+								 	}
+								 	catch(e){
+								 		var align = "left";
+								 	}
+								 	finally{
+								 		return align;
+								 	}
+								 })*/
+								 
+				}
+				catch(e){
+					charts.groups.select("g.chart-hover-dot-group").style("visibility","hidden").select("text").text("");
+				}
+			})
+			verticalBlinds.on("mouseleave",function(d,i){
+				dotGroup.attr("transform","translate(0,0)").style("visibility","hidden");
+			})
 
 		}
 
@@ -485,6 +618,7 @@
 				putInTable(measures.inclusion.detailed, "inc1");
 
 				data.universe = this.viewData("raw").measures.growth.overall.map(function(d,i){return d.CBSA+""});
+				data.universe_sort = data.universe.slice(0); 
 
 				data.ranges = {};
 				function getRanges(A,propName){
@@ -522,6 +656,37 @@
 			}
 
 			drawTable.call(this);
+			var tableSortButtons = this.store("tableSortButtons");
+			tableSortButtons.on("mousedown",function(d,i){
+				var thiz = d3.select(this);
+
+				tableSortButtons.classed("sort-asc sort-desc",false); //reset buttons
+
+				if(sortProp.prop==d.c && !sortProp.asc){
+					//reset
+					sortProp.prop = null;
+					sortProp.asc = true;
+					var addClass = false;
+				}
+				else if(sortProp.prop==d.c){
+					sortProp.asc = !sortProp.asc;
+					var addClass = true;
+				}
+				else{
+					sortProp.prop = d.c;
+					sortProp.asc = true;
+					var addClass = true;
+				}
+
+				if(addClass){
+					thiz.classed("sort-asc", sortProp.asc);
+					thiz.classed("sort-desc", !sortProp.asc);
+				}
+				
+				sortProp.justsorted = true;
+				drawTable.call(self);
+				sortProp.justsorted = false;
+			})
 
 			//if redraw is being called because of achange in view or metro, redraw map, otherwise the map-class handles responsiveness
 			if(this.changeEvent.view || this.changeEvent.metro){
@@ -577,15 +742,15 @@
 			var tableHeader = tableHeaderWrap.append("div").style({"background-color":"#dddddd", "padding":"0px 10px", "height":"25px"})
 											 .append("div").classed("c-fix",true);
 			
-			tableHeader.selectAll("div.th").data(["Growth","Prosperity","Inclusion"]).enter().append("div")
+			var tableSortButtons = tableHeader.selectAll("div.th").data([{l:"Growth",c:"gr"},{l:"Prosperity",c:"pro"},{l:"Inclusion",c:"inc"}]).enter().append("div")
 				.style("margin-left",function(d,i){return i==0 ? "0%" : "2%"})
 				.style("margin-right",function(d,i){return i===2 ? "-30px" : "0px"})
-				.style({"float":"left", "width":"32%"})
-				.append("p").style({"line-height":"1em","margin":"0px","font-size":"13px","text-align":"center","padding":"6px 0px"})
-				.text(function(d,i){return d});
+				.style({"float":"left", "width":"32%"}).style("cursor","pointer");
+			tableSortButtons.append("p").style({"line-height":"1em","margin":"0px","font-size":"13px","text-align":"center","padding":"6px 0px"})
+				.text(function(d,i){return d.l});
 
-			var tableOuter = rightSide.append("div").style({"clear":"both","border":"1px solid #aaaaaa", "border-width":"1px 0px 1px 0px", "padding":"0px", "max-height":"800px", "overflow-y":"auto"});
-			var tableWrap = tableOuter.append("div").style("padding","0px 0px 500px 0px");
+			var tableOuter = rightSide.append("div").style({"clear":"both","border":"1px solid #aaaaaa", "border-width":"1px 0px 1px 0px", "padding":"0px", "max-height":"850px", "overflow-y":"auto"});
+			var tableWrap = tableOuter.append("div").style({"padding":"0px 0px 600px 0px","background-color":"#dddddd"});
 			var table = tableWrap.append("div").style("width","100%"); //.append("g").attr("id","core-svg-table")
 
 			//MAPS SETUP
@@ -613,15 +778,15 @@
 
 			//CHARTSS SETUP
 			var chartWrap = mapAndCharts.append("div").style("overflow","visible");
-			var chartHeight = 70;
-			var chartPad = 40;
+			var chartHeight = 85;
+			var chartPad = 45;
 			var threeChartPad = 0;
 							
 			var chartTitleWrap = chartWrap.append("div").style({"position":"relative","z-index":"5"});
 			var chartTitle = chartTitleWrap.append("p").classed("charts-title",true)
 				                    .html('Change in the selected metro area over time')
 				                    .style({"margin":"0px 15px 5px 10px","font-weight":"bold"});
-			var chartLegend = chartTitleWrap.append("div").classed("c-fix",true).style({"padding":"0px 0px 10px 0px", "margin":"0px 15px 15px 0px", "border-bottom":"1px dotted #aaaaaa"})
+			var chartLegend = chartTitleWrap.append("div").classed("c-fix",true).style({"padding":"0px 0px 10px 0px", "margin":"0px 15px 0px 0px", "border-bottom":"1px dotted #aaaaaa"})
 						  .selectAll("div").data(["Metro","U.S."]).enter()
 						  .append("div").style({float:"left", "margin":"0px 10px 0px 10px"}).classed("c-fix",true);
 			chartLegend.append("div").style({"height":"2px","width":"20px","margin":"7px 5px 6px 2px", "float":"left"})
@@ -635,15 +800,23 @@
 			//add y-axes to each group
 			chartG.append("g").classed("d3-axis-group",true).attr("transform","translate(0,0)");
 
-			var xaxis = chartSVG.append("g").attr("transform","translate(0,"+((3*chartHeight)+(2*chartPad)+5)+")").classed("d3-axis-group",true);
+			var xaxis = chartSVG.append("g").attr("transform","translate(0,"+((3*chartHeight)+(2*chartPad)+10)+")").classed("d3-axis-group",true);
 				//xaxis.append("line").attr({"x1":"0%","x2":"100%","y1":"1","y2":"1","stroke":"#aaaaaa", "stroke-width":"1px"})
 				//					.style("shape-rendering","crispEdges");
 
-			chartG.append("rect").attr({"width":"100%","height":chartHeight+"px","fill":"#ffffff"}).classed("chart-back",true);
+			chartG.append("rect").attr({"width":"100%","height":chartHeight+"px","fill":"#fbfbfb", "stroke":"#dddddd"})
+				  .classed("chart-back",true).style("shape-rendering","crispEdges");
 			chartG.append("g").classed("grid-line-group",true);
 			chartG.append("path").classed("us-trend-line",true).attr({"d":"M0,0", "stroke":"#aaaaaa"});
-			chartG.append("path").classed("metro-trend-line",true).attr({"d":"M0,0", "stroke":"#00649f"});
-			chartG.append("text").classed("chart-title",true).attr({x:"0",y:"-10"}).attr({"font-size":"13px"}).text("...")
+			chartG.append("path").classed("metro-trend-line",true).attr({"d":"M0,0", "stroke":"rgb(9, 95, 181)"});
+			chartG.append("text").classed("chart-title",true).attr({x:"0",y:"-6"}).attr({"font-size":"13px"}).text("...")
+			var chartHoverDot = chartG.append("g").style("visibility","hidden").classed("chart-hover-dot-group",true);
+			//chartHoverDot.append("line").attr({"x1":0, "x2":0, "y1":0, "y2":chartHeight, stroke:"#dddddd"});
+			chartHoverDot.append("rect").attr({"width":"50px", "height":"13px", fill:"#ffffff", opacity:0.8, x:"0", y:"-17",stroke:"none"})
+			chartHoverDot.append("circle").attr({"cx":0, "cy":0, "r":3, "fill":"rgb(9, 95, 181)"});
+			chartHoverDot.append("text").attr({"x":0, "y":0, "font-size":"11px", "dy":-5, "dx":3, "text-anchor":"start"});
+
+			var hoverPanels = chartSVG.append("g");
 			//store in view
 			this.store("mapData",{large:map, dataBound:false});
 
@@ -651,9 +824,10 @@
 			this.store("table", table); //store these in the view state
 			this.store("tableOuter", tableOuter);
 			this.store("tableHeader", tableHeader);
+			this.store("tableSortButtons", tableSortButtons);
 
 			this.store("mapWrap", mapWrap);
-			this.store("charts", {wrap:chartWrap, height:chartHeight, pad:chartPad, group:chartSVG, groups: chartG, title: chartTitle, legend:chartLegend, xaxis:xaxis});
+			this.store("charts", {wrap:chartWrap, height:chartHeight, pad:chartPad, group:chartSVG, groups: chartG, title: chartTitle, legend:chartLegend, xaxis:xaxis, hover:hoverPanels});
 
 			//period and category
 			this.store("period","Five");

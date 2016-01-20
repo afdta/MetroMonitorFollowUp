@@ -99,8 +99,8 @@
 
 		}
 
+		var sortProp = {prop:null, asc:true, justsorted:false};
 		function drawTable(){
-			var self = this;
 
 			var table = this.storage("table");
 			var tableOuter = this.storage("tableOuter");
@@ -113,13 +113,40 @@
 			var metro = this.getMetro();
 			var self = this;
 
-			var rows = table.selectAll("div.table-row").data(data.universe);
+			//sort data
+			data.universe_sort.sort(function(a,b){
+				try{
+					if(!sortProp.prop){
+						var order = a > b ? 1 : -1;
+					}
+					else{
+						if(sortProp.prop in {"gr":1, "inc":1, "pro":1}){
+							var ra = data.table[a][sortProp.prop+"0"][period+"R"];
+							var rb = data.table[b][sortProp.prop+"0"][period+"R"];
+							var order = (ra < rb && sortProp.asc) || (ra > rb && !sortProp.asc) ? -1 : (ra==rb ? 0 : 1);
+							console.log("a: "+ra+" | b: "+rb+" | order: "+order);
+						}
+						else{
+							var order = 0;
+						}
+					}
+				}
+				catch(e){
+					var order = 0;
+				}
+				finally{
+					return order;
+				}
+			});
+
+			var rows = table.selectAll("div.table-row").data(data.universe_sort,function(d,i){return d});
 			var rowEnter = rows.enter().append("div").classed("table-row",true);
 
 			rowEnter.append("p").classed("row-label",true).style({"pointer-events":"none","margin":"0px 0px 5px 0px","line-height":"1em"});
 			rowEnter.append("div").classed("c-fix row-swatches",true);
 			rowEnter.append("div").classed("c-fix row-detail",true);
 			rows.exit().remove();
+			rows.order();
 
 			
 			rows.on("mouseenter",function(d,i){
@@ -164,7 +191,7 @@
 
 			//draw the detail in each cell
 			var detailTitle = rows.select("div.row-detail").selectAll("p.row-title").data(["Inclusion by race measures the extent to which gaps between whites and non-whites are narrowing. The data for <b>non-whites are bolded</b> in the table below."]);
-			detailTitle.enter().append("p").classed("row-title",true).style({"font-size":"13px","line-height":"1.3em","margin":"12px 0px 5px 0px","border-bottom":"1px solid #aaaaaa", "padding-bottom":"4px"});
+			detailTitle.enter().append("p").classed("row-title",true).style({"font-size":"13px","line-height":"1.3em","margin":"0px","border-bottom":"1px solid #aaaaaa", "padding-bottom":"4px"});
 			detailTitle.exit().remove();
 			detailTitle.html(function(d,i){return d});
 
@@ -178,26 +205,35 @@
 
 			function scrollToTop(){
 				try{
-					rows.classed("row-is-pinned",false);
-					var metRow = rows.filter(function(d,i){return d==metro});
-					metRow.classed("row-is-pinned",true);
+					if(sortProp.justsorted){
+						sortProp.justsorted = false;
+						var T = 0;
+					}
+					else{
+						rows.classed("row-is-pinned",false);
+						var metRow = rows.filter(function(d,i){return d==metro});
+						metRow.classed("row-is-pinned",true);
 
-					var metNode = metRow.node();
-					var parNode = metNode.parentNode;
+						var metNode = metRow.node();
+						var parNode = metNode.parentNode;
 
-					var outerT = parNode.getBoundingClientRect().top;
-					var rowT = metNode.getBoundingClientRect().top;
-					var T = Math.round(rowT - outerT)+1; 
+						if(parNode.parentNode.parentNode.getBoundingClientRect().top < 0){return null};
 
-					var tweenGen = function(){
-						var current = this.scrollTop; //get current amount
-						var interpolate = d3.interpolateNumber(current, T);
-						return function(t){
-							this.scrollTop = interpolate(t);
+						var outerT = parNode.getBoundingClientRect().top;
+						var rowT = metNode.getBoundingClientRect().top;
+						var T = Math.round(rowT - outerT)+1; 
+
+						var tweenGen = function(){
+							var current = this.scrollTop; //get current amount
+							var interpolate = d3.interpolateNumber(current, T);
+							return function(t){
+								this.scrollTop = interpolate(t);
+							}
 						}
 					}
 				}
 				catch(e){
+					var T = 0;
 				}
 
 				if(self.changeEvent.view){
@@ -379,7 +415,7 @@
 
 			charts.groups.select("text.chart-title")
 				.text(function(d,i){return d.ind})
-				.attr({"x":chartWidth, "text-anchor":"end"})
+				.attr({"x":0, "text-anchor":"start", "font-weight":"bold"})
 
 		}
 
@@ -404,6 +440,7 @@
 				data.levels = raw.levelsDetail;
 
 				data.universe = raw.ranks.map(function(d,i){return d.CBSA+""});
+				data.universe_sort = data.universe.slice(0); 
 
 				this.viewData("processed",data);
 
@@ -466,8 +503,8 @@ var setupBase = function(){
 												.style({"margin":"0px 0px 5px 10px", "font-weight":"bold"});
 			
 
-			var tableOuter = rightSide.append("div").style({"clear":"both","border":"1px solid #aaaaaa", "border-width":"1px 0px 1px 0px", "padding":"0px", "max-height":"800px", "overflow-y":"auto"});
-			var tableWrap = tableOuter.append("div").style("padding","0px 0px 500px 0px");
+			var tableOuter = rightSide.append("div").style({"clear":"both","border":"1px solid #aaaaaa", "border-width":"1px 0px 1px 0px", "padding":"0px", "max-height":"850px", "overflow-y":"auto"});
+			var tableWrap = tableOuter.append("div").style({"padding":"0px 0px 500px 0px","background-color":"#dddddd"});
 			var table = tableWrap.append("div").style("width","100%"); //.append("g").attr("id","core-svg-table")
 
 			//MAPS SETUP
@@ -488,7 +525,7 @@ var setupBase = function(){
 			//CHARTSS SETUP
 			var chartWrap = mapAndCharts.append("div").style("overflow","visible");
 			var chartHeight = 95;
-			var chartPad = 35;
+			var chartPad = 52;
 			var threeChartPad = 0;
 							
 			var chartTitleWrap = chartWrap.append("div").style({"position":"relative","z-index":"5"});

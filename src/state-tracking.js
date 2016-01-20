@@ -11,6 +11,11 @@ function MetroInteractive(appWrapperElement){
 	S.viewWrap = S.wrap.append("div").classed("metro-interactive-views",true);
 
 	S.changeEvent = {view:false, metro:false, resize:false} //keep track of what is triggering redraws
+	S.changeEventReset = function(){
+		S.changeEvent.view=false;
+		S.changeEvent.metro=false;
+		S.changeEvent.resize=false;
+	}
 
 	//keep track of selected metro area and view
 	S.metro = null; //no defaults
@@ -284,6 +289,7 @@ function MetroInteractive(appWrapperElement){
 						viewOps.dataStore.raw = dat;
 						viewOps.dataState = 2; //data loaded!
 						draw_view(); //draw the view
+						S.changeEventReset(); //reset the change event in case any code within a view relies on this
 					}
 				});
 			}
@@ -295,6 +301,7 @@ function MetroInteractive(appWrapperElement){
 				//data is loaded (2) or there is no data to load asynchronously (3)...
 				draw_view();  //draw
 				show_this_slide();  //and show the view
+				S.changeEventReset(); //reset the change event in case any code within a view relies on this
 			}
 			else if(viewOps.dataState===0){
 				//data is not loaded...
@@ -351,9 +358,8 @@ function MetroInteractive(appWrapperElement){
 			if(!!setHash){set_hash(newhash)}
 
 			//Record change event -- reset then record
-			S.changeEvent.view = false;
-			S.changeEvent.metro = false;
-			S.changeEvent.resize = false;
+			S.changeEventReset();
+
 			if(S.view != viewCode && S.metro != metroCode){
 				S.changeEvent.view = true;
 				S.changeEvent.metro = true;
@@ -368,10 +374,11 @@ function MetroInteractive(appWrapperElement){
 				S.changeEvent.resize = true;
 			}
 
+			//state must be updated before show is called because it relies on the current state -- if the user changes metro while the redraw method is called asynchronously, you want that callback to use the new metro. It might redraw twice, but it will do so with the right data.
 			S.view = viewCode;
 			S.metro = metroCode;
 
-			//state must be updated before show is called because it relies on the current state -- if the user changes metro while the redraw method is called asynchronously, you want that callback to use the new metro. It might redraw twice, but it will do so with the right data.
+			
 			//because the data
 			viewRegister[viewCode].show();
 			if(viewMenuCtrl.bilt){
