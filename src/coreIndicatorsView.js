@@ -34,7 +34,7 @@
 			}
 			else if(category==="inc"){
 				var indicators = [{c:"EmpRatio", l:"Employment-to-population ratio", b:"inc", ls:"Emp. / pop.", i:0}, 
-								  {c:"MedEarn", l:"Median earnings", b:"inc", ls:"Med. earn.", i:1}, 
+								  {c:"MedEarn", l:"Median wage", b:"inc", ls:"Med. earn.", i:1}, 
 								  {c:"RelPov", l:"Relative poverty", b:"inc", ls:"Rel. poverty", i:2}];
 			}
 			else{
@@ -116,17 +116,6 @@
 				var rnk = formats.rankth(d.r);
 				return '<b>'+val+'</b>' + ' <span style="color:#666666">(' + rnk + ')</span>';
 			}).style({"font-size":"13px","text-align":"center","display":"inline-block"});
-			//cell_vals.select("div").style("background-color",function(d,i){console.log(d); return "red"});
-
-			/*var threeCol = g.selectAll("g.table-curve-columns").data(catmap);
-			threeG.enter().append("g").attr("transform","translate(0,0)").classed("table-curve-columns",true);
-			threeG.exit().remove();
-
-			var threeRow = threeCol.selectAll("g.table-curve-rows").data(function(d,i){return d});
-			var threeRowEnter = threeRow.enter().append("g").classed("table-curve-rows",true);
-			threeRowEnter.append("text").classed("table-curve-label",true);
-			threeRowEnter.append("text").classed("table-curve-value",true);
-			threeRowEnter.append("line")*/
 
 		}
 
@@ -157,7 +146,7 @@
 							var ra = data.table[a][sortProp.prop+"0"][period+"R"];
 							var rb = data.table[b][sortProp.prop+"0"][period+"R"];
 							var order = (ra < rb && sortProp.asc) || (ra > rb && !sortProp.asc) ? -1 : (ra==rb ? 0 : 1);
-							//console.log("a: "+ra+" | b: "+rb+" | order: "+order);
+							
 						}
 						else{
 							var order = 0;
@@ -286,7 +275,6 @@
 
 			function scrollToTop(){
 				try{
-
 					rows.classed("row-is-pinned",false);
 					var metRow = rows.filter(function(d,i){return d==metro});
 					metRow.classed("row-is-pinned",true);
@@ -429,10 +417,10 @@
 				var num = "num"+dec;
 
 				if(ind in {"EmpRatio":0, "RelPov":0}){
-					var fmt = self.formats[pct];
+					var fmt = self.formats[num];
 				}
 				else if(ind in {"MedEarn":0}){
-					var fmt = self.formats[doll];
+					var fmt = self.formats[num];
 				}
 				else{
 					var fmt = self.formats[num];
@@ -482,7 +470,9 @@
 				var line = d3.svg.line().x(x).y(y);
 				var metpath = line(data);
 				var uspath = line(usdata);
-				return {x:x, y:y, val:val, year:year, fmt:fmt, l:d.l, metpath:metpath, uspath:uspath, yaxis:axis, ticks:tickVals, yscale:scaleY}
+				var baseyear = d.c in {"MedEarn":1, "RelPov":1, "EmpRatio":1} ? 1999 : 2000;
+
+				return {x:x, y:y, val:val, year:year, fmt:fmt, l:(d.l + " (indexed, " +baseyear+ "=100)"), metpath:metpath, uspath:uspath, yaxis:axis, ticks:tickVals, yscale:scaleY}
 			});
 
 			try{
@@ -530,7 +520,7 @@
 					d3.select(this).transition().call(d.yaxis);
 				});
 			}catch(e){
-				console.log(e);
+				//console.log(e);
 			}
 
 			//add hover panels
@@ -836,6 +826,8 @@
 			this.store("buttons", {period:periodButtons, category:categoryButtons});
 		}
 
-		var view1 = MetroMonitorVersion2.addView(redrawBase, "coreIndicators.json", setupBase);
+		var dataRepo = "data/coreIndicators.json";
+
+		var view1 = MetroMonitorVersion2.addView(redrawBase, dataRepo, setupBase);
 		view1.name("Growth / Prosperity / Inclusion");
 	})();

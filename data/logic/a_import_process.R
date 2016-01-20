@@ -34,6 +34,7 @@ IncRaceRnk <- read.csv("Inclusion by Race AD Ranks.csv", stringsAsFactors=FALSE,
 IncRaceVal <- read.csv("Inclusion by Race AD Values.csv", stringsAsFactors=FALSE, na.strings=nastr)
 
 IncChg <- read.csv("Inclusion Change.csv", stringsAsFactors=FALSE, na.strings=nastr)
+IncChgS <- read.csv("Inclusion Change with Sig.csv", stringsAsFactors=FALSE, na.strings=nastr)
 IncRnk <- read.csv("Inclusion Ranks.csv", stringsAsFactors=FALSE, na.strings=nastr)
 IncVal <- read.csv("Inclusion Values.csv", stringsAsFactors=FALSE, na.strings=nastr)
 
@@ -42,6 +43,7 @@ ProRnk <- read.csv("Prosperity Ranks.csv", stringsAsFactors=FALSE, na.strings=na
 ProVal <- read.csv("Prosperity Values.csv", stringsAsFactors=FALSE, na.strings=nastr)
 
 ProIdx <- read.csv("Prosperity Index.csv", stringsAsFactors=FALSE, na.strings=nastr)
+AllIdx <- read.csv("All Indicators Indexed.csv", stringsAsFactors=FALSE, na.strings=nastr)
 
 #FIX bad 2000 values
 GrVal[GrVal$year==2000,"value"] <- 100
@@ -152,6 +154,13 @@ table(INCCHG$Period, INCCHG$Year)
 table(INCCHG$IND, INCCHG$Indicator)
 table(INCVAL$IND, INCVAL$Indicator)
 
+#index the data
+INCVAL99 <- INCVAL[INCVAL$Year==1999,c("CBSA","IND","Race","Value")]
+names(INCVAL99)[4] <- "Value99"
+INCVALIDX <- merge(INCVAL[c("CBSA","Year","IND","Race","Value","SE")],INCVAL99,by=c("CBSA","IND","Race"))
+names(INCVALIDX)[5] <- "ValueYrly"
+INCVALIDX$Value <- 100*(INCVALIDX$ValueYrly/INCVALIDX$Value99)
+
 INCR_WIDE <- merge(dcast(INCR, CBSA~Period, value.var="Rank"), dcast(INCR, CBSA~Period, value.var="Score"), by="CBSA", suffixes=c("R","Z"))
 INCCHG1_WIDE <- merge(dcast(INCCHG, CBSA~IND+Period, value.var="Value"), dcast(INCCHG, CBSA~IND+Period, value.var="SE"), by="CBSA", suffixes=c("V","SE"))
 
@@ -173,7 +182,7 @@ ALL <- list(growth=list(overall=GRR_WIDE, detailed=GRCHG_WIDE),
             prosperity=list(overall=PROR_WIDE, detailed=PROCHG_WIDE),
             inclusion=list(overall=INCR_WIDE, detailed=INCCHG_WIDE))
 
-names(INCVAL) <- tolower(names(INCVAL))
+names(INCVALIDX) <- tolower(names(INCVALIDX))
 names(GRVAL) <- tolower(names(GRVAL))
 names(PROVAL) <- tolower(names(PROVAL))
 names(PROIDX) <- tolower(names(PROIDX))
@@ -194,7 +203,7 @@ getVals <- function(df){
   return(ss)
 }
   
-VALUES <- list(growth=getVals(GRVAL), prosperityLevels=getVals(PROVAL), prosperity=getVals(PROIDX), inclusion=getVals(INCVAL))
+VALUES <- list(growth=getVals(GRVAL), prosperityLevels=getVals(PROVAL), prosperity=getVals(PROIDX), inclusion=getVals(INCVALIDX))
 
 
 json <- toJSON(list(measures=ALL, values=VALUES), digits=5)
@@ -218,21 +227,23 @@ INCRACECH_WIDE <- merge(dcast(INCRACECH, CBSA~IND+Period, value.var="Value"), dc
 
 
 #detailed
-INCCHGd <- IncChg[IncChg$CBSA %in% metID$CBSA_Code, c("Year", "CBSA", "CBSA.Name", "Indicator", "Race", "Value", "SE")]
-INCVALd <- IncVal[IncVal$CBSA %in% metID$CBSA_Code, ]
+INCCHGd <- IncChgS[IncChgS$CBSA %in% metID$CBSA_Code, c("Year", "CBSA", "CBSA_Name", "Indicator", "Race", "Value", "SE", "Sig")]
+INCVALd <- IncVal[(IncVal$CBSA %in% metID$CBSA_Code) & (IncVal$Year %in% c(1999,2009,2014)) & (IncVal$Race %in% c("White", "People of Color")), ]
 INCCHGd$race <- ifelse(INCCHGd$Race=="People of Color", "NonWhite", INCCHGd$Race)
 INCVALd$race <- ifelse(INCVALd$Race=="People of Color", "NonWhite", INCVALd$Race)
-INCCHGd$IND <- ifelse(INCCHGd$Indicator=="Percent Change in Employment-to-Population Ratio", "EmpRatio", ifelse(INCCHGd$Indicator=="Percent Change in Median Earnings", "MedEarn", "RelPov"))
+INCCHGd$IND <- ifelse(INCCHGd$Indicator=="Percentage Point Change in Employment-to-Population Ratio", "EmpRatio", ifelse(INCCHGd$Indicator=="Percent Change in Median Earnings", "MedEarn", "RelPov"))
 INCVALd$IND <- ifelse(INCVALd$Indicator=="Employment-to-Population Ratio", "EmpRatio", ifelse(INCVALd$Indicator=="Median Earnings", "MedEarn", "RelPov"))
 INCCHGd$Period <- ifelse(INCCHGd$Year=="2013-2014", "One", ifelse(INCCHGd$Year=="2009-2014", "Five", "Ten"))
+INCCHGd$SIG <- ifelse(is.na(INCCHGd$Sig), 0, 1)
 with(INCVALd, table(race, Race))
 with(INCVALd, table(IND, Indicator))
 with(INCCHGd, table(race, Race))
 with(INCCHGd, table(IND, Indicator))
 with(INCCHGd, table(Year, Period))
+with(INCCHGd, table(Sig, SIG, useNA="always"))
 
 INCVALd_WIDE <- merge(dcast(INCVALd, CBSA+Year~race+IND, value.var="Value"), dcast(INCVALd, CBSA+Year~race+IND, value.var="SE"), by=c("CBSA","Year"), suffixes=c("V","SE"))
-INCCHGd_WIDE <- merge(dcast(INCCHGd, CBSA~race+IND+Period, value.var="Value"), dcast(INCCHGd, CBSA~race+IND+Period, value.var="SE"), by=c("CBSA"), suffixes=c("V","SE"))
+INCCHGd_WIDE <- merge(dcast(INCCHGd, CBSA~race+IND+Period, value.var="Value"), dcast(INCCHGd, CBSA~race+IND+Period, value.var="SIG"), by=c("CBSA"), suffixes=c("V","SIG"))
 
 INCVALd_LIST <- split(INCVALd_WIDE, INCVALd_WIDE$CBSA)
 INCCHGd_LIST <- split(INCCHGd_WIDE, INCCHGd_WIDE$CBSA)

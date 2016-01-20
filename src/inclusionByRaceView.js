@@ -29,29 +29,22 @@
 
 		var columns = [{}, {}];
 
-		//left off here -- how to do this table
-		function drawDetailedTable(metro, period, g, formats){
+
+		function drawDetailedTable(levels, change, period, g, formats){
+
+		try{
+
 			var years = getYears(period);
-			for(i=0; i<metro.length; i++){
-				if(metro[i].Year==years.s){
-					var start = metro[i];
+			for(i=0; i<levels.length; i++){
+				if(levels[i].Year==years.s){
+					var start = levels[i];
 				}
-				else if(metro[i].Year==years.e){
-					var end = metro[i];
+				else if(levels[i].Year==years.e){
+					var end = levels[i];
 				}
 			}
 
-		try{
-			var ch_NW_ER = (end.NonWhite_EmpRatioV - start.NonWhite_EmpRatioV)*1;
-			var ch_W_ER = (end.White_EmpRatioV - start.White_EmpRatioV)*1;
-			
-			var ch_NW_ME = (end.NonWhite_MedEarnV/start.NonWhite_MedEarnV)-1;
-			var ch_W_ME = (end.White_MedEarnV/start.White_MedEarnV)-1;
-
-			var ch_NW_RP = (end.NonWhite_RelPovV - start.NonWhite_RelPovV)*1;
-			var ch_W_RP = (end.White_RelPovV - start.White_RelPovV)*1;
-
-			var r0 = [{text:""}, {text:"Emp.-to-pop. ratio"}, {text:"Median earnings"}, {text:"Relative poverty"}]
+			var r0 = [{text:""}, {text:"Emp.-to-pop. ratio"}, {text:"Median wage"}, {text:"Relative poverty"}]
 
 			var r1 = [{text:(start.Year === 2000 ? 1999 : start.Year)},
 					  {nw:start.NonWhite_EmpRatioV, w:start.White_EmpRatioV, fmt:formats.pct1},
@@ -66,10 +59,24 @@
 					 ]
 
 			var r3 = [{text:"Change"},
-					  {nw:ch_NW_ER, w:ch_W_ER, fmt:formats.ppch1},
-					  {nw:ch_NW_ME, w:ch_W_ME, fmt:formats.pctch1},
-					  {nw:ch_NW_RP, w:ch_W_RP, fmt:formats.ppch1}
-					 ]
+					   {nw:change["NonWhite_EmpRatio_"+period+"V"], 
+					    nws:change["NonWhite_EmpRatio_"+period+"SIG"], 
+					    w:change["White_EmpRatio_"+period+"V"],
+					    ws:change["White_EmpRatio_"+period+"SIG"], 
+					    fmt:formats.ppch1
+					  },
+					   {nw:change["NonWhite_MedEarn_"+period+"V"], 
+					    nws:change["NonWhite_MedEarn_"+period+"SIG"],
+					    w:change["White_MedEarn_"+period+"V"], 
+					    ws:change["White_MedEarn_"+period+"SIG"],
+					    fmt:formats.pctch1
+					  },
+					   {nw:change["NonWhite_RelPov_"+period+"V"], 
+					    nws:change["NonWhite_RelPov_"+period+"SIG"], 
+					    w:change["White_RelPov_"+period+"V"],
+					    ws:change["White_RelPov_"+period+"SIG"],  
+					    fmt:formats.ppch1}
+					  ]
 
 			var threeRows = g.selectAll("div.as-table-row").data([r0,r1,r2,r3]);
 			threeRows.enter().append("div").classed("as-table-row",true);
@@ -84,14 +91,27 @@
 			var cell_vals = fourCells.selectAll("div.value-actual").data(function(d,i){
 				var ta = i%4 ===0 ? "right" : "center";
 				var label = [{v:d.text, w:"normal", ta:ta}]; //[{v:"non-white", w:"bold", ta:ta}, {v:"white", w:"normal", ta:ta}] : 
-				return d.hasOwnProperty("fmt") ? [{v: d.fmt(d.nw), w:"bold", ta:ta}, {v:d.fmt(d.w), w:"normal", ta:ta}] : label;
+				return d.hasOwnProperty("fmt") ? [{v: d.fmt(d.nw)+(d.nws==1 ? "*" : ""), w:"bold", ta:ta}, {v:d.fmt(d.w)+(d.ws==1 ? "*" : ""), w:"normal", ta:ta}] : label;
 			});
 			cell_vals.enter().append("div").classed("value-actual",true).append("p");
 			cell_vals.exit().remove();
 			cell_vals.select("p").text(function(d,i){return d.v})
 				.style({"font-size":"13px","margin":"0px","padding":"3px","line-height":"1em", "text-align":"center"})
 				.style("font-weight",function(d,i){return d.w});
-				//.style("text-align",function(d,i){return d.ta});
+				
+
+			try{
+				d3.select(g.node().parentNode).selectAll("p.table-footnote")
+				  .data(['*Indicates a statistically signficant change','p.p. = percentage points'])
+				 .enter().append("p").classed("table-footnote",true).text(function(d,i){return d})
+				 .style({"font-size":"13px", "color":"#666666", "margin":"0px 5px", "line-height":"1em", "text-align":"right"})
+				 .style("margin-top",function(d,i){
+				 	return i==0 ? "10px" : "7px";
+				 });
+				}
+			catch(e){
+
+			}
 		}
 		catch(e){
 
@@ -113,6 +133,9 @@
 			var metro = this.getMetro();
 			var self = this;
 
+			var changeData = this.viewData("raw").changeDetail[metro][0];
+			var levelsData = this.viewData("raw").levelsDetail[metro];
+
 			//sort data
 			data.universe_sort.sort(function(a,b){
 				try{
@@ -120,15 +143,9 @@
 						var order = a > b ? 1 : -1;
 					}
 					else{
-						if(sortProp.prop in {"gr":1, "inc":1, "pro":1}){
-							var ra = data.table[a][sortProp.prop+"0"][period+"R"];
-							var rb = data.table[b][sortProp.prop+"0"][period+"R"];
-							var order = (ra < rb && sortProp.asc) || (ra > rb && !sortProp.asc) ? -1 : (ra==rb ? 0 : 1);
-							console.log("a: "+ra+" | b: "+rb+" | order: "+order);
-						}
-						else{
-							var order = 0;
-						}
+						var ra = data.table[a]["rank"][period+"R"];
+						var rb = data.table[b]["rank"][period+"R"];
+						var order = (ra < rb && sortProp.asc) || (ra > rb && !sortProp.asc) ? -1 : (ra==rb ? 0 : 1);
 					}
 				}
 				catch(e){
@@ -146,7 +163,40 @@
 			rowEnter.append("div").classed("c-fix row-swatches",true);
 			rowEnter.append("div").classed("c-fix row-detail",true);
 			rows.exit().remove();
+
+			//determine if the selected metro is pinned at the top -- if so, it should remain at the top of the table after sorting
+			//need to do this before reordering the dom below
+			try{
+				var metBallpark = rows.filter(function(d,i){return d==metro}).node();
+				var ballPark = metBallpark.parentNode.parentNode.parentNode;
+				var ballParkDist = metBallpark.getBoundingClientRect().top-ballPark.getBoundingClientRect().top;
+				var inTheBallPark = ballParkDist > -80 && ballParkDist < 200; //snap to current
+			}
+			catch(e){
+				var inTheBallPark = false;
+			}
 			rows.order();
+
+			//after sorting, is the pinned metro above/below where it was?
+			try{
+				var newMetBallPark = rows.filter(function(d,i){return d==metro}).node();
+				var newBallParkDist = newMetBallPark.getBoundingClientRect().top-ballPark.getBoundingClientRect().top;
+				var detailNode = newMetBallPark.lastChild.getBoundingClientRect();
+
+				//if it was above and now below, you need to remove offset (and vice versa)
+				if(ballParkDist < 0 && newBallParkDist > 0){
+					var offsetDistance = detailNode.top-detailNode.bottom; //subtract this offset
+				}
+				else if(ballParkDist > 0 && newBallParkDist < 0){
+					var offsetDistance = detailNode.bottom - detailNode.top; //add
+				}
+				else{
+					var offsetDistance = 0;
+				};
+			}
+			catch(e){
+				var offsetDistance = 0;
+			}
 
 			
 			rows.on("mouseenter",function(d,i){
@@ -180,7 +230,6 @@
 				var metro = data.table[d];
 				var keyR = period+"R";
 				return [{r:metro.rank[keyR], l:"G"}];
-				return [{r:metro.gr0[keyR], l:"G: "}];
 			});
 			swatches.enter().append("div").classed("swatch",true).append("p").style({"margin":"0px","text-align":"center"});
 			swatches.exit().remove();
@@ -200,35 +249,30 @@
 			detailWrap.exit().remove();
 
 			detailWrap.each(function(d,i){
-				drawDetailedTable(data.levels[d], period, d3.select(this), self.formats);
+				drawDetailedTable(levelsData, changeData, period, d3.select(this), self.formats);
 			});
 
 			function scrollToTop(){
 				try{
-					if(sortProp.justsorted){
-						sortProp.justsorted = false;
-						var T = 0;
-					}
-					else{
-						rows.classed("row-is-pinned",false);
-						var metRow = rows.filter(function(d,i){return d==metro});
-						metRow.classed("row-is-pinned",true);
+					rows.classed("row-is-pinned",false);
+					var metRow = rows.filter(function(d,i){return d==metro});
+					metRow.classed("row-is-pinned",true);
 
-						var metNode = metRow.node();
-						var parNode = metNode.parentNode;
+					var metNode = metRow.node();
+					var parNode = metNode.parentNode;
+					var containerT = parNode.parentNode.parentNode.getBoundingClientRect().top;
 
-						if(parNode.parentNode.parentNode.getBoundingClientRect().top < 0){return null};
+					if(containerT < 0){return null};
 
-						var outerT = parNode.getBoundingClientRect().top;
-						var rowT = metNode.getBoundingClientRect().top;
-						var T = Math.round(rowT - outerT)+1; 
+					var outerT = parNode.getBoundingClientRect().top;
+					var rowT = metNode.getBoundingClientRect().top;
+					var T = Math.round(rowT - outerT)+1; 
 
-						var tweenGen = function(){
-							var current = this.scrollTop; //get current amount
-							var interpolate = d3.interpolateNumber(current, T);
-							return function(t){
-								this.scrollTop = interpolate(t);
-							}
+					var tweenGen = function(){
+						var current = this.scrollTop; //get current amount
+						var interpolate = d3.interpolateNumber(current, T);
+						return function(t){
+							this.scrollTop = interpolate(t);
 						}
 					}
 				}
@@ -236,11 +280,24 @@
 					var T = 0;
 				}
 
+				//scrollToTop
 				if(self.changeEvent.view){
 					tableOuter.node().scrollTop = T;
 				}
-				else{
+				else if(self.changeEvent.metro){
 					tableOuter.transition().duration(1000).tween("scrollTopTween", tweenGen); 
+				}
+				else if(inTheBallPark){
+					tableOuter.node().scrollTop = T; //show the metro if it's near top
+				}
+				else if(sortProp.justsorted){
+					tableOuter.node().scrollTop = 0; //if there's a sort prop--the user is interested in sort order
+				}
+				else{
+					var currentScroll = tableOuter.node().scrollTop;
+					var newScroll = currentScroll + offsetDistance;
+					if(newScroll < 0){newScroll=0}
+					tableOuter.node().scrollTop = newScroll; //so nothing changes
 				}
 			}
 			scrollToTop();
@@ -335,7 +392,7 @@
 			}
 
 			//scales
-			var groups = ["Total","White","Black","Hispanic","Asian","Other","NonWhite"];
+			var groups = ["White","Black","Hispanic","Asian","Other","NonWhite","Total"];
 			var scaleX = d3.scale.ordinal().domain(groups).rangeRoundPoints([0,chartWidth], 1);
 			var axisX = d3.svg.axis().scale(scaleX).orient("bottom")
 									 .tickValues(groups).tickFormat(function(d,i){
@@ -364,14 +421,17 @@
 			
 			}
 
-			var formats0 = {"EmpRatio":self.formats.pctch0, "RelPov":self.formats.pctch0, "MedEarn":self.formats.pctch0};
-			var formats = {"EmpRatio":self.formats.pctch1, "RelPov":self.formats.pctch1, "MedEarn":self.formats.pctch1};
+			var formats0 = {"EmpRatio":self.formats.ppch0, "RelPov":self.formats.ppch0, "MedEarn":self.formats.pctch0};
+			var formats = {"EmpRatio":function(v){return self.formats.numch1(v*100)}, 
+						   "RelPov":function(v){return self.formats.numch1(v*100)}, 
+						   "MedEarn":function(v){return self.formats.numch1(v*100)} };
 			var genObs = function(ind){
 				var fmt0 = formats0[ind];
 				var fmt = formats[ind];
 				var map = groups.map(function(d,i){
 					var val = data[d+"_"+ind+"_"+period+"V"];
-					var txt = fmt(val);
+					var sig = data[d+"_"+ind+"_"+period+"SIG"] == 1 ? "*" : "";
+					var txt = fmt(val) + sig;
 					return {val: val, txt:txt, group:d, ind:ind}
 				})
 				var extent = d3.extent(map, function(d,i){return d.val});
@@ -379,7 +439,7 @@
 				var extent2 = [extent[0]-pad, extent[1]+pad]; 
 				var yscale = d3.scale.linear().domain(extent2).range([charts.height,0]);
 				var axis = d3.svg.axis().scale(yscale).orient("left").ticks(3).tickFormat(fmt0).outerTickSize(0);
-				var label = ind=="EmpRatio" ? "Employment-to-population ratio" : (ind=="MedEarn" ? "Median earnings" : "Relative poverty");
+				var label = ind=="EmpRatio" ? "Employment-to-pop. ratio (p.p. change)" : (ind=="MedEarn" ? "Median wage (% change)" : "Relative poverty (p.p. change)");
 				
 				for(var i=0; i<map.length; i++){
 					map[i].x = scaleX(map[i].group);
@@ -397,7 +457,7 @@
 			var dpgEnter = dataPointsGroups.enter().append("g").classed("data-points-group",true);
 			dpgEnter.append("line").attr({"x1":0, "x2":0, "y1":0, "y2":charts.height, "stroke":"#ffffff"});
 			dpgEnter.append("circle").attr({"cx":0,"r":3,"fill":"#555555"});
-			dpgEnter.append("text").attr({"x":0, "dy":-6, "text-anchor":"middle", "font-size":"11px"});
+			dpgEnter.append("text").attr({"x":0, "dy":16, "text-anchor":"middle", "font-size":"11px"});
 			dataPointsGroups.exit().remove();
 			dataPointsGroups.attr("transform",function(d,i){return "translate("+d.x+",0)"});
 
@@ -410,7 +470,7 @@
 					d3.select(this).transition().call(d.yaxis);
 				});
 			}catch(e){
-				console.log(e);
+				
 			}
 
 			charts.groups.select("text.chart-title")
@@ -437,7 +497,7 @@
 				}
 				var raw = this.viewData("raw");
 				putInTable(raw.ranks, "rank");
-				data.levels = raw.levelsDetail;
+				//data.levels = raw.levelsDetail;
 
 				data.universe = raw.ranks.map(function(d,i){return d.CBSA+""});
 				data.universe_sort = data.universe.slice(0); 
@@ -456,6 +516,37 @@
 			}
 
 			drawTable.call(this);
+			var tableSortButtons = this.store("tableHeader");
+			tableSortButtons.on("mousedown",function(d,i){
+				var thiz = d3.select(this);
+
+				tableSortButtons.classed("sort-asc sort-desc",false); //reset buttons
+
+				if(sortProp.prop==d.c && !sortProp.asc){
+					//reset
+					sortProp.prop = null;
+					sortProp.asc = true;
+					var addClass = false;
+				}
+				else if(sortProp.prop==d.c){
+					sortProp.asc = !sortProp.asc;
+					var addClass = true;
+				}
+				else{
+					sortProp.prop = d.c;
+					sortProp.asc = true;
+					var addClass = true;
+				}
+
+				if(addClass){
+					thiz.classed("sort-asc", sortProp.asc);
+					thiz.classed("sort-desc", !sortProp.asc);
+				}
+				
+				sortProp.justsorted = true;
+				drawTable.call(self);
+				sortProp.justsorted = false;
+			})
 
 			//if redraw is being called because of achange in view or metro, redraw map, otherwise the map-class handles responsiveness
 			if(this.changeEvent.view || this.changeEvent.metro){
@@ -464,7 +555,7 @@
 			drawCurves.call(self);
 		}
 
-var setupBase = function(){
+		var setupBase = function(){
 			var self = this;
 			this.header.append("p").text("Inclusion by race in the 100 largest U.S. metro areas");
 			
@@ -489,7 +580,7 @@ var setupBase = function(){
 			//time period
 			var periodMenu = legendAndTime.append("div").classed("c-fix two-fifths column-right",true);
 			periodMenu.append("p").text("Select a time period to focus on").style({"font-size":"13px"});
-			var periodButtons = periodMenu.selectAll("div").data([{c:"One", l:"One-year"}, {c:"Five", l:"Five-year"}, {c:"Ten", l:"Ten-year"}]).enter().append("div")
+			var periodButtons = periodMenu.selectAll("div").data([{c:"One", l:"One-year"}, {c:"Five", l:"Five-year"}, {c:"Ten", l:"Fifteen-year"}]).enter().append("div")
 										  .classed("generic-button",true).classed("generic-button-selected",function(d,i){return i===1})
 										  .style({"box-sizing":"border-box", "width":"32%"}).style("margin",function(d,i){return i<2 ? "0px 2% 0px 0px" : "0px"})
 										  ;
@@ -499,7 +590,8 @@ var setupBase = function(){
 			var rightSide = this.container.append("div").classed("two-fifths column-right",true);
 			var tableHeaderWrap = rightSide.append("div");
 
-			var tableHeader = tableHeaderWrap.append("div").append("p").text("Inclusion by race rankings")
+			var tableHeader = tableHeaderWrap.append("div").style("cursor","pointer").datum({"c":"inc"});
+				tableHeader.append("p").text("Inclusion by race rankings")
 												.style({"margin":"0px 0px 5px 10px", "font-weight":"bold"});
 			
 
@@ -524,8 +616,8 @@ var setupBase = function(){
 
 			//CHARTSS SETUP
 			var chartWrap = mapAndCharts.append("div").style("overflow","visible");
-			var chartHeight = 95;
-			var chartPad = 52;
+			var chartHeight = 85;
+			var chartPad = 42;
 			var threeChartPad = 0;
 							
 			var chartTitleWrap = chartWrap.append("div").style({"position":"relative","z-index":"5"});
@@ -547,6 +639,10 @@ var setupBase = function(){
 
 			chartG.append("rect").attr({"width":"100%","height":chartHeight+"px","fill":"#eeeeee"}).classed("chart-back",true);
 			chartG.append("text").classed("chart-title",true).attr({x:"0",y:"-6"}).attr({"font-size":"13px"}).text("...")
+			
+			chartWrap.append("p").text("Notes: *Indicates a statistically significant change; p.p. = percentage points")
+								 .style({"font-size":"13px", "text-align":"right","margin":"-15px 40px 0px 0px"})
+
 			//store in view
 			this.store("mapData",{large:map, dataBound:false, title:mapTitle, wrap:mapWrap});
 
@@ -564,6 +660,7 @@ var setupBase = function(){
 			this.store("buttons", {period:periodButtons});
 		}
 
+		var dataRepo = "data/inclusionByRace.json"
 
-		MetroMonitorVersion2.addView(redrawBase, "inclusionByRace.json", setupBase).name("Inclusion by race");
+		MetroMonitorVersion2.addView(redrawBase, dataRepo, setupBase).name("Inclusion by race");
 	})();
