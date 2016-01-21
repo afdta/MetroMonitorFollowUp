@@ -386,7 +386,7 @@
 				var width = 500;
 			}
 			finally{
-				var chartWidth = width-90;
+				var chartWidth = width-100;
 				charts.group.attr("transform","translate(50,"+(0.75*charts.pad)+")");
 				charts.groups.select("rect.chart-back").attr("width",chartWidth);
 			}
@@ -455,7 +455,7 @@
 			
 			var dataPointsGroups = charts.groups.selectAll("g.data-points-group").data(function(d,i){return d.dat});
 			var dpgEnter = dataPointsGroups.enter().append("g").classed("data-points-group",true);
-			dpgEnter.append("line").attr({"x1":0, "x2":0, "y1":0, "y2":charts.height, "stroke":"#ffffff"});
+			dpgEnter.append("line").attr({"x1":0, "x2":0, "y1":0, "y2":charts.height, "stroke":"#dddddd"});
 			dpgEnter.append("circle").attr({"cx":0,"r":3,"fill":"#555555"});
 			dpgEnter.append("text").attr({"x":0, "dy":16, "text-anchor":"middle", "font-size":"11px"});
 			dataPointsGroups.exit().remove();
@@ -562,7 +562,7 @@
 			//var tableWrap = this.container.append("div").style({"padding":"5px 0px 5px 0px", "border":"1px solid #dddddd", "border-width":"1px 0px 1px 0px"}).classed("two-fifths",true).append("div").style("max-height","600px");
 			var headerWrap = this.container.append("div").classed("c-fix",true).style({"padding":"15px"});
 			var header0 = headerWrap.append("div");;
-			header0.append("p").html('Inclusion measures how broadly economic gains are shared among the population. <span style="font-style:italic"> Inclusion varies significantly by race and ethnicity. Explore the data below to find out... .</span>')
+			header0.append("p").html('Inclusion indicators measure how the benefits of growth are shared among all people in a metropolitan economy. Race is an important dimension of inclusion outcomes. Gaps in the median wage, relative poverty rate, and the employment rate among different racial and ethnic groups can indicate whether access to opportunity is broadly shared throughout a metropolitan area.')
 							   .style({"margin":"0px"});
 
 			//legend area
@@ -637,7 +637,7 @@
 				//xaxis.append("line").attr({"x1":"0%","x2":"100%","y1":"1","y2":"1","stroke":"#aaaaaa", "stroke-width":"1px"})
 				//					.style("shape-rendering","crispEdges");
 
-			chartG.append("rect").attr({"width":"100%","height":chartHeight+"px","fill":"#eeeeee"}).classed("chart-back",true);
+			chartG.append("rect").attr({"width":"100%","height":chartHeight+"px","fill":"#fbfbfb","stroke":"#dddddd"}).classed("chart-back",true).style("shape-rendering","crispEdges");
 			chartG.append("text").classed("chart-title",true).attr({x:"0",y:"-6"}).attr({"font-size":"13px"}).text("...")
 			
 			chartWrap.append("p").text("Notes: *Indicates a statistically significant change; p.p. = percentage points")

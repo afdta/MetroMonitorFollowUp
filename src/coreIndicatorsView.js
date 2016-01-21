@@ -57,7 +57,7 @@
 
 		var columns = [{}, {}];
 
-		function drawDetailedTable(metro, ranges, period, g, formats){
+		function drawDetailedTable(metro, period, g, formats){
 			var grI = getInd("gr");
 			var proI = getInd("pro");
 			var incI = getInd("inc");
@@ -69,22 +69,11 @@
 				return sa.map(function(ind, i, a){
 					var I = ind.c+"_"+period+"V";
 					var D = ind.c+"_"+period+"R";
-					var R = ranges[I];
 					var value = metro[(ind.b+"1")][I];
 					var rank = metro[(ind.b)+"1"][D];
-					return {cat:ind.b, metric:I, label: ind.ls, value:value, maxmin:R, rank:rank, absmax:d3.max(R, function(d,i){return Math.abs(d)})};
+					return {cat:ind.b, metric:I, label: ind.ls, value:value, rank:rank};
 				});
 			});
-
-
-			/*var headerRow = g.selectAll("div.as-table-header-row").data([["Growth", "Prosperity", "Inclusion"]]);
-			headerRow.enter().append("div").classed("as-table-header-row as-table-row",true);
-			headerRow.exit().remove();
-			
-			headerRow.selectAll("div.as-table-cell").data(function(d,i){return d}).enter().append("div").classed("as-table-cell",true)
-			.style("width",function(d,i){
-				return i==2 ? "32%" :"34%";
-			}).append("p").text(function(d,i){return d}).style({"font-size":"11px", "color":"#666666", "padding-bottom":"5px"});*/
 
 			var threeRows = g.selectAll("div.as-table-row").data(catmap);
 			threeRows.enter().append("div").classed("as-table-row",true);
@@ -255,7 +244,7 @@
 			detailWrap.exit().remove();
 
 			detailWrap.each(function(d,i){
-				drawDetailedTable(data.table[d], data.ranges, period, d3.select(this), self.formats);
+				drawDetailedTable(data.table[d], period, d3.select(this), self.formats);
 			})
 
 			try{
@@ -380,13 +369,11 @@
 						return col;
 					});
 
-					//for composite maps, set textAccessor
-					//if(!!isComposite){
-						var ta = function(d){
-							var overall = (category=="gr" ? "Growth" : (category=="pro" ? "Prosperity" : "Inclusion")) + " rank: " + formats.rankth(d.data.dat[obj][ind]) + " of 100";
-							return [overall];
-						}
-					//}
+					//set textAccessor
+					var ta = function(d){
+						var overall = (category=="gr" ? "Growth" : (category=="pro" ? "Prosperity" : "Inclusion")) + " rank: " + formats.rankth(d.data.dat[obj][ind]) + " of 100";
+						return [overall];
+					}
 					this.textAccessor(ta);
 				}
 			}
@@ -561,18 +548,6 @@
 
 								 	return d.fmt(val);
 								 })
-								 /*.attr("text-anchor",function(d,i){
-								 	var year = d.year(obs[0]);
-								 	try{
-								 		var align = year < 2006 ? "start" : (year < 2012 ? "middle" : "end");
-								 	}
-								 	catch(e){
-								 		var align = "left";
-								 	}
-								 	finally{
-								 		return align;
-								 	}
-								 })*/
 								 
 				}
 				catch(e){
@@ -588,6 +563,7 @@
 		//redraw -- setup is just to add html
 		function redrawBase(){
 			var self = this;
+			var buttons = this.store("buttons");
 			//if processed data not there, create it and do some one-time stuff
 			if(!this.viewData("processed")){
 				var data = {};
@@ -610,24 +586,8 @@
 				data.universe = this.viewData("raw").measures.growth.overall.map(function(d,i){return d.CBSA+""});
 				data.universe_sort = data.universe.slice(0); 
 
-				data.ranges = {};
-				function getRanges(A,propName){
-					var ind = getInd(propName);
-					var years = ["One", "Five", "Ten"];
-					for(var y=0; y<3; y++){
-						for(var i=0; i<ind.length; i++){
-							var prop = ind[i].c + "_" + years[y] + "V";
-							data.ranges[prop] = d3.extent(A, function(d,i,a){return d[prop]});
-						}
-					}
-				}
-				getRanges(measures.growth.detailed,"gr");
-				getRanges(measures.prosperity.detailed,"pro");
-				getRanges(measures.inclusion.detailed,"inc");
-
 				this.viewData("processed",data);
 
-				var buttons = this.store("buttons");
 				buttons.period.on("mousedown",function(d,i){
 					self.store("period",d.c);
 					buttons.period.classed("generic-button-selected", function(d,j){return i===j});
@@ -638,32 +598,30 @@
 				buttons.category.on("mousedown",function(d,i){
 					self.store("category",d.c);
 					buttons.category.classed("generic-button-selected", function(d,j){return i===j});
-					drawTable.call(self);
+					sortAndDrawTable(d.c, false);
 					drawMaps.call(self);
 					drawCurves.call(self);
 				})
 
 			}
 
-			drawTable.call(this);
 			var tableSortButtons = this.store("tableSortButtons");
-			tableSortButtons.on("mousedown",function(d,i){
-				var thiz = d3.select(this);
-
+			function sortAndDrawTable(code, callOriginatedFromTableSort){
+				var thiz = tableSortButtons.filter(function(d,i){return d.c==code;});
 				tableSortButtons.classed("sort-asc sort-desc",false); //reset buttons
 
-				if(sortProp.prop==d.c && !sortProp.asc){
+				if(sortProp.prop==code && !sortProp.asc){
 					//reset
 					sortProp.prop = null;
 					sortProp.asc = true;
 					var addClass = false;
 				}
-				else if(sortProp.prop==d.c){
+				else if(sortProp.prop==code){
 					sortProp.asc = !sortProp.asc;
 					var addClass = true;
 				}
 				else{
-					sortProp.prop = d.c;
+					sortProp.prop = code;
 					sortProp.asc = true;
 					var addClass = true;
 				}
@@ -676,12 +634,23 @@
 				sortProp.justsorted = true;
 				drawTable.call(self);
 				sortProp.justsorted = false;
-			})
 
-			//if redraw is being called because of achange in view or metro, redraw map, otherwise the map-class handles responsiveness
-			if(this.changeEvent.view || this.changeEvent.metro){
-				drawMaps.call(this);
-			};
+				//if call doesn't originate from table sort buttons, don't do any redrawing
+				if(callOriginatedFromTableSort){
+					self.store("category",code); //change the selected category
+					drawMaps.call(self);
+					drawCurves.call(self);
+					buttons.category.classed("generic-button-selected",function(d,i){
+						return code==d.c;
+					});					
+				}
+			}
+			tableSortButtons.on("mousedown",function(d,i){sortAndDrawTable(d.c, true)});
+
+
+			//redraw
+			drawTable.call(this);
+			if(this.changeEvent.view || this.changeEvent.metro){drawMaps.call(this);} //map class handles changes due to resizing
 			drawCurves.call(self);
 		}
 
@@ -692,18 +661,39 @@
 			//var tableWrap = this.container.append("div").style({"padding":"5px 0px 5px 0px", "border":"1px solid #dddddd", "border-width":"1px 0px 1px 0px"}).classed("two-fifths",true).append("div").style("max-height","600px");
 			var headerWrap = this.container.append("div").classed("c-fix",true).style({"padding":"15px"});
 			var header0 = headerWrap.append("div");;
-			header0.append("p").html('Successful economic development should support <b>growth</b>, <b>prosperity</b>, and <b>inclusion</b> in the form of economic expansion, a rising standard of living, and broadly shared economic gains. <span style="font-style:italic"> Explore the data below to find out which large metro areas have performed best on these metrics over time.</span>')
-							   .style({"margin":"0px"});
-			/*header0.selectAll("div").data([{cat:"Growth", def:"Economic expansion"}, 
-										   {cat:"Prosperity", def:"A rising standard of living"}, 
-										   {cat:"Inclusion", def:"Broadly shared prosperity"}]).enter().append("div")
-									.style({"float":"left", "padding":"5px 1.5%"})
-									.append("p").html(function(d,i){return "<b>"+d.cat+": "+"</b>"+d.def}).style({"margin":"0px", "text-align":"center"});*/
+			var openFlexBox = header0.append("p").html('Successful economic development should put a metropolitan economy on a higher trajectory of long-run growth by improving the productivity of individuals and firms in order to raise local standards of living for all people. This means that, at least over the long-term, metropolitan areas should seek to achieve growth that also increases prosperity and inclusion. <span style="font-style:italic">Explore the data below to find out which large metro areas have performed best on these metrics over time.</span>')
+							   .style({"margin":"0px"}).append("span").text(" Define the indicators»")
+							   .style({"font-weight":"bold","cursor":"pointer", "font-style":"italic"});
 
-			//header0.append("p").html('<span></span>').style({"font-style":"normal","line-height":"1.4em","padding":"5px 10px 0px 0px", "margin":"5px 20px 0px 0px", "border-top":"1px dotted #aaaaaa", "clear":"both", "font-size":"13px"});
-			
+
+			//add a definitions box
+			var flexBoxOuter = this.container.append("div").style({"height":"0px","overflow":"hidden","position":"relative"});
+			//var flexBoxClose = flexBoxOuter.append("p").style({"position":"absolute","top":"5px","right":"5px","padding":"5px","cursor":"pointer"}).text("X")
+			var flexBox = flexBoxOuter.append("div");
+			var flexBoxOpen = false;
+			flexBox.append("p").style({"padding":"0px 15px 25px 15px", "margin":"0px 30px"}).html('<b>Growth</b> indicators capture net change in the total size of a metropolitan area’s economy. As a metropolitan economy grows, it creates new opportunities for individuals and can become more efficient as it grows larger. The Metro Monitor measures growth in gross product (GMP), number of jobs, and aggregate wages paid to workers.');
+			flexBox.append("p").style({"padding":"0px 15px 25px 15px", "margin":"0px 30px"}).html('<b>Prosperity</b> refers to the wealth and income produced by an economy on a per-capita or per-worker basis. When a metropolitan area grows by increasing the productivity of its workers, the value of those workers’ labor rises. As the value of labor rises, so can workers’ wages. In this way, prosperity indicators capture the quality of a metropolitan area’s economic growth from the standpoint of its workers and residents.');
+			flexBox.append("p").style({"padding":"0px 15px 25px 15px", "margin":"0px 30px"}).html('<b>Inclusion</b> indicators measure how the benefits of growth and prosperity in a metropolitan economy—specifically, employment and income—are distributed among people. Inclusive growth enables more people to invest in their skills and to purchase more goods and services.');
+
+			openFlexBox.on("mousedown",function(d,i){
+				flexBoxOpen = !flexBoxOpen;
+				d3.select(this).text(flexBoxOpen ? " Hide the indicator definitions." : " Define the indicators»");
+				if(!flexBoxOpen){
+					flexBoxOuter.interrupt().transition().duration(600).style("height","0px");
+				}else{
+					try{
+						var box = flexBox.node().getBoundingClientRect();
+						var height = (box.bottom-box.top)+"px";
+					}
+					catch(e){
+						var height = "auto";
+					}
+					flexBoxOuter.transition().duration(600).style("height",height).each("end",function(d,i){return flexBoxOuter.style("height","auto")});
+				}
+			});
+
 			//legend area
-			var legendAndTime = this.container.append("div").style({"padding-bottom":"15px", "border-bottom":"1px solid #dddddd", "margin-bottom":"15px"}).classed("c-fix",true);
+			var legendAndTime = this.container.append("div").style({"padding":"10px 0px 15px 0px", "border-bottom":"1px solid #dddddd", "margin-bottom":"15px"}).classed("c-fix",true);
 			var legendWrap = legendAndTime.append("div").classed("c-fix three-fifths mobile-bottom-buffer",true).append("div").style({"padding":"0px 15px 0px 15px"});
 			legendWrap.append("p").text("Metro areas are ranked from 1 to 100; 1 indicates the best performance").style({"font-size":"13px"});
 			var legendSwatches = legendWrap.append("div").classed("c-fix",true).selectAll("div").data(colors).enter().append("div").style({"float":"left","margin":"0px 15px 5px 0px"});
