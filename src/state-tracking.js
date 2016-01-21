@@ -3,6 +3,14 @@
 
 //produce a state/navigation object for MPP interactives
 function MetroInteractive(appWrapperElement){
+	
+	//BROWSER TESTING
+	if(!document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1")){
+		appWrapperElement.innerHTML = '<p style="font-style:italic;text-align:center;margin:30px 0px 30px 0px;">This interactive feature requires a modern browser such as Chrome, Firefox, IE9+, or Safari.</p>';
+		return null;
+	}
+
+	//state object, S
 	var S = {};
 
 	//basic structure: A] app wrapper > a] menu wrapper, b] slide/views wrapper
@@ -138,7 +146,7 @@ function MetroInteractive(appWrapperElement){
 	//metroLookup can be used later to restrict the geography for a given view--use case not needed now and will be handled in the view callback
 	//the first registered view becomes the default
 	var numViews = 0;
-	S.addView = function(redrawView, data_uri, setupView, metroLookup){
+	S.addView = function(setupView, redrawView, data_uri, metroLookup){
 		var viewNum = numViews;
 		var viewIndex = "V"+viewNum;
 		var viewName = viewIndex; //can be set by user later
@@ -202,7 +210,7 @@ function MetroInteractive(appWrapperElement){
 		viewOps.storage = viewOps.store; //maintain for backwards compatibility
 
 		//run setup
-		if(!!setupView){setupView.call(viewOps);} //must be synchronous!!}
+		if(!!setupView){setupView.call(viewOps);} //must be synchronous
 
 		function viewLoading(){slide.classed("view-is-loading",true)}
 		function viewLoaded(){slide.classed("view-is-loading",false)}
@@ -255,7 +263,6 @@ function MetroInteractive(appWrapperElement){
 				redrawView.call(viewOps); //must be a synchronous fn
 			}
 			catch(e){
-				console.log(e);
 				slide.classed("bad-view",true);
 			}
 			
@@ -446,7 +453,7 @@ function MetroInteractive(appWrapperElement){
 		viewMenuCtrl.build().syncButtons();
 	}
 
-	//hash changes -- need to test the hash changes in wide variety of browsers
+	//hash changes
 	function set_hash(hash){
 		if(window.history.pushState) {
 		    window.history.pushState(null, null, ("#"+hash));
@@ -476,14 +483,13 @@ function MetroInteractive(appWrapperElement){
 	}
 
 	window.addEventListener("hashchange",hash_listener,false);
-	//window.addEventListener("popstate",function(e){console.log(e.state)})
 	
-	//on resize, redraw the current view
+	//on resize, redraw the current view on a delay
 	var resize_timer;
 	window.addEventListener("resize",function(){
 		clearTimeout(resize_timer);
 		resize_timer = setTimeout(qcRedraw, 200);
-	})
+	});
 
 
 	function append_loading_icon(wrapper_selection){
@@ -505,5 +511,5 @@ function MetroInteractive(appWrapperElement){
 
 	}
 
-	return S;
+	return S; //make the state available
 };

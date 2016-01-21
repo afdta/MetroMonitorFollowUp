@@ -1,10 +1,10 @@
 //view 1 - "core indicators" view
 
 	(function(){
-		var colors = ['#d7191c','#fdae61','#ffffbf','#abd9e9','#2c7bb6'];
-		var colors = ['#e66101','#fdb863','#f7f7f7','#b2abd2','#5e3c99'];
-		var colors = ['#d01c8b','#f1b6da','#f7f7f7','#b8e186','#4dac26'];
 		var colors = ['#053769', '#a4c7f2', '#cccccc', '#ffa626', '#ff5e1a'];
+		
+		var dataFile = "data/coreIndicators.json";
+		//var dataFile = "/~/media/multimedia/interactives/2016/MetroMonitorV2/data/coreIndicators.json"
 
 		var periods = {"Five":"2009 to 2014", "One":"2013 to 2014", "Ten":"2004 to 2014"};
 
@@ -661,8 +661,8 @@
 			//var tableWrap = this.container.append("div").style({"padding":"5px 0px 5px 0px", "border":"1px solid #dddddd", "border-width":"1px 0px 1px 0px"}).classed("two-fifths",true).append("div").style("max-height","600px");
 			var headerWrap = this.container.append("div").classed("c-fix",true).style({"padding":"15px"});
 			var header0 = headerWrap.append("div");;
-			var openFlexBox = header0.append("p").html('Successful economic development should put a metropolitan economy on a higher trajectory of long-run growth by improving the productivity of individuals and firms in order to raise local standards of living for all people. This means that, at least over the long-term, metropolitan areas should seek to achieve growth that also increases prosperity and inclusion. <span style="font-style:italic">Explore the data below to find out which large metro areas have performed best on these metrics over time.</span>')
-							   .style({"margin":"0px"}).append("span").text(" Define the indicators»")
+			var openFlexBox = header0.append("p").html('<span style="font-style:italic">Explore the data below to find out which large metro areas have performed best on indicators of growth, prosperity, and inclusion over time.</span>')
+							   .style({"margin":"0px", "margin-right":"10%"}).append("span").text(" Define the indicators»")
 							   .style({"font-weight":"bold","cursor":"pointer", "font-style":"italic"});
 
 
@@ -816,8 +816,6 @@
 			this.store("buttons", {period:periodButtons, category:categoryButtons});
 		}
 
-		var dataRepo = "data/coreIndicators.json";
-
-		var view1 = MetroMonitorVersion2.addView(redrawBase, dataRepo, setupBase);
+		var view1 = MetroMonitorVersion2.addView(setupBase, redrawBase, dataFile);
 		view1.name("Growth / Prosperity / Inclusion");
 	})();

@@ -1,9 +1,8 @@
 //view 1 - "inclusion by race" view
-
 	(function(){
-		var colors = ['#d7191c','#fdae61','#ffffbf','#abd9e9','#2c7bb6'];
-		var colors = ['#e66101','#fdb863','#f7f7f7','#b2abd2','#5e3c99'];
-		var colors = ['#d01c8b','#f1b6da','#f7f7f7','#b8e186','#4dac26'];
+		var dataFile = "data/inclusionByRace.json";
+		//var dataFile = "/~/media/multimedia/interactives/2016/MetroMonitorV2/data/inclusionByRace.json"
+
 		var colors = ['#053769', '#a4c7f2', '#cccccc', '#ffa626', '#ff5e1a'];
 
 		var periods = {"Five":"2009–2014", "One":"2013–2014", "Ten":"1999–2014"};
@@ -32,93 +31,93 @@
 
 		function drawDetailedTable(levels, change, period, g, formats){
 
-		try{
+			try{
 
-			var years = getYears(period);
-			for(i=0; i<levels.length; i++){
-				if(levels[i].Year==years.s){
-					var start = levels[i];
+				var years = getYears(period);
+				for(i=0; i<levels.length; i++){
+					if(levels[i].Year==years.s){
+						var start = levels[i];
+					}
+					else if(levels[i].Year==years.e){
+						var end = levels[i];
+					}
 				}
-				else if(levels[i].Year==years.e){
-					var end = levels[i];
+
+				var r0 = [{text:""}, {text:"Emp.-to-pop. ratio"}, {text:"Median wage"}, {text:"Relative poverty"}]
+
+				var r1 = [{text:(start.Year === 2000 ? 1999 : start.Year)},
+						  {nw:start.NonWhite_EmpRatioV, w:start.White_EmpRatioV, fmt:formats.pct1},
+						  {nw:start.NonWhite_MedEarnV, w:start.White_MedEarnV, fmt:formats.doll0},
+						  {nw:start.NonWhite_RelPovV, w:start.White_RelPovV, fmt:formats.pct1}
+						 ]
+				
+				var r2 = [{text:end.Year},
+						  {nw:end.NonWhite_EmpRatioV, w:end.White_EmpRatioV, fmt:formats.pct1},
+						  {nw:end.NonWhite_MedEarnV, w:end.White_MedEarnV, fmt:formats.doll0},
+						  {nw:end.NonWhite_RelPovV, w:end.White_RelPovV, fmt:formats.pct1}
+						 ]
+
+				var r3 = [{text:"Change"},
+						   {nw:change["NonWhite_EmpRatio_"+period+"V"], 
+						    nws:change["NonWhite_EmpRatio_"+period+"SIG"], 
+						    w:change["White_EmpRatio_"+period+"V"],
+						    ws:change["White_EmpRatio_"+period+"SIG"], 
+						    fmt:formats.ppch1
+						  },
+						   {nw:change["NonWhite_MedEarn_"+period+"V"], 
+						    nws:change["NonWhite_MedEarn_"+period+"SIG"],
+						    w:change["White_MedEarn_"+period+"V"], 
+						    ws:change["White_MedEarn_"+period+"SIG"],
+						    fmt:formats.pctch1
+						  },
+						   {nw:change["NonWhite_RelPov_"+period+"V"], 
+						    nws:change["NonWhite_RelPov_"+period+"SIG"], 
+						    w:change["White_RelPov_"+period+"V"],
+						    ws:change["White_RelPov_"+period+"SIG"],  
+						    fmt:formats.ppch1}
+						  ]
+
+				var threeRows = g.selectAll("div.as-table-row").data([r0,r1,r2,r3]);
+				threeRows.enter().append("div").classed("as-table-row",true);
+				threeRows.exit().remove();
+
+				var fourCells = threeRows.selectAll("div.as-table-cell").data(function(d,i){return d});
+				fourCells.enter().append("div").classed("as-table-cell",true).style("width",function(d,i){
+					return i==0 ? "22%" :"26%";
+				}).style("vertical-align", function(d,i){return i===0 ? "top" : "middle"});
+				fourCells.exit().remove();
+
+				var cell_vals = fourCells.selectAll("div.value-actual").data(function(d,i){
+					var ta = i%4 ===0 ? "right" : "center";
+					var label = [{v:d.text, w:"normal", ta:ta}]; //[{v:"non-white", w:"bold", ta:ta}, {v:"white", w:"normal", ta:ta}] : 
+					return d.hasOwnProperty("fmt") ? [{v: d.fmt(d.nw)+(d.nws==1 ? "*" : ""), w:"bold", ta:ta}, {v:d.fmt(d.w)+(d.ws==1 ? "*" : ""), w:"normal", ta:ta}] : label;
+				});
+				cell_vals.enter().append("div").classed("value-actual",true).append("p");
+				cell_vals.exit().remove();
+				cell_vals.select("p").text(function(d,i){return d.v})
+					.style({"font-size":"13px","margin":"0px","padding":"3px","line-height":"1em", "text-align":"center"})
+					.style("font-weight",function(d,i){return d.w});
+					
+
+				try{
+					d3.select(g.node().parentNode).selectAll("p.table-footnote")
+					  .data(['*Indicates a statistically signficant change','p.p. = percentage points'])
+					 .enter().append("p").classed("table-footnote",true).text(function(d,i){return d})
+					 .style({"font-size":"13px", "color":"#666666", "margin":"0px 5px", "line-height":"1em", "text-align":"right"})
+					 .style("margin-top",function(d,i){
+					 	return i==0 ? "10px" : "7px";
+					 });
+					}
+				catch(e){
+
 				}
 			}
-
-			var r0 = [{text:""}, {text:"Emp.-to-pop. ratio"}, {text:"Median wage"}, {text:"Relative poverty"}]
-
-			var r1 = [{text:(start.Year === 2000 ? 1999 : start.Year)},
-					  {nw:start.NonWhite_EmpRatioV, w:start.White_EmpRatioV, fmt:formats.pct1},
-					  {nw:start.NonWhite_MedEarnV, w:start.White_MedEarnV, fmt:formats.doll0},
-					  {nw:start.NonWhite_RelPovV, w:start.White_RelPovV, fmt:formats.pct1}
-					 ]
-			
-			var r2 = [{text:end.Year},
-					  {nw:end.NonWhite_EmpRatioV, w:end.White_EmpRatioV, fmt:formats.pct1},
-					  {nw:end.NonWhite_MedEarnV, w:end.White_MedEarnV, fmt:formats.doll0},
-					  {nw:end.NonWhite_RelPovV, w:end.White_RelPovV, fmt:formats.pct1}
-					 ]
-
-			var r3 = [{text:"Change"},
-					   {nw:change["NonWhite_EmpRatio_"+period+"V"], 
-					    nws:change["NonWhite_EmpRatio_"+period+"SIG"], 
-					    w:change["White_EmpRatio_"+period+"V"],
-					    ws:change["White_EmpRatio_"+period+"SIG"], 
-					    fmt:formats.ppch1
-					  },
-					   {nw:change["NonWhite_MedEarn_"+period+"V"], 
-					    nws:change["NonWhite_MedEarn_"+period+"SIG"],
-					    w:change["White_MedEarn_"+period+"V"], 
-					    ws:change["White_MedEarn_"+period+"SIG"],
-					    fmt:formats.pctch1
-					  },
-					   {nw:change["NonWhite_RelPov_"+period+"V"], 
-					    nws:change["NonWhite_RelPov_"+period+"SIG"], 
-					    w:change["White_RelPov_"+period+"V"],
-					    ws:change["White_RelPov_"+period+"SIG"],  
-					    fmt:formats.ppch1}
-					  ]
-
-			var threeRows = g.selectAll("div.as-table-row").data([r0,r1,r2,r3]);
-			threeRows.enter().append("div").classed("as-table-row",true);
-			threeRows.exit().remove();
-
-			var fourCells = threeRows.selectAll("div.as-table-cell").data(function(d,i){return d});
-			fourCells.enter().append("div").classed("as-table-cell",true).style("width",function(d,i){
-				return i==0 ? "22%" :"26%";
-			}).style("vertical-align", function(d,i){return i===0 ? "top" : "middle"});
-			fourCells.exit().remove();
-
-			var cell_vals = fourCells.selectAll("div.value-actual").data(function(d,i){
-				var ta = i%4 ===0 ? "right" : "center";
-				var label = [{v:d.text, w:"normal", ta:ta}]; //[{v:"non-white", w:"bold", ta:ta}, {v:"white", w:"normal", ta:ta}] : 
-				return d.hasOwnProperty("fmt") ? [{v: d.fmt(d.nw)+(d.nws==1 ? "*" : ""), w:"bold", ta:ta}, {v:d.fmt(d.w)+(d.ws==1 ? "*" : ""), w:"normal", ta:ta}] : label;
-			});
-			cell_vals.enter().append("div").classed("value-actual",true).append("p");
-			cell_vals.exit().remove();
-			cell_vals.select("p").text(function(d,i){return d.v})
-				.style({"font-size":"13px","margin":"0px","padding":"3px","line-height":"1em", "text-align":"center"})
-				.style("font-weight",function(d,i){return d.w});
-				
-
-			try{
-				d3.select(g.node().parentNode).selectAll("p.table-footnote")
-				  .data(['*Indicates a statistically signficant change','p.p. = percentage points'])
-				 .enter().append("p").classed("table-footnote",true).text(function(d,i){return d})
-				 .style({"font-size":"13px", "color":"#666666", "margin":"0px 5px", "line-height":"1em", "text-align":"right"})
-				 .style("margin-top",function(d,i){
-				 	return i==0 ? "10px" : "7px";
-				 });
-				}
 			catch(e){
 
 			}
 		}
-		catch(e){
 
-		}
-
-		}
-
+		//control sorting of the 
 		var sortProp = {prop:null, asc:true, justsorted:false};
 		function drawTable(){
 
@@ -312,8 +311,6 @@
 			var self = this;
 
 			mapData.title.text("Change in inclusion by race, " + periods[period]);
-				   //.style({"margin":"20px 0px -5px 10px","font-size":"15px","line-height":"1em", "font-weight":"bold"});
-
 
 			//bind map data -- only once
 			if(!mapData.dataBound){
@@ -332,8 +329,6 @@
 			function refill(){
 
 				var key = period+"R";
-				//fn to refill the map dots based on the selection of indicator and time period -- the thisArg will be the map object
-				
 				this.metros.attr("r", function(d,i){
 					return 6;
 				});
@@ -350,7 +345,7 @@
 				//set text accessor for hover boxes
 				var ta = function(d){
 					var rank = d.data.inclusion.rank[key]
-					var overall = "Overall rank: " + rank + " of 100";
+					var overall = "Inclusion by race rank: " + rank + " of 100";
 					return [overall];
 				}
 				this.textAccessor(ta);
@@ -515,7 +510,6 @@
 
 			}
 
-			drawTable.call(this);
 			var tableSortButtons = this.store("tableHeader");
 			tableSortButtons.on("mousedown",function(d,i){
 				var thiz = d3.select(this);
@@ -548,10 +542,8 @@
 				sortProp.justsorted = false;
 			})
 
-			//if redraw is being called because of achange in view or metro, redraw map, otherwise the map-class handles responsiveness
-			if(this.changeEvent.view || this.changeEvent.metro){
-				drawMaps.call(this);
-			};
+			drawTable.call(this);
+			if(this.changeEvent.view || this.changeEvent.metro){drawMaps.call(this);};
 			drawCurves.call(self);
 		}
 
@@ -559,11 +551,10 @@
 			var self = this;
 			this.header.append("p").text("Inclusion by race in the 100 largest U.S. metro areas");
 			
-			//var tableWrap = this.container.append("div").style({"padding":"5px 0px 5px 0px", "border":"1px solid #dddddd", "border-width":"1px 0px 1px 0px"}).classed("two-fifths",true).append("div").style("max-height","600px");
 			var headerWrap = this.container.append("div").classed("c-fix",true).style({"padding":"15px"});
 			var header0 = headerWrap.append("div");;
 			header0.append("p").html('Inclusion indicators measure how the benefits of growth are shared among all people in a metropolitan economy. Race is an important dimension of inclusion outcomes. Gaps in the median wage, relative poverty rate, and the employment rate among different racial and ethnic groups can indicate whether access to opportunity is broadly shared throughout a metropolitan area.')
-							   .style({"margin":"0px"});
+							   .style({"margin":"0px","margin-bottom":"15px"});
 
 			//legend area
 			var legendAndTime = this.container.append("div").style({"padding-bottom":"15px", "border-bottom":"0px solid #dddddd", "margin-bottom":"15px"}).classed("c-fix",true);
@@ -614,7 +605,7 @@
 			map.makeResponsive();
 
 
-			//CHARTSS SETUP
+			//CHARTS SETUP
 			var chartWrap = mapAndCharts.append("div").style("overflow","visible");
 			var chartHeight = 85;
 			var chartPad = 42;
@@ -634,8 +625,6 @@
 			chartG.append("g").classed("d3-axis-group",true).attr("transform","translate(0,0)");
 
 			var xaxis = chartSVG.append("g").attr("transform","translate(0,"+((3*chartHeight)+(2*chartPad)+5)+")").classed("d3-axis-group",true);
-				//xaxis.append("line").attr({"x1":"0%","x2":"100%","y1":"1","y2":"1","stroke":"#aaaaaa", "stroke-width":"1px"})
-				//					.style("shape-rendering","crispEdges");
 
 			chartG.append("rect").attr({"width":"100%","height":chartHeight+"px","fill":"#fbfbfb","stroke":"#dddddd"}).classed("chart-back",true).style("shape-rendering","crispEdges");
 			chartG.append("text").classed("chart-title",true).attr({x:"0",y:"-6"}).attr({"font-size":"13px"}).text("...")
@@ -660,7 +649,5 @@
 			this.store("buttons", {period:periodButtons});
 		}
 
-		var dataRepo = "data/inclusionByRace.json"
-
-		MetroMonitorVersion2.addView(redrawBase, dataRepo, setupBase).name("Inclusion by race");
+		MetroMonitorVersion2.addView(setupBase, redrawBase, dataFile).name("Inclusion by race");
 	})();
