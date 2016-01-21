@@ -322,6 +322,7 @@
 				mapData.dataBound = true;
 			}
 
+			var formats = this.formats;
 			//function generator
 			function refill(){
 
@@ -342,7 +343,7 @@
 				//set text accessor for hover boxes
 				var ta = function(d){
 					var rank = d.data.inclusion.rank[key]
-					var overall = "Inclusion by race rank: " + rank + " of 100";
+					var overall = "Inclusion by race rank: " + formats.rankth(rank) + " of 100";
 					return [overall];
 				}
 				this.textAccessor(ta);
