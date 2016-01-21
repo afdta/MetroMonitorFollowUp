@@ -26,9 +26,6 @@
 			return {s:startYear, e:endYear}
 		}
 
-		var columns = [{}, {}];
-
-
 		function drawDetailedTable(levels, change, period, g, formats){
 
 			try{
@@ -492,7 +489,6 @@
 				}
 				var raw = this.viewData("raw");
 				putInTable(raw.ranks, "rank");
-				//data.levels = raw.levelsDetail;
 
 				data.universe = raw.ranks.map(function(d,i){return d.CBSA+""});
 				data.universe_sort = data.universe.slice(0); 
