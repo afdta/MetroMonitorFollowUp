@@ -1,0 +1,301 @@
+Year,CBSA,CBSA Name,Composite,Rank,Score
+2000-2014,10420,"Akron, OH",Race,99,-6.03708601
+2000-2014,10580,"Albany-Schenectady-Troy, NY",Race,53,0.145673394
+2000-2014,10740,"Albuquerque, NM",Race,14,2.209244013
+2000-2014,10900,"Allentown-Bethlehem-Easton, PA-NJ",Race,82,-1.980340004
+2000-2014,12060,"Atlanta-Sandy Springs-Roswell, GA",Race,28,1.332239628
+2000-2014,12260,"Augusta-Richmond County, GA-SC",Race,87,-2.509495974
+2000-2014,12420,"Austin-Round Rock, TX",Race,64,-0.385312438
+2000-2014,12540,"Bakersfield, CA",Race,10,2.6717031
+2000-2014,12580,"Baltimore-Columbia-Towson, MD",Race,90,-3.234532356
+2000-2014,12940,"Baton Rouge, LA",Race,40,0.654309571
+2000-2014,13820,"Birmingham-Hoover, AL",Race,36,0.869182706
+2000-2014,14260,"Boise City, ID",Race,7,3.056981087
+2000-2014,14460,"Boston-Cambridge-Newton, MA-NH",Race,67,-0.49160096
+2000-2014,14860,"Bridgeport-Stamford-Norwalk, CT",Race,25,1.530509472
+2000-2014,15380,"Buffalo-Cheektowaga-Niagara Falls, NY",Race,72,-0.834637642
+2000-2014,15980,"Cape Coral-Fort Myers, FL",Race,3,4.959665775
+2000-2014,16700,"Charleston-North Charleston, SC",Race,85,-2.022415876
+2000-2014,16740,"Charlotte-Concord-Gastonia, NC-SC",Race,56,-0.036522239
+2000-2014,16860,"Chattanooga, TN-GA",Race,58,-0.063353062
+2000-2014,16980,"Chicago-Naperville-Elgin, IL-IN-WI",Race,46,0.329402506
+2000-2014,17140,"Cincinnati, OH-KY-IN",Race,91,-3.30966711
+2000-2014,17460,"Cleveland-Elyria, OH",Race,95,-4.250388622
+2000-2014,17820,"Colorado Springs, CO",Race,74,-1.303700686
+2000-2014,17900,"Columbia, SC",Race,23,1.710707903
+2000-2014,18140,"Columbus, OH",Race,97,-4.36725378
+2000-2014,19100,"Dallas-Fort Worth-Arlington, TX",Race,42,0.485447824
+2000-2014,19380,"Dayton, OH",Race,89,-2.72860527
+2000-2014,19660,"Deltona-Daytona Beach-Ormond Beach, FL",Race,54,0.081216276
+2000-2014,19740,"Denver-Aurora-Lakewood, CO",Race,45,0.37065345
+2000-2014,19780,"Des Moines-West Des Moines, IA",Race,92,-3.419254065
+2000-2014,19820,"Detroit-Warren-Dearborn, MI",Race,78,-1.461659789
+2000-2014,21340,"El Paso, TX",Race,9,2.754859209
+2000-2014,23420,"Fresno, CA",Race,30,1.315021157
+2000-2014,24340,"Grand Rapids-Wyoming, MI",Race,96,-4.290107727
+2000-2014,24660,"Greensboro-High Point, NC",Race,62,-0.205942005
+2000-2014,24860,"Greenville-Anderson-Mauldin, SC",Race,38,0.694029272
+2000-2014,25420,"Harrisburg-Carlisle, PA",Race,84,-2.021624804
+2000-2014,25540,"Hartford-West Hartford-East Hartford, CT",Race,49,0.270068288
+2000-2014,26420,"Houston-The Woodlands-Sugar Land, TX",Race,22,1.74148345
+2000-2014,26900,"Indianapolis-Carmel-Anderson, IN",Race,33,1.02156806
+2000-2014,27140,"Jackson, MS",Race,15,2.207281828
+2000-2014,27260,"Jacksonville, FL",Race,65,-0.390449166
+2000-2014,28140,"Kansas City, MO-KS",Race,41,0.623950005
+2000-2014,28940,"Knoxville, TN",Race,93,-4.075044632
+2000-2014,29460,"Lakeland-Winter Haven, FL",Race,79,-1.519450426
+2000-2014,29820,"Las Vegas-Henderson-Paradise, NV",Race,6,3.379425287
+2000-2014,30780,"Little Rock-North Little Rock-Conway, AR",Race,35,0.873825192
+2000-2014,31080,"Los Angeles-Long Beach-Anaheim, CA",Race,12,2.4915452
+2000-2014,31140,"Louisville/Jefferson County, KY-IN",Race,17,2.006736279
+2000-2014,31540,"Madison, WI",Race,68,-0.531971693
+2000-2014,32580,"McAllen-Edinburg-Mission, TX",Race,1,5.126244545
+2000-2014,32820,"Memphis, TN-MS-AR",Race,43,0.412159592
+2000-2014,33100,"Miami-Fort Lauderdale-West Palm Beach, FL",Race,11,2.620202065
+2000-2014,33340,"Milwaukee-Waukesha-West Allis, WI",Race,66,-0.48881644
+2000-2014,33460,"Minneapolis-St. Paul-Bloomington, MN-WI",Race,52,0.193228886
+2000-2014,34980,"Nashville-Davidson-Murfreesboro-Franklin, TN",Race,59,-0.067008406
+2000-2014,35300,"New Haven-Milford, CT",Race,50,0.248020142
+2000-2014,35380,"New Orleans-Metairie, LA",Race,70,-0.652564824
+2000-2014,35620,"New York-Newark-Jersey City, NY-NJ-PA",Race,47,0.300824106
+2000-2014,35840,"North Port-Sarasota-Bradenton, FL",Race,71,-0.776711583
+2000-2014,36260,"Ogden-Clearfield, UT",Race,5,3.522675514
+2000-2014,36420,"Oklahoma City, OK",Race,57,-0.055578709
+2000-2014,36540,"Omaha-Council Bluffs, NE-IA",Race,88,-2.549260139
+2000-2014,36740,"Orlando-Kissimmee-Sanford, FL",Race,19,1.916452885
+2000-2014,37100,"Oxnard-Thousand Oaks-Ventura, CA",Race,2,5.091495037
+2000-2014,37340,"Palm Bay-Melbourne-Titusville, FL",Race,4,3.634280682
+2000-2014,37980,"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",Race,60,-0.179946393
+2000-2014,38060,"Phoenix-Mesa-Scottsdale, AZ",Race,20,1.86817348
+2000-2014,38300,"Pittsburgh, PA",Race,98,-5.65311861
+2000-2014,38900,"Portland-Vancouver-Hillsboro, OR-WA",Race,37,0.867000461
+2000-2014,39300,"Providence-Warwick, RI-MA",Race,18,1.952884316
+2000-2014,39340,"Provo-Orem, UT",Race,61,-0.204729557
+2000-2014,39580,"Raleigh, NC",Race,73,-1.189158082
+2000-2014,40060,"Richmond, VA",Race,80,-1.593012094
+2000-2014,40140,"Riverside-San Bernardino-Ontario, CA",Race,21,1.821872711
+2000-2014,40380,"Rochester, NY",Race,77,-1.383905053
+2000-2014,40900,"Sacramento-Roseville-Arden-Arcade, CA",Race,27,1.369063854
+2000-2014,41180,"St. Louis, MO-IL",Race,63,-0.236401916
+2000-2014,41620,"Salt Lake City, UT",Race,16,2.14068532
+2000-2014,41700,"San Antonio-New Braunfels, TX",Race,34,0.893023968
+2000-2014,41740,"San Diego-Carlsbad, CA",Race,31,1.118084908
+2000-2014,41860,"San Francisco-Oakland-Hayward, CA",Race,51,0.233765706
+2000-2014,41940,"San Jose-Sunnyvale-Santa Clara, CA",Race,8,2.774302721
+2000-2014,42540,"Scranton-Wilkes-Barre-Hazleton, PA",Race,26,1.488293767
+2000-2014,42660,"Seattle-Tacoma-Bellevue, WA",Race,44,0.375301689
+2000-2014,44060,"Spokane-Spokane Valley, WA",Race,100,-6.932497025
+2000-2014,44140,"Springfield, MA",Race,83,-1.988545895
+2000-2014,44700,"Stockton-Lodi, CA",Race,24,1.629403353
+2000-2014,45060,"Syracuse, NY",Race,94,-4.227616787
+2000-2014,45300,"Tampa-St. Petersburg-Clearwater, FL",Race,13,2.489139557
+2000-2014,45780,"Toledo, OH",Race,75,-1.345046043
+2000-2014,46060,"Tucson, AZ",Race,55,-0.015194673
+2000-2014,46140,"Tulsa, OK",Race,29,1.330395222
+2000-2014,46520,"Urban Honolulu, HI",Race,69,-0.580302238
+2000-2014,47260,"Virginia Beach-Norfolk-Newport News, VA-NC",Race,39,0.668663442
+2000-2014,47900,"Washington-Arlington-Alexandria, DC-VA-MD-WV",Race,81,-1.821379542
+2000-2014,48620,"Wichita, KS",Race,32,1.099966645
+2000-2014,49180,"Winston-Salem, NC",Race,48,0.289146125
+2000-2014,49340,"Worcester, MA-CT",Race,76,-1.36503613
+2000-2014,49660,"Youngstown-Warren-Boardman, OH-PA",Race,86,-2.485232592
+2009-2014,10420,"Akron, OH",Race,94,-2.800570011
+2009-2014,10580,"Albany-Schenectady-Troy, NY",Race,70,-0.281731904
+2009-2014,10740,"Albuquerque, NM",Race,74,-0.567101479
+2009-2014,10900,"Allentown-Bethlehem-Easton, PA-NJ",Race,96,-4.413903236
+2009-2014,12060,"Atlanta-Sandy Springs-Roswell, GA",Race,13,1.68482554
+2009-2014,12260,"Augusta-Richmond County, GA-SC",Race,99,-7.085878372
+2009-2014,12420,"Austin-Round Rock, TX",Race,51,0.444951922
+2009-2014,12540,"Bakersfield, CA",Race,3,2.191459656
+2009-2014,12580,"Baltimore-Columbia-Towson, MD",Race,73,-0.392101705
+2009-2014,12940,"Baton Rouge, LA",Race,45,0.562083244
+2009-2014,13820,"Birmingham-Hoover, AL",Race,52,0.405962497
+2009-2014,14260,"Boise City, ID",Race,6,1.853745103
+2009-2014,14460,"Boston-Cambridge-Newton, MA-NH",Race,68,-0.19746992
+2009-2014,14860,"Bridgeport-Stamford-Norwalk, CT",Race,48,0.49488008
+2009-2014,15380,"Buffalo-Cheektowaga-Niagara Falls, NY",Race,44,0.650158465
+2009-2014,15980,"Cape Coral-Fort Myers, FL",Race,1,2.998262882
+2009-2014,16700,"Charleston-North Charleston, SC",Race,80,-0.723351836
+2009-2014,16740,"Charlotte-Concord-Gastonia, NC-SC",Race,29,1.002257109
+2009-2014,16860,"Chattanooga, TN-GA",Race,4,2.148589373
+2009-2014,16980,"Chicago-Naperville-Elgin, IL-IN-WI",Race,50,0.451481044
+2009-2014,17140,"Cincinnati, OH-KY-IN",Race,81,-0.813960791
+2009-2014,17460,"Cleveland-Elyria, OH",Race,82,-0.919059515
+2009-2014,17820,"Colorado Springs, CO",Race,84,-1.148410559
+2009-2014,17900,"Columbia, SC",Race,16,1.372501969
+2009-2014,18140,"Columbus, OH",Race,86,-1.338405728
+2009-2014,19100,"Dallas-Fort Worth-Arlington, TX",Race,58,0.149046779
+2009-2014,19380,"Dayton, OH",Race,91,-2.031126022
+2009-2014,19660,"Deltona-Daytona Beach-Ormond Beach, FL",Race,98,-5.50190258
+2009-2014,19740,"Denver-Aurora-Lakewood, CO",Race,21,1.195504427
+2009-2014,19780,"Des Moines-West Des Moines, IA",Race,39,0.732645869
+2009-2014,19820,"Detroit-Warren-Dearborn, MI",Race,75,-0.589258373
+2009-2014,21340,"El Paso, TX",Race,12,1.733675003
+2009-2014,23420,"Fresno, CA",Race,65,0.005578324
+2009-2014,24340,"Grand Rapids-Wyoming, MI",Race,42,0.705324888
+2009-2014,24660,"Greensboro-High Point, NC",Race,92,-2.124168396
+2009-2014,24860,"Greenville-Anderson-Mauldin, SC",Race,14,1.658369064
+2009-2014,25420,"Harrisburg-Carlisle, PA",Race,93,-2.759007454
+2009-2014,25540,"Hartford-West Hartford-East Hartford, CT",Race,34,0.902793229
+2009-2014,26420,"Houston-The Woodlands-Sugar Land, TX",Race,17,1.345048547
+2009-2014,26900,"Indianapolis-Carmel-Anderson, IN",Race,11,1.744756103
+2009-2014,27140,"Jackson, MS",Race,7,1.838566422
+2009-2014,27260,"Jacksonville, FL",Race,18,1.284525514
+2009-2014,28140,"Kansas City, MO-KS",Race,27,1.025048494
+2009-2014,28940,"Knoxville, TN",Race,89,-1.903789163
+2009-2014,29460,"Lakeland-Winter Haven, FL",Race,100,-8.471615791
+2009-2014,29820,"Las Vegas-Henderson-Paradise, NV",Race,2,2.224056482
+2009-2014,30780,"Little Rock-North Little Rock-Conway, AR",Race,43,0.690685749
+2009-2014,31080,"Los Angeles-Long Beach-Anaheim, CA",Race,56,0.248698547
+2009-2014,31140,"Louisville/Jefferson County, KY-IN",Race,28,1.013662696
+2009-2014,31540,"Madison, WI",Race,95,-3.312504768
+2009-2014,32580,"McAllen-Edinburg-Mission, TX",Race,9,1.802507281
+2009-2014,32820,"Memphis, TN-MS-AR",Race,15,1.58610177
+2009-2014,33100,"Miami-Fort Lauderdale-West Palm Beach, FL",Race,76,-0.622261226
+2009-2014,33340,"Milwaukee-Waukesha-West Allis, WI",Race,46,0.525958776
+2009-2014,33460,"Minneapolis-St. Paul-Bloomington, MN-WI",Race,30,0.990238428
+2009-2014,34980,"Nashville-Davidson-Murfreesboro-Franklin, TN",Race,41,0.725926399
+2009-2014,35300,"New Haven-Milford, CT",Race,59,0.125035718
+2009-2014,35380,"New Orleans-Metairie, LA",Race,57,0.161668748
+2009-2014,35620,"New York-Newark-Jersey City, NY-NJ-PA",Race,63,0.032210052
+2009-2014,35840,"North Port-Sarasota-Bradenton, FL",Race,8,1.828316331
+2009-2014,36260,"Ogden-Clearfield, UT",Race,67,-0.027469635
+2009-2014,36420,"Oklahoma City, OK",Race,35,0.895890415
+2009-2014,36540,"Omaha-Council Bluffs, NE-IA",Race,71,-0.299152851
+2009-2014,36740,"Orlando-Kissimmee-Sanford, FL",Race,47,0.505521417
+2009-2014,37100,"Oxnard-Thousand Oaks-Ventura, CA",Race,10,1.746661663
+2009-2014,37340,"Palm Bay-Melbourne-Titusville, FL",Race,19,1.249864101
+2009-2014,37980,"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",Race,36,0.79020524
+2009-2014,38060,"Phoenix-Mesa-Scottsdale, AZ",Race,53,0.361767262
+2009-2014,38300,"Pittsburgh, PA",Race,78,-0.701137125
+2009-2014,38900,"Portland-Vancouver-Hillsboro, OR-WA",Race,87,-1.483345747
+2009-2014,39300,"Providence-Warwick, RI-MA",Race,49,0.470932961
+2009-2014,39340,"Provo-Orem, UT",Race,61,0.064987659
+2009-2014,39580,"Raleigh, NC",Race,66,-0.017265633
+2009-2014,40060,"Richmond, VA",Race,72,-0.390927851
+2009-2014,40140,"Riverside-San Bernardino-Ontario, CA",Race,26,1.080169082
+2009-2014,40380,"Rochester, NY",Race,22,1.185278058
+2009-2014,40900,"Sacramento-Roseville-Arden-Arcade, CA",Race,37,0.747080505
+2009-2014,41180,"St. Louis, MO-IL",Race,64,0.01847142
+2009-2014,41620,"Salt Lake City, UT",Race,5,2.066749811
+2009-2014,41700,"San Antonio-New Braunfels, TX",Race,24,1.125401974
+2009-2014,41740,"San Diego-Carlsbad, CA",Race,40,0.729516685
+2009-2014,41860,"San Francisco-Oakland-Hayward, CA",Race,79,-0.720614791
+2009-2014,41940,"San Jose-Sunnyvale-Santa Clara, CA",Race,60,0.079829529
+2009-2014,42540,"Scranton-Wilkes-Barre-Hazleton, PA",Race,25,1.102910638
+2009-2014,42660,"Seattle-Tacoma-Bellevue, WA",Race,62,0.045804471
+2009-2014,44060,"Spokane-Spokane Valley, WA",Race,97,-4.757130146
+2009-2014,44140,"Springfield, MA",Race,83,-1.055786967
+2009-2014,44700,"Stockton-Lodi, CA",Race,38,0.745882094
+2009-2014,45060,"Syracuse, NY",Race,85,-1.179774046
+2009-2014,45300,"Tampa-St. Petersburg-Clearwater, FL",Race,55,0.27268818
+2009-2014,45780,"Toledo, OH",Race,23,1.161880732
+2009-2014,46060,"Tucson, AZ",Race,32,0.943518877
+2009-2014,46140,"Tulsa, OK",Race,20,1.243437171
+2009-2014,46520,"Urban Honolulu, HI",Race,33,0.927114248
+2009-2014,47260,"Virginia Beach-Norfolk-Newport News, VA-NC",Race,69,-0.253590018
+2009-2014,47900,"Washington-Arlington-Alexandria, DC-VA-MD-WV",Race,77,-0.670885324
+2009-2014,48620,"Wichita, KS",Race,31,0.982354045
+2009-2014,49180,"Winston-Salem, NC",Race,54,0.302547038
+2009-2014,49340,"Worcester, MA-CT",Race,88,-1.856077671
+2009-2014,49660,"Youngstown-Warren-Boardman, OH-PA",Race,90,-1.972836375
+2013-2014,10420,"Akron, OH",Race,85,-1.488441467
+2013-2014,10580,"Albany-Schenectady-Troy, NY",Race,26,1.274278641
+2013-2014,10740,"Albuquerque, NM",Race,46,0.597062349
+2013-2014,10900,"Allentown-Bethlehem-Easton, PA-NJ",Race,69,-0.592583179
+2013-2014,12060,"Atlanta-Sandy Springs-Roswell, GA",Race,14,1.767709613
+2013-2014,12260,"Augusta-Richmond County, GA-SC",Race,63,0.011188924
+2013-2014,12420,"Austin-Round Rock, TX",Race,51,0.411583602
+2013-2014,12540,"Bakersfield, CA",Race,11,2.013412952
+2013-2014,12580,"Baltimore-Columbia-Towson, MD",Race,87,-1.653230667
+2013-2014,12940,"Baton Rouge, LA",Race,52,0.399984062
+2013-2014,13820,"Birmingham-Hoover, AL",Race,75,-0.842278361
+2013-2014,14260,"Boise City, ID",Race,90,-2.199641705
+2013-2014,14460,"Boston-Cambridge-Newton, MA-NH",Race,78,-1.080900192
+2013-2014,14860,"Bridgeport-Stamford-Norwalk, CT",Race,83,-1.41738987
+2013-2014,15380,"Buffalo-Cheektowaga-Niagara Falls, NY",Race,57,0.272613525
+2013-2014,15980,"Cape Coral-Fort Myers, FL",Race,22,1.288739443
+2013-2014,16700,"Charleston-North Charleston, SC",Race,42,0.755239248
+2013-2014,16740,"Charlotte-Concord-Gastonia, NC-SC",Race,64,-0.056522243
+2013-2014,16860,"Chattanooga, TN-GA",Race,34,1.007803679
+2013-2014,16980,"Chicago-Naperville-Elgin, IL-IN-WI",Race,19,1.366834641
+2013-2014,17140,"Cincinnati, OH-KY-IN",Race,49,0.453300089
+2013-2014,17460,"Cleveland-Elyria, OH",Race,79,-1.093484282
+2013-2014,17820,"Colorado Springs, CO",Race,97,-5.501830101
+2013-2014,17900,"Columbia, SC",Race,35,1.003602505
+2013-2014,18140,"Columbus, OH",Race,93,-2.375953674
+2013-2014,19100,"Dallas-Fort Worth-Arlington, TX",Race,61,0.098203972
+2013-2014,19380,"Dayton, OH",Race,77,-0.971248627
+2013-2014,19660,"Deltona-Daytona Beach-Ormond Beach, FL",Race,100,-9.968899727
+2013-2014,19740,"Denver-Aurora-Lakewood, CO",Race,48,0.480418414
+2013-2014,19780,"Des Moines-West Des Moines, IA",Race,91,-2.216655731
+2013-2014,19820,"Detroit-Warren-Dearborn, MI",Race,60,0.141785234
+2013-2014,21340,"El Paso, TX",Race,99,-7.415773869
+2013-2014,23420,"Fresno, CA",Race,43,0.722060442
+2013-2014,24340,"Grand Rapids-Wyoming, MI",Race,82,-1.366410494
+2013-2014,24660,"Greensboro-High Point, NC",Race,73,-0.786234498
+2013-2014,24860,"Greenville-Anderson-Mauldin, SC",Race,84,-1.446214676
+2013-2014,25420,"Harrisburg-Carlisle, PA",Race,50,0.44494161
+2013-2014,25540,"Hartford-West Hartford-East Hartford, CT",Race,59,0.219607517
+2013-2014,26420,"Houston-The Woodlands-Sugar Land, TX",Race,16,1.58599329
+2013-2014,26900,"Indianapolis-Carmel-Anderson, IN",Race,15,1.753348112
+2013-2014,27140,"Jackson, MS",Race,3,3.184049606
+2013-2014,27260,"Jacksonville, FL",Race,45,0.688638806
+2013-2014,28140,"Kansas City, MO-KS",Race,38,0.947169662
+2013-2014,28940,"Knoxville, TN",Race,98,-6.012413025
+2013-2014,29460,"Lakeland-Winter Haven, FL",Race,55,0.296499968
+2013-2014,29820,"Las Vegas-Henderson-Paradise, NV",Race,13,1.916741848
+2013-2014,30780,"Little Rock-North Little Rock-Conway, AR",Race,6,2.36852026
+2013-2014,31080,"Los Angeles-Long Beach-Anaheim, CA",Race,39,0.890964389
+2013-2014,31140,"Louisville/Jefferson County, KY-IN",Race,20,1.362180233
+2013-2014,31540,"Madison, WI",Race,74,-0.828150809
+2013-2014,32580,"McAllen-Edinburg-Mission, TX",Race,28,1.255711317
+2013-2014,32820,"Memphis, TN-MS-AR",Race,17,1.455268264
+2013-2014,33100,"Miami-Fort Lauderdale-West Palm Beach, FL",Race,47,0.547174692
+2013-2014,33340,"Milwaukee-Waukesha-West Allis, WI",Race,58,0.226011634
+2013-2014,33460,"Minneapolis-St. Paul-Bloomington, MN-WI",Race,53,0.392328501
+2013-2014,34980,"Nashville-Davidson-Murfreesboro-Franklin, TN",Race,68,-0.551494956
+2013-2014,35300,"New Haven-Milford, CT",Race,72,-0.78320688
+2013-2014,35380,"New Orleans-Metairie, LA",Race,65,-0.280347228
+2013-2014,35620,"New York-Newark-Jersey City, NY-NJ-PA",Race,41,0.86107713
+2013-2014,35840,"North Port-Sarasota-Bradenton, FL",Race,81,-1.365661502
+2013-2014,36260,"Ogden-Clearfield, UT",Race,24,1.27717483
+2013-2014,36420,"Oklahoma City, OK",Race,56,0.287658691
+2013-2014,36540,"Omaha-Council Bluffs, NE-IA",Race,80,-1.10353899
+2013-2014,36740,"Orlando-Kissimmee-Sanford, FL",Race,29,1.229687691
+2013-2014,37100,"Oxnard-Thousand Oaks-Ventura, CA",Race,1,3.260114431
+2013-2014,37340,"Palm Bay-Melbourne-Titusville, FL",Race,86,-1.489508867
+2013-2014,37980,"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",Race,36,0.962306023
+2013-2014,38060,"Phoenix-Mesa-Scottsdale, AZ",Race,40,0.88984704
+2013-2014,38300,"Pittsburgh, PA",Race,88,-1.65854907
+2013-2014,38900,"Portland-Vancouver-Hillsboro, OR-WA",Race,30,1.206216574
+2013-2014,39300,"Providence-Warwick, RI-MA",Race,9,2.044192314
+2013-2014,39340,"Provo-Orem, UT",Race,92,-2.348525286
+2013-2014,39580,"Raleigh, NC",Race,37,0.960454941
+2013-2014,40060,"Richmond, VA",Race,67,-0.432783902
+2013-2014,40140,"Riverside-San Bernardino-Ontario, CA",Race,33,1.048537135
+2013-2014,40380,"Rochester, NY",Race,18,1.408153057
+2013-2014,40900,"Sacramento-Roseville-Arden-Arcade, CA",Race,62,0.02956605
+2013-2014,41180,"St. Louis, MO-IL",Race,21,1.306746364
+2013-2014,41620,"Salt Lake City, UT",Race,54,0.29684782
+2013-2014,41700,"San Antonio-New Braunfels, TX",Race,31,1.189239144
+2013-2014,41740,"San Diego-Carlsbad, CA",Race,70,-0.629513204
+2013-2014,41860,"San Francisco-Oakland-Hayward, CA",Race,27,1.257130384
+2013-2014,41940,"San Jose-Sunnyvale-Santa Clara, CA",Race,23,1.284986019
+2013-2014,42540,"Scranton-Wilkes-Barre-Hazleton, PA",Race,5,2.476742744
+2013-2014,42660,"Seattle-Tacoma-Bellevue, WA",Race,44,0.691517353
+2013-2014,44060,"Spokane-Spokane Valley, WA",Race,95,-3.337579727
+2013-2014,44140,"Springfield, MA",Race,7,2.208535194
+2013-2014,44700,"Stockton-Lodi, CA",Race,89,-1.684464693
+2013-2014,45060,"Syracuse, NY",Race,25,1.274560928
+2013-2014,45300,"Tampa-St. Petersburg-Clearwater, FL",Race,76,-0.921320677
+2013-2014,45780,"Toledo, OH",Race,10,2.014374495
+2013-2014,46060,"Tucson, AZ",Race,32,1.146714211
+2013-2014,46140,"Tulsa, OK",Race,8,2.162037134
+2013-2014,46520,"Urban Honolulu, HI",Race,2,3.240689039
+2013-2014,47260,"Virginia Beach-Norfolk-Newport News, VA-NC",Race,12,1.96762228
+2013-2014,47900,"Washington-Arlington-Alexandria, DC-VA-MD-WV",Race,66,-0.292785972
+2013-2014,48620,"Wichita, KS",Race,96,-5.157831669
+2013-2014,49180,"Winston-Salem, NC",Race,4,3.169417858
+2013-2014,49340,"Worcester, MA-CT",Race,71,-0.658685565
+2013-2014,49660,"Youngstown-Warren-Boardman, OH-PA",Race,94,-2.743062735

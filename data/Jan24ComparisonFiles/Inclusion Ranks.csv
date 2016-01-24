@@ -1,0 +1,301 @@
+Year,CBSA,CBSA Name,Composite,Rank,Score
+2000-2014,10420,"Akron, OH",Inclusion,90,-2.445293427
+2000-2014,10580,"Albany-Schenectady-Troy, NY",Inclusion,39,0.259873092
+2000-2014,10740,"Albuquerque, NM",Inclusion,44,0.111837745
+2000-2014,10900,"Allentown-Bethlehem-Easton, PA-NJ",Inclusion,60,-0.820677876
+2000-2014,12060,"Atlanta-Sandy Springs-Roswell, GA",Inclusion,99,-3.618186474
+2000-2014,12260,"Augusta-Richmond County, GA-SC",Inclusion,94,-2.906248093
+2000-2014,12420,"Austin-Round Rock, TX",Inclusion,25,1.39098382
+2000-2014,12540,"Bakersfield, CA",Inclusion,18,1.949599624
+2000-2014,12580,"Baltimore-Columbia-Towson, MD",Inclusion,29,1.057925701
+2000-2014,12940,"Baton Rouge, LA",Inclusion,3,5.127046585
+2000-2014,13820,"Birmingham-Hoover, AL",Inclusion,49,-0.293466032
+2000-2014,14260,"Boise City, ID",Inclusion,85,-2.083150148
+2000-2014,14460,"Boston-Cambridge-Newton, MA-NH",Inclusion,40,0.256127477
+2000-2014,14860,"Bridgeport-Stamford-Norwalk, CT",Inclusion,68,-1.072660089
+2000-2014,15380,"Buffalo-Cheektowaga-Niagara Falls, NY",Inclusion,19,1.925241232
+2000-2014,15980,"Cape Coral-Fort Myers, FL",Inclusion,84,-1.998449326
+2000-2014,16700,"Charleston-North Charleston, SC",Inclusion,8,2.765910864
+2000-2014,16740,"Charlotte-Concord-Gastonia, NC-SC",Inclusion,95,-2.912048101
+2000-2014,16860,"Chattanooga, TN-GA",Inclusion,97,-3.042014599
+2000-2014,16980,"Chicago-Naperville-Elgin, IL-IN-WI",Inclusion,43,0.116117001
+2000-2014,17140,"Cincinnati, OH-KY-IN",Inclusion,48,-0.142227009
+2000-2014,17460,"Cleveland-Elyria, OH",Inclusion,69,-1.174689293
+2000-2014,17820,"Colorado Springs, CO",Inclusion,88,-2.311148405
+2000-2014,17900,"Columbia, SC",Inclusion,92,-2.771696329
+2000-2014,18140,"Columbus, OH",Inclusion,52,-0.457690775
+2000-2014,19100,"Dallas-Fort Worth-Arlington, TX",Inclusion,51,-0.443725944
+2000-2014,19380,"Dayton, OH",Inclusion,81,-1.830111265
+2000-2014,19660,"Deltona-Daytona Beach-Ormond Beach, FL",Inclusion,76,-1.477627277
+2000-2014,19740,"Denver-Aurora-Lakewood, CO",Inclusion,34,0.593429685
+2000-2014,19780,"Des Moines-West Des Moines, IA",Inclusion,72,-1.33251667
+2000-2014,19820,"Detroit-Warren-Dearborn, MI",Inclusion,93,-2.832678318
+2000-2014,21340,"El Paso, TX",Inclusion,6,4.330794811
+2000-2014,23420,"Fresno, CA",Inclusion,16,2.109651089
+2000-2014,24340,"Grand Rapids-Wyoming, MI",Inclusion,80,-1.758677244
+2000-2014,24660,"Greensboro-High Point, NC",Inclusion,96,-2.989297867
+2000-2014,24860,"Greenville-Anderson-Mauldin, SC",Inclusion,91,-2.577834606
+2000-2014,25420,"Harrisburg-Carlisle, PA",Inclusion,37,0.458598614
+2000-2014,25540,"Hartford-West Hartford-East Hartford, CT",Inclusion,56,-0.590519786
+2000-2014,26420,"Houston-The Woodlands-Sugar Land, TX",Inclusion,7,3.165967941
+2000-2014,26900,"Indianapolis-Carmel-Anderson, IN",Inclusion,89,-2.372014046
+2000-2014,27140,"Jackson, MS",Inclusion,9,2.726920605
+2000-2014,27260,"Jacksonville, FL",Inclusion,98,-3.477842331
+2000-2014,28140,"Kansas City, MO-KS",Inclusion,86,-2.223608494
+2000-2014,28940,"Knoxville, TN",Inclusion,65,-0.981723785
+2000-2014,29460,"Lakeland-Winter Haven, FL",Inclusion,31,0.722525835
+2000-2014,29820,"Las Vegas-Henderson-Paradise, NV",Inclusion,78,-1.484152198
+2000-2014,30780,"Little Rock-North Little Rock-Conway, AR",Inclusion,53,-0.479098022
+2000-2014,31080,"Los Angeles-Long Beach-Anaheim, CA",Inclusion,10,2.639852524
+2000-2014,31140,"Louisville/Jefferson County, KY-IN",Inclusion,59,-0.705602825
+2000-2014,31540,"Madison, WI",Inclusion,46,0.090158165
+2000-2014,32580,"McAllen-Edinburg-Mission, TX",Inclusion,1,8.039588928
+2000-2014,32820,"Memphis, TN-MS-AR",Inclusion,79,-1.601203799
+2000-2014,33100,"Miami-Fort Lauderdale-West Palm Beach, FL",Inclusion,17,2.096646309
+2000-2014,33340,"Milwaukee-Waukesha-West Allis, WI",Inclusion,75,-1.415481091
+2000-2014,33460,"Minneapolis-St. Paul-Bloomington, MN-WI",Inclusion,66,-1.000498652
+2000-2014,34980,"Nashville-Davidson-Murfreesboro-Franklin, TN",Inclusion,54,-0.557155848
+2000-2014,35300,"New Haven-Milford, CT",Inclusion,71,-1.317518711
+2000-2014,35380,"New Orleans-Metairie, LA",Inclusion,4,4.886033058
+2000-2014,35620,"New York-Newark-Jersey City, NY-NJ-PA",Inclusion,20,1.789191127
+2000-2014,35840,"North Port-Sarasota-Bradenton, FL",Inclusion,45,0.09806098
+2000-2014,36260,"Ogden-Clearfield, UT",Inclusion,21,1.620225549
+2000-2014,36420,"Oklahoma City, OK",Inclusion,12,2.388233662
+2000-2014,36540,"Omaha-Council Bluffs, NE-IA",Inclusion,30,1.025561094
+2000-2014,36740,"Orlando-Kissimmee-Sanford, FL",Inclusion,87,-2.262439251
+2000-2014,37100,"Oxnard-Thousand Oaks-Ventura, CA",Inclusion,36,0.541419625
+2000-2014,37340,"Palm Bay-Melbourne-Titusville, FL",Inclusion,63,-0.922104299
+2000-2014,37980,"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",Inclusion,50,-0.377579421
+2000-2014,38060,"Phoenix-Mesa-Scottsdale, AZ",Inclusion,61,-0.836045146
+2000-2014,38300,"Pittsburgh, PA",Inclusion,13,2.302414894
+2000-2014,38900,"Portland-Vancouver-Hillsboro, OR-WA",Inclusion,64,-0.964006245
+2000-2014,39300,"Providence-Warwick, RI-MA",Inclusion,28,1.20527339
+2000-2014,39340,"Provo-Orem, UT",Inclusion,11,2.487277269
+2000-2014,39580,"Raleigh, NC",Inclusion,83,-1.992730379
+2000-2014,40060,"Richmond, VA",Inclusion,82,-1.857801318
+2000-2014,40140,"Riverside-San Bernardino-Ontario, CA",Inclusion,58,-0.6754089
+2000-2014,40380,"Rochester, NY",Inclusion,55,-0.575740337
+2000-2014,40900,"Sacramento-Roseville-Arden-Arcade, CA",Inclusion,77,-1.479735374
+2000-2014,41180,"St. Louis, MO-IL",Inclusion,62,-0.913668215
+2000-2014,41620,"Salt Lake City, UT",Inclusion,15,2.196789265
+2000-2014,41700,"San Antonio-New Braunfels, TX",Inclusion,23,1.590183496
+2000-2014,41740,"San Diego-Carlsbad, CA",Inclusion,32,0.68536675
+2000-2014,41860,"San Francisco-Oakland-Hayward, CA",Inclusion,33,0.64751631
+2000-2014,41940,"San Jose-Sunnyvale-Santa Clara, CA",Inclusion,26,1.233959794
+2000-2014,42540,"Scranton-Wilkes-Barre-Hazleton, PA",Inclusion,47,-0.010975599
+2000-2014,42660,"Seattle-Tacoma-Bellevue, WA",Inclusion,22,1.613144875
+2000-2014,44060,"Spokane-Spokane Valley, WA",Inclusion,41,0.229607344
+2000-2014,44140,"Springfield, MA",Inclusion,14,2.200620651
+2000-2014,44700,"Stockton-Lodi, CA",Inclusion,27,1.218570948
+2000-2014,45060,"Syracuse, NY",Inclusion,42,0.224278539
+2000-2014,45300,"Tampa-St. Petersburg-Clearwater, FL",Inclusion,38,0.387903988
+2000-2014,45780,"Toledo, OH",Inclusion,70,-1.21672678
+2000-2014,46060,"Tucson, AZ",Inclusion,67,-1.039943099
+2000-2014,46140,"Tulsa, OK",Inclusion,2,5.614157677
+2000-2014,46520,"Urban Honolulu, HI",Inclusion,5,4.697881699
+2000-2014,47260,"Virginia Beach-Norfolk-Newport News, VA-NC",Inclusion,24,1.494494438
+2000-2014,47900,"Washington-Arlington-Alexandria, DC-VA-MD-WV",Inclusion,35,0.573898077
+2000-2014,48620,"Wichita, KS",Inclusion,73,-1.371228576
+2000-2014,49180,"Winston-Salem, NC",Inclusion,100,-4.873267174
+2000-2014,49340,"Worcester, MA-CT",Inclusion,57,-0.62672627
+2000-2014,49660,"Youngstown-Warren-Boardman, OH-PA",Inclusion,74,-1.392200708
+2009-2014,10420,"Akron, OH",Inclusion,64,-0.812168956
+2009-2014,10580,"Albany-Schenectady-Troy, NY",Inclusion,33,0.789827228
+2009-2014,10740,"Albuquerque, NM",Inclusion,100,-4.762796402
+2009-2014,10900,"Allentown-Bethlehem-Easton, PA-NJ",Inclusion,70,-1.105301261
+2009-2014,12060,"Atlanta-Sandy Springs-Roswell, GA",Inclusion,63,-0.768622518
+2009-2014,12260,"Augusta-Richmond County, GA-SC",Inclusion,99,-4.430534363
+2009-2014,12420,"Austin-Round Rock, TX",Inclusion,60,-0.736938
+2009-2014,12540,"Bakersfield, CA",Inclusion,79,-1.491503835
+2009-2014,12580,"Baltimore-Columbia-Towson, MD",Inclusion,55,-0.408602327
+2009-2014,12940,"Baton Rouge, LA",Inclusion,13,2.194496155
+2009-2014,13820,"Birmingham-Hoover, AL",Inclusion,96,-3.332130194
+2009-2014,14260,"Boise City, ID",Inclusion,15,2.043860912
+2009-2014,14460,"Boston-Cambridge-Newton, MA-NH",Inclusion,36,0.590114236
+2009-2014,14860,"Bridgeport-Stamford-Norwalk, CT",Inclusion,32,0.793218434
+2009-2014,15380,"Buffalo-Cheektowaga-Niagara Falls, NY",Inclusion,29,0.853127778
+2009-2014,15980,"Cape Coral-Fort Myers, FL",Inclusion,62,-0.754462123
+2009-2014,16700,"Charleston-North Charleston, SC",Inclusion,6,3.419285536
+2009-2014,16740,"Charlotte-Concord-Gastonia, NC-SC",Inclusion,59,-0.600556195
+2009-2014,16860,"Chattanooga, TN-GA",Inclusion,81,-1.525284648
+2009-2014,16980,"Chicago-Naperville-Elgin, IL-IN-WI",Inclusion,21,1.510079861
+2009-2014,17140,"Cincinnati, OH-KY-IN",Inclusion,19,1.615382195
+2009-2014,17460,"Cleveland-Elyria, OH",Inclusion,16,1.979245901
+2009-2014,17820,"Colorado Springs, CO",Inclusion,93,-2.507523537
+2009-2014,17900,"Columbia, SC",Inclusion,98,-3.511119127
+2009-2014,18140,"Columbus, OH",Inclusion,41,0.363399506
+2009-2014,19100,"Dallas-Fort Worth-Arlington, TX",Inclusion,44,0.148813725
+2009-2014,19380,"Dayton, OH",Inclusion,14,2.185125589
+2009-2014,19660,"Deltona-Daytona Beach-Ormond Beach, FL",Inclusion,46,0.141907692
+2009-2014,19740,"Denver-Aurora-Lakewood, CO",Inclusion,7,3.297981262
+2009-2014,19780,"Des Moines-West Des Moines, IA",Inclusion,92,-2.150794029
+2009-2014,19820,"Detroit-Warren-Dearborn, MI",Inclusion,5,3.42610836
+2009-2014,21340,"El Paso, TX",Inclusion,58,-0.556411147
+2009-2014,23420,"Fresno, CA",Inclusion,77,-1.286721468
+2009-2014,24340,"Grand Rapids-Wyoming, MI",Inclusion,4,3.51154089
+2009-2014,24660,"Greensboro-High Point, NC",Inclusion,50,-0.215221226
+2009-2014,24860,"Greenville-Anderson-Mauldin, SC",Inclusion,12,2.688264847
+2009-2014,25420,"Harrisburg-Carlisle, PA",Inclusion,74,-1.257091522
+2009-2014,25540,"Hartford-West Hartford-East Hartford, CT",Inclusion,27,0.985900044
+2009-2014,26420,"Houston-The Woodlands-Sugar Land, TX",Inclusion,35,0.621080399
+2009-2014,26900,"Indianapolis-Carmel-Anderson, IN",Inclusion,65,-0.839865685
+2009-2014,27140,"Jackson, MS",Inclusion,8,3.232325554
+2009-2014,27260,"Jacksonville, FL",Inclusion,95,-3.027437687
+2009-2014,28140,"Kansas City, MO-KS",Inclusion,71,-1.105456114
+2009-2014,28940,"Knoxville, TN",Inclusion,69,-1.042351723
+2009-2014,29460,"Lakeland-Winter Haven, FL",Inclusion,54,-0.400115907
+2009-2014,29820,"Las Vegas-Henderson-Paradise, NV",Inclusion,97,-3.366387129
+2009-2014,30780,"Little Rock-North Little Rock-Conway, AR",Inclusion,88,-1.90974021
+2009-2014,31080,"Los Angeles-Long Beach-Anaheim, CA",Inclusion,75,-1.268054843
+2009-2014,31140,"Louisville/Jefferson County, KY-IN",Inclusion,45,0.14697355
+2009-2014,31540,"Madison, WI",Inclusion,39,0.448841929
+2009-2014,32580,"McAllen-Edinburg-Mission, TX",Inclusion,76,-1.269250393
+2009-2014,32820,"Memphis, TN-MS-AR",Inclusion,42,0.292604685
+2009-2014,33100,"Miami-Fort Lauderdale-West Palm Beach, FL",Inclusion,37,0.487143785
+2009-2014,33340,"Milwaukee-Waukesha-West Allis, WI",Inclusion,40,0.444102317
+2009-2014,33460,"Minneapolis-St. Paul-Bloomington, MN-WI",Inclusion,24,1.132287264
+2009-2014,34980,"Nashville-Davidson-Murfreesboro-Franklin, TN",Inclusion,73,-1.215065598
+2009-2014,35300,"New Haven-Milford, CT",Inclusion,82,-1.580774188
+2009-2014,35380,"New Orleans-Metairie, LA",Inclusion,28,0.922467053
+2009-2014,35620,"New York-Newark-Jersey City, NY-NJ-PA",Inclusion,52,-0.296938479
+2009-2014,35840,"North Port-Sarasota-Bradenton, FL",Inclusion,10,3.030615568
+2009-2014,36260,"Ogden-Clearfield, UT",Inclusion,17,1.740323901
+2009-2014,36420,"Oklahoma City, OK",Inclusion,18,1.661731958
+2009-2014,36540,"Omaha-Council Bluffs, NE-IA",Inclusion,47,0.130765378
+2009-2014,36740,"Orlando-Kissimmee-Sanford, FL",Inclusion,67,-0.963026941
+2009-2014,37100,"Oxnard-Thousand Oaks-Ventura, CA",Inclusion,61,-0.740815639
+2009-2014,37340,"Palm Bay-Melbourne-Titusville, FL",Inclusion,91,-2.116833925
+2009-2014,37980,"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",Inclusion,68,-1.025879979
+2009-2014,38060,"Phoenix-Mesa-Scottsdale, AZ",Inclusion,87,-1.905927062
+2009-2014,38300,"Pittsburgh, PA",Inclusion,25,1.083605647
+2009-2014,38900,"Portland-Vancouver-Hillsboro, OR-WA",Inclusion,34,0.665198386
+2009-2014,39300,"Providence-Warwick, RI-MA",Inclusion,48,-0.067356467
+2009-2014,39340,"Provo-Orem, UT",Inclusion,11,2.921988726
+2009-2014,39580,"Raleigh, NC",Inclusion,83,-1.65656662
+2009-2014,40060,"Richmond, VA",Inclusion,51,-0.275327981
+2009-2014,40140,"Riverside-San Bernardino-Ontario, CA",Inclusion,90,-2.02833724
+2009-2014,40380,"Rochester, NY",Inclusion,26,1.028819561
+2009-2014,40900,"Sacramento-Roseville-Arden-Arcade, CA",Inclusion,84,-1.769030809
+2009-2014,41180,"St. Louis, MO-IL",Inclusion,66,-0.876340032
+2009-2014,41620,"Salt Lake City, UT",Inclusion,23,1.158423424
+2009-2014,41700,"San Antonio-New Braunfels, TX",Inclusion,22,1.447186232
+2009-2014,41740,"San Diego-Carlsbad, CA",Inclusion,57,-0.517612815
+2009-2014,41860,"San Francisco-Oakland-Hayward, CA",Inclusion,49,-0.143667459
+2009-2014,41940,"San Jose-Sunnyvale-Santa Clara, CA",Inclusion,3,3.680760145
+2009-2014,42540,"Scranton-Wilkes-Barre-Hazleton, PA",Inclusion,38,0.469353855
+2009-2014,42660,"Seattle-Tacoma-Bellevue, WA",Inclusion,30,0.840996742
+2009-2014,44060,"Spokane-Spokane Valley, WA",Inclusion,89,-1.926141977
+2009-2014,44140,"Springfield, MA",Inclusion,2,5.382490158
+2009-2014,44700,"Stockton-Lodi, CA",Inclusion,80,-1.504323959
+2009-2014,45060,"Syracuse, NY",Inclusion,86,-1.886731863
+2009-2014,45300,"Tampa-St. Petersburg-Clearwater, FL",Inclusion,31,0.797867358
+2009-2014,45780,"Toledo, OH",Inclusion,9,3.148529291
+2009-2014,46060,"Tucson, AZ",Inclusion,56,-0.495411754
+2009-2014,46140,"Tulsa, OK",Inclusion,1,5.569465637
+2009-2014,46520,"Urban Honolulu, HI",Inclusion,53,-0.309051007
+2009-2014,47260,"Virginia Beach-Norfolk-Newport News, VA-NC",Inclusion,78,-1.358553886
+2009-2014,47900,"Washington-Arlington-Alexandria, DC-VA-MD-WV",Inclusion,72,-1.128131747
+2009-2014,48620,"Wichita, KS",Inclusion,94,-2.715867519
+2009-2014,49180,"Winston-Salem, NC",Inclusion,85,-1.77538383
+2009-2014,49340,"Worcester, MA-CT",Inclusion,43,0.16870828
+2009-2014,49660,"Youngstown-Warren-Boardman, OH-PA",Inclusion,20,1.529204488
+2013-2014,10420,"Akron, OH",Inclusion,98,-2.785870552
+2013-2014,10580,"Albany-Schenectady-Troy, NY",Inclusion,57,-0.515361428
+2013-2014,10740,"Albuquerque, NM",Inclusion,49,-0.134244323
+2013-2014,10900,"Allentown-Bethlehem-Easton, PA-NJ",Inclusion,8,2.314325333
+2013-2014,12060,"Atlanta-Sandy Springs-Roswell, GA",Inclusion,55,-0.400531888
+2013-2014,12260,"Augusta-Richmond County, GA-SC",Inclusion,78,-1.088901401
+2013-2014,12420,"Austin-Round Rock, TX",Inclusion,90,-1.858412027
+2013-2014,12540,"Bakersfield, CA",Inclusion,99,-2.978923798
+2013-2014,12580,"Baltimore-Columbia-Towson, MD",Inclusion,86,-1.520597219
+2013-2014,12940,"Baton Rouge, LA",Inclusion,5,2.700569153
+2013-2014,13820,"Birmingham-Hoover, AL",Inclusion,80,-1.36775136
+2013-2014,14260,"Boise City, ID",Inclusion,10,1.947613716
+2013-2014,14460,"Boston-Cambridge-Newton, MA-NH",Inclusion,64,-0.740512788
+2013-2014,14860,"Bridgeport-Stamford-Norwalk, CT",Inclusion,71,-0.853803754
+2013-2014,15380,"Buffalo-Cheektowaga-Niagara Falls, NY",Inclusion,38,0.431486666
+2013-2014,15980,"Cape Coral-Fort Myers, FL",Inclusion,37,0.543100953
+2013-2014,16700,"Charleston-North Charleston, SC",Inclusion,15,1.614731789
+2013-2014,16740,"Charlotte-Concord-Gastonia, NC-SC",Inclusion,65,-0.743805468
+2013-2014,16860,"Chattanooga, TN-GA",Inclusion,100,-3.179289103
+2013-2014,16980,"Chicago-Naperville-Elgin, IL-IN-WI",Inclusion,35,0.589236975
+2013-2014,17140,"Cincinnati, OH-KY-IN",Inclusion,42,0.219250381
+2013-2014,17460,"Cleveland-Elyria, OH",Inclusion,84,-1.461811304
+2013-2014,17820,"Colorado Springs, CO",Inclusion,79,-1.211957455
+2013-2014,17900,"Columbia, SC",Inclusion,60,-0.627280951
+2013-2014,18140,"Columbus, OH",Inclusion,59,-0.585352004
+2013-2014,19100,"Dallas-Fort Worth-Arlington, TX",Inclusion,73,-0.961574316
+2013-2014,19380,"Dayton, OH",Inclusion,17,1.526714683
+2013-2014,19660,"Deltona-Daytona Beach-Ormond Beach, FL",Inclusion,75,-0.988665938
+2013-2014,19740,"Denver-Aurora-Lakewood, CO",Inclusion,6,2.509511948
+2013-2014,19780,"Des Moines-West Des Moines, IA",Inclusion,96,-2.434994936
+2013-2014,19820,"Detroit-Warren-Dearborn, MI",Inclusion,39,0.430147648
+2013-2014,21340,"El Paso, TX",Inclusion,87,-1.528435946
+2013-2014,23420,"Fresno, CA",Inclusion,61,-0.682244897
+2013-2014,24340,"Grand Rapids-Wyoming, MI",Inclusion,26,0.91813767
+2013-2014,24660,"Greensboro-High Point, NC",Inclusion,33,0.664852619
+2013-2014,24860,"Greenville-Anderson-Mauldin, SC",Inclusion,7,2.483976364
+2013-2014,25420,"Harrisburg-Carlisle, PA",Inclusion,72,-0.935978353
+2013-2014,25540,"Hartford-West Hartford-East Hartford, CT",Inclusion,24,1.138464093
+2013-2014,26420,"Houston-The Woodlands-Sugar Land, TX",Inclusion,25,1.095375657
+2013-2014,26900,"Indianapolis-Carmel-Anderson, IN",Inclusion,45,0.110378891
+2013-2014,27140,"Jackson, MS",Inclusion,4,2.763664007
+2013-2014,27260,"Jacksonville, FL",Inclusion,91,-1.868419647
+2013-2014,28140,"Kansas City, MO-KS",Inclusion,82,-1.399526477
+2013-2014,28940,"Knoxville, TN",Inclusion,62,-0.719734907
+2013-2014,29460,"Lakeland-Winter Haven, FL",Inclusion,29,0.840704143
+2013-2014,29820,"Las Vegas-Henderson-Paradise, NV",Inclusion,23,1.193011761
+2013-2014,30780,"Little Rock-North Little Rock-Conway, AR",Inclusion,92,-1.96469903
+2013-2014,31080,"Los Angeles-Long Beach-Anaheim, CA",Inclusion,44,0.145037681
+2013-2014,31140,"Louisville/Jefferson County, KY-IN",Inclusion,83,-1.412447333
+2013-2014,31540,"Madison, WI",Inclusion,85,-1.468223214
+2013-2014,32580,"McAllen-Edinburg-Mission, TX",Inclusion,94,-2.204308033
+2013-2014,32820,"Memphis, TN-MS-AR",Inclusion,81,-1.371229649
+2013-2014,33100,"Miami-Fort Lauderdale-West Palm Beach, FL",Inclusion,21,1.243235946
+2013-2014,33340,"Milwaukee-Waukesha-West Allis, WI",Inclusion,67,-0.780463815
+2013-2014,33460,"Minneapolis-St. Paul-Bloomington, MN-WI",Inclusion,51,-0.174367756
+2013-2014,34980,"Nashville-Davidson-Murfreesboro-Franklin, TN",Inclusion,56,-0.425756544
+2013-2014,35300,"New Haven-Milford, CT",Inclusion,76,-1.064210176
+2013-2014,35380,"New Orleans-Metairie, LA",Inclusion,9,2.088681936
+2013-2014,35620,"New York-Newark-Jersey City, NY-NJ-PA",Inclusion,34,0.633732677
+2013-2014,35840,"North Port-Sarasota-Bradenton, FL",Inclusion,1,5.113667011
+2013-2014,36260,"Ogden-Clearfield, UT",Inclusion,3,3.315286636
+2013-2014,36420,"Oklahoma City, OK",Inclusion,88,-1.651455402
+2013-2014,36540,"Omaha-Council Bluffs, NE-IA",Inclusion,63,-0.732046366
+2013-2014,36740,"Orlando-Kissimmee-Sanford, FL",Inclusion,66,-0.748240948
+2013-2014,37100,"Oxnard-Thousand Oaks-Ventura, CA",Inclusion,95,-2.227648735
+2013-2014,37340,"Palm Bay-Melbourne-Titusville, FL",Inclusion,28,0.8863644
+2013-2014,37980,"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",Inclusion,43,0.193635628
+2013-2014,38060,"Phoenix-Mesa-Scottsdale, AZ",Inclusion,77,-1.077872157
+2013-2014,38300,"Pittsburgh, PA",Inclusion,19,1.437215805
+2013-2014,38900,"Portland-Vancouver-Hillsboro, OR-WA",Inclusion,32,0.749854088
+2013-2014,39300,"Providence-Warwick, RI-MA",Inclusion,22,1.204965472
+2013-2014,39340,"Provo-Orem, UT",Inclusion,2,3.950715065
+2013-2014,39580,"Raleigh, NC",Inclusion,69,-0.811121166
+2013-2014,40060,"Richmond, VA",Inclusion,36,0.570400834
+2013-2014,40140,"Riverside-San Bernardino-Ontario, CA",Inclusion,70,-0.845097423
+2013-2014,40380,"Rochester, NY",Inclusion,54,-0.320486546
+2013-2014,40900,"Sacramento-Roseville-Arden-Arcade, CA",Inclusion,52,-0.235214978
+2013-2014,41180,"St. Louis, MO-IL",Inclusion,97,-2.545442104
+2013-2014,41620,"Salt Lake City, UT",Inclusion,48,-0.133125886
+2013-2014,41700,"San Antonio-New Braunfels, TX",Inclusion,50,-0.153146818
+2013-2014,41740,"San Diego-Carlsbad, CA",Inclusion,31,0.790193319
+2013-2014,41860,"San Francisco-Oakland-Hayward, CA",Inclusion,41,0.357625008
+2013-2014,41940,"San Jose-Sunnyvale-Santa Clara, CA",Inclusion,11,1.842864871
+2013-2014,42540,"Scranton-Wilkes-Barre-Hazleton, PA",Inclusion,40,0.396682829
+2013-2014,42660,"Seattle-Tacoma-Bellevue, WA",Inclusion,47,-0.079078898
+2013-2014,44060,"Spokane-Spokane Valley, WA",Inclusion,27,0.886536121
+2013-2014,44140,"Springfield, MA",Inclusion,58,-0.536298275
+2013-2014,44700,"Stockton-Lodi, CA",Inclusion,13,1.79168725
+2013-2014,45060,"Syracuse, NY",Inclusion,18,1.512959957
+2013-2014,45300,"Tampa-St. Petersburg-Clearwater, FL",Inclusion,46,-0.062537611
+2013-2014,45780,"Toledo, OH",Inclusion,12,1.835560203
+2013-2014,46060,"Tucson, AZ",Inclusion,20,1.424118638
+2013-2014,46140,"Tulsa, OK",Inclusion,14,1.758297682
+2013-2014,46520,"Urban Honolulu, HI",Inclusion,16,1.601801276
+2013-2014,47260,"Virginia Beach-Norfolk-Newport News, VA-NC",Inclusion,53,-0.297491014
+2013-2014,47900,"Washington-Arlington-Alexandria, DC-VA-MD-WV",Inclusion,68,-0.780661106
+2013-2014,48620,"Wichita, KS",Inclusion,93,-2.176860571
+2013-2014,49180,"Winston-Salem, NC",Inclusion,89,-1.756762147
+2013-2014,49340,"Worcester, MA-CT",Inclusion,30,0.812120199
+2013-2014,49660,"Youngstown-Warren-Boardman, OH-PA",Inclusion,74,-0.968218923
