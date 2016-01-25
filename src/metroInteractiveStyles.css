@@ -116,7 +116,7 @@
   	border:1px solid #aaaaaa;
   	border-width:0px 0px 1px 0px;
 
-  	padding:0px 0px 20px 0px;
+  	padding:0px 0px 10px 0px;
   	z-index:10;
 
   	background: #ffffff;
@@ -174,7 +174,7 @@
 }
 
 .metro-interactive-loading-icon rect{shape-rendering:crispEdges;}
-.metro-interactive-loading-icon rect, .metro-interactive-loading-icon text{fill:#666666;}
+.metro-interactive-loading-icon text{fill:#666666;}
 
 .metro-interactive-view.view-is-loading .metro-interactive-loading-icon{display:block;}
 
@@ -269,6 +269,18 @@
 .metro-interactive-view .no-mobile-display{
 
 }
+
+.metro-interactive-wrap .bulleted-item{
+	position:relative;
+	margin:0px 15px 0px 45px;
+	padding:0px 5px 5px 5px;
+}
+.metro-interactive-wrap .bulleted-item::before{
+	position:absolute;
+	left:-12px;
+	content:"• ";
+}
+.metro-interactive-wrap .bulleted-item span{font-style:italic; text-decoration:underline;}
 
 .metro-interactive-view .column-right{float:right;}
 .metro-interactive-view .column-left{float:left;}
