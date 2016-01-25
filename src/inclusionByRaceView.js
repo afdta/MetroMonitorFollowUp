@@ -1,7 +1,7 @@
 //view 1 - "inclusion by race" view
 	(function(){
-		//var dataFile = "data/inclusionByRace.json";
-		var dataFile = "/~/media/multimedia/interactives/2016/MetroMonitorV2/data/inclusionByRace.json"
+		var dataFile = "data/inclusionByRace.json";
+		//var dataFile = "/~/media/multimedia/interactives/2016/MetroMonitor/data/inclusionByRace.json"
 
 		var colors = ['#053769', '#a4c7f2', '#cccccc', '#ffa626', '#ff5e1a'];
 
@@ -380,7 +380,6 @@
 			}
 			finally{
 				var chartWidth = width-100;
-				charts.group.attr("transform","translate(50,"+(0.75*charts.pad)+")");
 				charts.groups.select("rect.chart-back").attr("width",chartWidth);
 			}
 
@@ -596,26 +595,27 @@
 								.style({"margin":"0px 20px -5px 0px", "padding":"0px 0px 5px 10px", "border-bottom":"1px solid #aaaaaa", "font-weight":"bold"});
 
 
-			var mapWrap = mapAndCharts.append("div").style("overflow","visible").style({"padding":"0px 0px 0px 0px","position":"relative"});
+			var mapWrap = mapAndCharts.append("div").style("overflow","visible").style({"padding":"0px 0px 0px 0px","position":"relative","z-index":"5"});
 			//add another div and create the map within it
 			var map = new dotMap(mapWrap.append("div").node());
 			map.makeResponsive();
 
 
 			//CHARTS SETUP
-			var chartWrap = mapAndCharts.append("div").style("overflow","visible");
-			var chartHeight = 85;
+			var chartWrap = mapAndCharts.append("div").style({"overflow":"visible","z-index":"3","position":"relative"});
+			var chartHeight = 81;
 			var chartPad = 42;
 			var threeChartPad = 0;
 							
-			var chartTitleWrap = chartWrap.append("div").style({"position":"relative","z-index":"5"});
+			var chartTitleWrap = chartWrap.append("div");
 			var chartTitle = chartTitleWrap.append("p").classed("charts-title",true)
 				                    .html('Change in the components of inclusion by race/ethnicity')
 				                    .style({"margin":"0px 15px 5px 10px","font-weight":"bold"});
 			var chartMetroTitle = chartTitleWrap.append("p").style({"margin":"0px 15px 5px 10px", "line-height":"1em"}).text("Selected metro area");
 
 
-			var chartSVG = chartWrap.append("svg").style({"width":"100%","height":((chartHeight*3)+(chartPad*4)+35)+"px"}).append("g").attr("transform","translate(0,0)");
+			var chartSVG = chartWrap.append("svg").style({"width":"100%","height":((chartHeight*3)+(chartPad*2)+35+75)+"px"})
+									.append("g").attr("transform","translate(50,35)");
 			var chartG = chartSVG.selectAll("g").data([1,2,3]).enter().append("g")
 												.attr("transform",function(d,i){return "translate(0," + i*(chartHeight+chartPad) + ")"});
 			//add y-axes to each group
@@ -627,7 +627,7 @@
 			chartG.append("text").classed("chart-title",true).attr({x:"0",y:"-6"}).attr({"font-size":"13px"}).text("...")
 			
 			chartWrap.append("p").text("Notes: *Indicates a statistically significant change; p.p. = percentage points")
-								 .style({"font-size":"13px", "text-align":"right","margin":"-15px 40px 0px 0px"})
+								 .style({"font-size":"13px", "text-align":"right","margin":"-10px 40px 0px 0px"})
 
 			//store in view
 			this.store("mapData",{large:map, dataBound:false, title:mapTitle, wrap:mapWrap});
