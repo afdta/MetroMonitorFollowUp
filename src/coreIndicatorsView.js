@@ -806,7 +806,7 @@
 
 
 			var catMenu = mapAndCharts.append("div").classed("c-fix",true).style({"background-color":"#dddddd", "padding":"0px 15px", "height":"25px","border-bottom":"1px solid #aaaaaa"});
-			catMenu.append("p").style({"float":"left","right":"0px 15px 0px 0px","font-size":"13px","padding":"6px 8px 6px 0px", "line-height":"1em","font-weight":"bold"}).text("Select: ")
+			catMenu.append("p").style({"float":"left","font-size":"13px","padding":"6px 8px 6px 0px", "line-height":"1em","font-weight":"bold"}).text("Select: ")
 			var categoryButtons = catMenu.selectAll("div").data([{c:"gr", l:"Growth"}, {c:"pro", l:"Prosperity"}, {c:"inc", l:"Inclusion"}])
 										 .enter().append("div").classed("generic-button",true).classed("generic-button-selected",function(d,i){return i===0})
 										 .style({"float":"left","margin":"0px 4px 0px 0px","border":"none","height":"100%"});
