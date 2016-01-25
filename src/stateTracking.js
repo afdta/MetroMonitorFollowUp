@@ -268,6 +268,7 @@ function MetroInteractive(appWrapperElement){
 
 		function draw_view(){
 			viewLoading();
+
 			//redraw this view -- viewOps available as this (e.g. this.data, this.getMetro, etc...)
 			try{
 				redrawView.call(viewOps); //must be a synchronous fn
@@ -371,21 +372,20 @@ function MetroInteractive(appWrapperElement){
 			var newhash = viewCode + "G" + metroCode;
 			if(!!setHash){set_hash(newhash)}
 
-			//Reset then record change event
-			S.changeEventReset();
+			//Do not reset changeEvents here--only reset after changes have been actually drawn (in draw_view). While data is loading asynchronously, 
+			//a resize event could wipe out change view data if you reset here, making code in the redraw callback potentially unreliable. The approach 
+			//below is somewhat conservative, as it "layers" changes. That is, once a change has been recorded, it will not be reset until the view 
+			//is (re)drawn. This means if a user switches from geo A to B and then back to A, the view will still be drawn with the changeEvent.metro flag 
+			//turned on. This might be more expensive in terms of redraws but it is more predictable, and as a practical matter, this only should come 
+			//into play during the asynchronous phase of this code (data loading). Even then it is not likely to be an issue because S.view an S.metro 
+			//are initialized to null and so for the first draw, these changeEvent flags will always be set. Note that the resize flag is only set to 
+			//true when changeView is called from qcRedraw.
 
-			if(S.view != viewCode && S.metro != metroCode){
-				S.changeEvent.view = true;
-				S.changeEvent.metro = true;
-			}
-			else if(S.view != viewCode){
+			if(S.view != viewCode){
 				S.changeEvent.view = true;
 			}
-			else if(S.metro != metroCode){
+			if(S.metro != metroCode){
 				S.changeEvent.metro = true;
-			}
-			else{
-				S.changeEvent.resize = true;
 			}
 
 			//state must be updated before show is called because it relies on the current state -- if the user changes metro while the redraw method is called asynchronously, you want that callback to use the new metro. It might redraw twice, but it will do so with the right data.
@@ -407,7 +407,12 @@ function MetroInteractive(appWrapperElement){
 	//"qc" or "quick change" wrappers for changeView, when you just want to change metro or view and force a hash change
 	function qcMetro(metroCode){changeView(S.view, metroCode, true);}
 	function qcView(viewCode){changeView(viewCode, S.metro, true);}
-	function qcRedraw(){changeView(S.view, S.metro, false);} //redraw the current view -- for resize events -- doesn't reset hash
+	
+	//redraw the current view -- for resize events -- doesn't reset hash
+	function qcRedraw(){
+		S.changeEvent.resize = true;
+		changeView(S.view, S.metro, false);
+	}
 
 	//build_view_nav can only be called once everything has been registered -- i.e. in S.cap
 	viewMenuCtrl.build = function(){
