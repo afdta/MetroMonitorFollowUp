@@ -81,54 +81,55 @@ dotMap.prototype.textAccessor = function(fn){if(!!fn){this.getText = fn}}
 
 dotMap.prototype.title = function(text, style){this.mapTitle.html(text).style((!!style ? style : {}));}
 
-var setHighlight = function(geoCode, pin, color_override, radius_scalar){
- try{
-  //dots: an object holding the (permanent) pinned dot or the (temporary) hover dot and stateful parameters
-  var dots = pin ? this.dotHL.pin : this.dotHL.hover;
-  dots.geo = geoCode; //record selected geo, even if undefined
+dotMap.prototype.setHighlight = function(geoCode, pin, color_override, radius_scalar){
+   try{
+    //dots: an object holding the (permanent) pinned dot or the (temporary) hover dot and stateful parameters
+    var dots = pin ? this.dotHL.pin : this.dotHL.hover;
+    dots.geo = geoCode; //record selected geo, even if undefined
+      
+    if(!geoCode){
+      dots.match.attr({"cx":"-100","cy":"-100","r":"0","fill":"#ffffff","stroke-width":"0","stroke":"#ffffff"});
+      dots.loc.attr({"cx":"-100","cy":"-100","r":"0","fill":"#ffffff","stroke-width":"0","stroke":"#ffffff"});
+    }
+    else if(this.metros){
+      var metDot = this.metros.filter(function(d,i){
+        return d.geo==geoCode;
+      });
+      var X = metDot.attr("cx");
+      var Y = metDot.attr("cy");
+      var fill = metDot.attr("fill");
+      var r = parseInt(metDot.attr("r"));
+      var stroke = metDot.attr("stroke");
+      var strokeW = metDot.attr("stroke-width");
+
+      var locDA = pin ? "none" : "2,2";
+
+      var rScale = !!radius_scalar ? radius_scalar : dots.r;
+
+      var newStroke = !!color_override ? color_override : dots.stroke;
+      try{var newR = r*rScale;}
+      catch(e){var newR = r;}
+
+      dots.match.attr({"cx":X, "cy":Y, "fill":fill, "r":r, "stroke":stroke, "stroke-width":strokeW});
+      dots.loc.attr({"cx":X, "cy":Y, "fill":"none", "r":newR, "stroke":newStroke, "stroke-width":"2", "stroke-dasharray":locDA});
+
+      //record parameters for the "loc" dot
+      dots.r = rScale;
+      dots.stroke = newStroke;
+    }
+   }
+   catch(e){
     
-  if(!geoCode){
-    dots.match.attr({"cx":"-100","cy":"-100","r":"0","fill":"#ffffff","stroke-width":"0","stroke":"#ffffff"});
-    dots.loc.attr({"cx":"-100","cy":"-100","r":"0","fill":"#ffffff","stroke-width":"0","stroke":"#ffffff"});
-  }
-  else if(this.metros){
-    var metDot = this.metros.filter(function(d,i){
-      return d.geo==geoCode;
-    });
-    var X = metDot.attr("cx");
-    var Y = metDot.attr("cy");
-    var fill = metDot.attr("fill");
-    var r = parseInt(metDot.attr("r"));
-    var stroke = metDot.attr("stroke");
-    var strokeW = metDot.attr("stroke-width");
-
-    var locDA = pin ? "none" : "2,2";
-
-    var rScale = !!radius_scalar ? radius_scalar : dots.r;
-
-    var newStroke = !!color_override ? color_override : dots.stroke;
-    try{var newR = r*rScale;}
-    catch(e){var newR = r;}
-
-    dots.match.attr({"cx":X, "cy":Y, "fill":fill, "r":r, "stroke":stroke, "stroke-width":strokeW});
-    dots.loc.attr({"cx":X, "cy":Y, "fill":"none", "r":newR, "stroke":newStroke, "stroke-width":"2", "stroke-dasharray":locDA});
-
-    //record parameters for the "loc" dot
-    dots.r = rScale;
-    dots.stroke = newStroke;
-  }
- }
- catch(e){
-  console.log(e);
- }
+   }
 }
+
 //pin a hightlight dot
 dotMap.prototype.select = function(geoCode, stroke_override, radius_scalar){
-  setHighlight.call(this, geoCode, true, stroke_override, radius_scalar);
+  this.setHighlight(geoCode, true, stroke_override, radius_scalar);
 }
 //pin a hightlight dot
 dotMap.prototype.highlight = function(geoCode, stroke_override, radius_scalar){
-  setHighlight.call(this, geoCode, false, stroke_override, radius_scalar);
+  this.setHighlight(geoCode, false, stroke_override, radius_scalar);
 }
 //refresh the pin and hover dots based on the last metro pinned/hovered (often undefined which removes the dot)
 dotMap.prototype.refreshHighlights = function(){
@@ -252,7 +253,6 @@ dotMap.prototype.drawMap = function(callback){
     this.metros = metros;
   }
   catch(e){
-    console.log(e);
     this.metros = null;
   }
   this.states = states;
