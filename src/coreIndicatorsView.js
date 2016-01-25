@@ -695,7 +695,7 @@
 			//redraw
 			drawTable.call(this);
 			if(this.changeEvent.view || this.changeEvent.metro){drawMaps.call(this);} //map class handles changes due to resizing
-			drawCurves.call(self);
+			drawCurves.call(this);
 		}
 
 		var setupBase = function(){
