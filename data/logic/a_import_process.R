@@ -220,7 +220,7 @@ INCRACECH_WIDE <- merge(dcast(INCRACECH, CBSA~IND+Period, value.var="Value"), dc
 
 #detailed
 INCCHGd <- IncChgS[IncChgS$CBSA %in% metID$CBSA_Code, c("Year", "CBSA", "CBSA_Name", "Indicator", "Race", "Value", "SE", "Sig")]
-INCVALd <- IncVal[(IncVal$CBSA %in% metID$CBSA_Code) & (IncVal$Year %in% c(1999,2009,2014)) & (IncVal$Race %in% c("White", "People of Color")), ]
+INCVALd <- IncVal[(IncVal$CBSA %in% metID$CBSA_Code) & (IncVal$Year %in% c(1999,2009,2013,2014)) & (IncVal$Race %in% c("White", "People of Color")), ]
 INCCHGd$race <- ifelse(INCCHGd$Race=="People of Color", "NonWhite", INCCHGd$Race)
 INCVALd$race <- ifelse(INCVALd$Race=="People of Color", "NonWhite", INCVALd$Race)
 INCCHGd$IND <- ifelse(INCCHGd$Indicator=="Percentage Point Change in Employment-to-Population Ratio", "EmpRatio", ifelse(INCCHGd$Indicator=="Percent Change in Median Earnings", "MedEarn", "RelPov"))
