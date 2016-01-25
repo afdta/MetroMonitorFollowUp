@@ -278,6 +278,9 @@ function MetroInteractive(appWrapperElement){
 			}
 			
 			S.changeEventReset(); //reset the change event in case any code within a view relies on this
+
+			if(viewIndex != S.view){S.changeEvent.view = true} //it is possible that while data for one view is loading, the user switches view. In that case when this callback is executed, it may reset the global changeEvent object that is made available to the second (current) view. This could could cause unexpected results.
+
 			viewOps.firstDraw = false; //it's been drawn
 
 			viewLoaded();
