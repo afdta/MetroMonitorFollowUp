@@ -366,7 +366,7 @@
 			var self = this;
 			var data = this.viewData().changeDetail[metro][0];
 
-			charts.title.html('Change in the components of inclusion by race/ethnicity, ' + periods[period]);
+			charts.title.html('Change in the components of inclusion by race, ' + periods[period]);
 			charts.metro.text(metroName);
 
 			//set chart dimensions
