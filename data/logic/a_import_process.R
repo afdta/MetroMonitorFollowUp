@@ -1,8 +1,3 @@
-#Notes about data:Inflation adjustment? Not necessary for index, but useful for display
-#inclusion change missing ranks (though not necessary, right?)
-#index values are 0 in 2000
-#are percentage points used
-
 library("reshape2")
 library("metromonitor")
 library("jsonlite")
@@ -45,9 +40,6 @@ ProVal <- read.csv("Prosperity Values.csv", stringsAsFactors=FALSE, na.strings=n
 ProIdx <- read.csv("Prosperity Index.csv", stringsAsFactors=FALSE, na.strings=nastr)
 AllIdx <- read.csv("All Indicators Indexed.csv", stringsAsFactors=FALSE, na.strings=nastr)
 
-#FIX bad 2000 values
-GrVal[GrVal$year==2000,"value"] <- 100
-ProIdx[ProIdx$year==2000,"value"] <- 100
 #For decennial census 2000 is actually 1999
 IncVal[IncVal$Year==2000, "Year"] <- 1999
 
