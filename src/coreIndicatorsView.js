@@ -3,8 +3,8 @@
 	(function(){
 		var colors = ['#053769', '#a4c7f2', '#cccccc', '#ffa626', '#ff5e1a'];
 		
-		//var dataFile = "data/coreIndicators.json";
-		var dataFile = "/~/media/multimedia/interactives/2016/MetroMonitorV2/data/coreIndicators.json"
+		var dataFile = "data/coreIndicators.json";
+		//var dataFile = "/~/media/multimedia/interactives/2016/MetroMonitor/data/coreIndicators.json"
 
 		var periods = {"Five":"2009 to 2014", "One":"2013 to 2014", "Ten":"2004 to 2014"};
 
@@ -34,7 +34,7 @@
 			}
 			else if(category==="inc"){
 				var indicators = [{c:"EmpRatio", l:"Employment-to-population ratio", b:"inc", ls:"Emp. / pop.", i:0}, 
-								  {c:"MedEarn", l:"Median wage", b:"inc", ls:"Med. earn.", i:1}, 
+								  {c:"MedEarn", l:"Median wage", b:"inc", ls:"Med. wage", i:1}, 
 								  {c:"RelPov", l:"Relative poverty", b:"inc", ls:"Rel. poverty", i:2}];
 			}
 			else{
@@ -52,10 +52,6 @@
 			return d;
 		}
 
-		
-		//hold svg groups -- will be defined in setupBase
-
-		var columns = [{}, {}];
 
 		function drawDetailedTable(metro, period, g, formats){
 			var grI = getInd("gr");
@@ -97,7 +93,6 @@
 				return [{v:d.value, r:d.rank}];
 			});
 			var cell_vals_enter = cell_vals.enter().append("div").classed("value-actual c-fix",true);
-				//cell_vals_enter.append("div").style({"display":"inline-block","height":"6px","width":"6px","border-radius":"3px","margin":"4px 5px 3px 0px"});
 				cell_vals_enter.append("p");
 			cell_vals.exit().remove();
 			cell_vals.select("p").html(function(d,i){
@@ -395,7 +390,8 @@
 			var self = this;
 
 			charts.title.html("Trends in the components of " + catlong.toLowerCase());
-			charts.legend.select("p").text(function(d,i){return i===0 ? metroName : "United States"})
+			charts.legend.select("p").text(function(d,i){return i===0 ? metroName : "United States"});
+			charts.note.style("display",category==="inc" ? "block" : "none");
 
 			var getFormat = function(ind, decimals){
 				var dec = !!decimals && decimals < 2 && decimals >= 0 ? decimals : 0;
@@ -426,7 +422,6 @@
 			}
 			finally{
 				var chartWidth = width-95;
-				charts.group.attr("transform","translate(50,35)");
 				charts.groups.select("rect.chart-back").attr("width",chartWidth);
 			}
 
@@ -480,10 +475,10 @@
 			//set newly bound data to trend line - no need to enter/exit above always 3
 			charts.groups.select("path.metro-trend-line").attr("d",function(d,i){
 				return d.metpath;
-			}).style({"fill":"none","stroke-width":"2px"});
+			}).attr({"fill":"none","stroke-width":"2px"});
 			charts.groups.select("path.us-trend-line").attr("d",function(d,i){
 				return d.uspath;
-			}).style({"fill":"none","stroke-width":"2px"});
+			}).attr({"fill":"none","stroke-width":"2px"});
 
 
 
@@ -526,32 +521,81 @@
 					var x = scaleX(d);
 					var obs = data.filter(function(o,i,a){
 						return o.year==d; 
-					})
+					});
+					var usobs = usdata.filter(function(o,i,a){
+						return o.year==d;
+					});
 
-					//binds the chart accessors to the dot group and shows dot
-					dotGroup = charts.groups.select("g.chart-hover-dot-group");
-					dotGroup.attr("transform",function(d,i){
-								 	var y = d.y(obs[0]);
-								 	return "translate("+x+","+y+")";
-								 })
-								 .style("visibility","visible")
-								 .select("text").text(function(d,i){
-								 	var val = d.val(obs[0]);
-								 	try{
-								 		var box = this.getBoundingClientRect();
-								 		var w = Math.round(box.right-box.left)+6;
-								 		d3.select(this.parentNode).select("rect").attr("width",w).attr("fill","#ffffff");
-								 	}
-								 	catch(e){
+					//each chart group (3 total) has 1 hover dot group -- we need to bind the accessors with the dot data.
+					dotGroup = charts.groups.selectAll("g.chart-hover-dot-group").data(function(d,i){
+						return [{acc:d, dat:[usobs[0],obs[0]], col:["#aaaaaa","#00649f"] }];
+					});
+					dotGroup.enter().append("g").classed("chart-hover-dot-group",true);
+					dotGroup.exit().remove();
 
-								 	}
+					dotGroup.attr("transform","translate("+x+",0)").style("visibility","visible");
 
-								 	return d.fmt(val);
-								 })
+					var backs = dotGroup.selectAll("rect").data(function(d,i){return [d,d]});
+						backs.enter().append("rect");
+						backs.exit().remove();
+						backs.attr({"x":0,"fill":"#ffffff","opacity":0.75});
+
+					var dots = dotGroup.selectAll("circle").data(function(d,i){return [d,d]});
+						dots.enter().append("circle");
+						dots.exit().remove();
+						dots.attr({"cx":"0","r":"3"})
+							.attr("cy",function(d, i){
+								return d.acc.y(d.dat[i]);
+							})
+							.attr("fill",function(d,i){
+								return d.col[i];
+							})
+
+					var labels = dotGroup.selectAll("text").data(function(d,i){return [d,d]});
+						labels.enter().append("text");
+						labels.exit().remove();
+						labels.attr({"x":0})
+							  .text(function(d,i){
+							  	var other = i==0 ? 1 : 0; //index of the other label
+							  	var val = d.acc.val(d.dat[i]);
+							  	var otherval = d.acc.val(d.dat[other]);
+							  	return i==0 && val==otherval ? "" : d.acc.fmt(val);
+							  })
+							  .attr({"font-size":"11px", "dy":0, "dx":2, "text-anchor":"start"})
+							  .attr("y",function(d,i){
+							  	var other = i==0 ? 1 : 0; //index of the other label
+							  	var val = d.acc.val(d.dat[i]);
+							  	var otherval = d.acc.val(d.dat[other]);
+							  	var y = d.acc.yscale(val);
+							  	if(val >= otherval){var yp = y-7}
+							  	else{var yp = y+14}
+							  	return yp;
+							  })
+							  .attr("fill",function(d,i){
+							  	return i==0 ? "#666666" : d.col[i];
+							  })
+							  .style("fill",function(d,i){
+							  	return i==0 ? "#666666" : d.col[i];
+							  });
+
+					backs.each(function(d,i){
+						try{
+							var text = d3.select(this.parentNode).selectAll("text").filter(function(d,j){return i==j});
+							var box = text.node().getBoundingClientRect();
+							var w = box.right - box.left;;
+							var y = text.attr("y");
+							d3.select(this).attr({"width":box.right-box.left+6, "height":box.bottom-box.top+4, "x":-1, "y":y-13, "rx":5, "ry":5});
+						}
+						catch(e){
+							console.log(e);
+							d3.select(this).style("width","0");
+						}
+
+					});
 								 
 				}
 				catch(e){
-					charts.groups.select("g.chart-hover-dot-group").style("visibility","hidden").select("text").text("");
+					charts.groups.select("g.chart-hover-dot-group").style("visibility","hidden").selectAll("text").remove();
 				}
 			})
 			verticalBlinds.on("mouseleave",function(d,i){
@@ -658,28 +702,43 @@
 			var self = this;
 			this.header.append("p").text("Growth, prosperity, and inclusion in the 100 largest U.S. metro areas");
 			
-			//var tableWrap = this.container.append("div").style({"padding":"5px 0px 5px 0px", "border":"1px solid #dddddd", "border-width":"1px 0px 1px 0px"}).classed("two-fifths",true).append("div").style("max-height","600px");
 			var headerWrap = this.container.append("div").classed("c-fix",true).style({"padding":"15px"});
 			var header0 = headerWrap.append("div");;
-			var openFlexBox = header0.append("p").html('<span style="font-style:italic">Explore the data below to find out which large metro areas have performed best on indicators of growth, prosperity, and inclusion over time.</span>')
-							   .style({"margin":"0px", "margin-right":"10%"}).append("span").text(" Define the indicators»")
+			var openFlexBox = header0.append("p").html('The Metro Monitor measures the performance of the nation\'s major metropolitan economies in three critical areas for economic development: growth, prosperity, and inclusion. Successful economic development should put a metropolitan economy on a higher trajectory of long-run growth (<span style="font-style:italic">growth</span>) by improving the productivity of individuals and firms in order to raise local standards of living (<span style="font-style:italic">prosperity</span>) for all people (<span style="font-style:italic">inclusion</span>). The Metro Monitor examines indicators within each of these categories that help assess metropolitan areas\' progress toward shaping an advanced economy that works for all.')
+							   .style({"margin":"0px", "margin-right":"0"}).append("span").text(" Define the indicators»")
 							   .style({"font-weight":"bold","cursor":"pointer", "font-style":"italic"});
 
 
 			//add a definitions box
 			var flexBoxOuter = this.container.append("div").style({"height":"0px","overflow":"hidden","position":"relative"});
 			//var flexBoxClose = flexBoxOuter.append("p").style({"position":"absolute","top":"5px","right":"5px","padding":"5px","cursor":"pointer"}).text("X")
-			var flexBox = flexBoxOuter.append("div");
+			var flexBox = flexBoxOuter.append("div").style({"padding":"15px 15px", "margin":"0px 15px", "border":"1px solid #dddddd", "background-color":"#fbfbfb"});
 			var flexBoxOpen = false;
-			flexBox.append("p").style({"padding":"0px 15px 25px 15px", "margin":"0px 30px"}).html('<b>Growth</b> indicators capture net change in the total size of a metropolitan area’s economy. As a metropolitan economy grows, it creates new opportunities for individuals and can become more efficient as it grows larger. The Metro Monitor measures growth in gross product (GMP), number of jobs, and aggregate wages paid to workers.');
-			flexBox.append("p").style({"padding":"0px 15px 25px 15px", "margin":"0px 30px"}).html('<b>Prosperity</b> refers to the wealth and income produced by an economy on a per-capita or per-worker basis. When a metropolitan area grows by increasing the productivity of its workers, the value of those workers’ labor rises. As the value of labor rises, so can workers’ wages. In this way, prosperity indicators capture the quality of a metropolitan area’s economic growth from the standpoint of its workers and residents.');
-			flexBox.append("p").style({"padding":"0px 15px 25px 15px", "margin":"0px 30px"}).html('<b>Inclusion</b> indicators measure how the benefits of growth and prosperity in a metropolitan economy—specifically, employment and income—are distributed among people. Inclusive growth enables more people to invest in their skills and to purchase more goods and services.');
+			flexBox.append("p").style({"padding":"0px 15px 5px 5px"}).html('<b>Growth</b> indicators capture change in the total size of a metropolitan area’s economy. As a metropolitan economy grows, it creates new opportunities for individuals and can become more efficient as it grows larger. Growth indicators capture change in:');
+			flexBox.append("p").classed("bulleted-item",true).html('<span>Jobs</span>: Total full- and part-time jobs. Source: Moody\'s Analytics');
+			flexBox.append("p").classed("bulleted-item",true).html('<span>Gross metropolitan product (GMP)</span>: Total value of goods and services produced in a metropolitan economy.  Source: Moody\'s Analytics');
+			flexBox.append("p").classed("bulleted-item",true).style({"padding-bottom":"25px"}).html('<span>Aggregate wages</span>: Total value of wages, salaries, and benefits paid to all workers.  Source: Moody\'s Analytics');
+
+			flexBox.append("p").style({"padding":"0px 15px 5px 5px"}).html('<b>Prosperity</b> refers to the wealth and income produced by an economy on a per-capita or per-worker basis. When a metropolitan area grows by increasing the productivity of its workers, the value of those workers’ labor rises. As the value of labor rises, so can workers’ wages. In this way, prosperity indicators capture the quality of a metropolitan area’s economic growth from the standpoint of its workers and residents. Prosperity indicators capture change in:');
+			flexBox.append("p").classed("bulleted-item",true).html('<span>GMP per job</span>: A measure of productivity equal to GMP divided by total jobs. Source: Moody\'s Analytics');
+			flexBox.append("p").classed("bulleted-item",true).html('<span>Average annual wage</span>: Aggregate wages divided by total jobs. Source: Moody\'s Analytics');
+			flexBox.append("p").classed("bulleted-item",true).style({"padding-bottom":"25px"}).html('<span>GMP per capita</span>: A measure of living standards equal to GMP divided by total population. Source: Moody\'s Analytics and the U.S. Census Bureau');			
+
+			flexBox.append("p").style({"padding":"0px 15px 5px 5px"}).html('<b>Inclusion</b> indicators measure how the benefits of growth and prosperity in a metropolitan economy are distributed among people. Inclusive growth enables more people to invest in their skills and to purchase more goods and services. Inclusion indicators capture change in:');
+			flexBox.append("p").classed("bulleted-item",true).html('<span>Median wage</span>: The annual wage earned by the person in the very middle of a metropolitan area\'s income distribution. Source: U.S. Census Bureau');
+			flexBox.append("p").classed("bulleted-item",true).html('<span>Relative income poverty rate</span>: The share of people in a metropolitan economy who earn less than half of the local median wage. Source: U.S. Census Bureau');
+			flexBox.append("p").classed("bulleted-item",true).style({"padding-bottom":"25px"}).html('<span>Employment-to-population ratio</span>: The share of all individuals aged 18 to 65 who are employed. Source: U.S. Census Bureau' );
+
+			flexBox.append("p").style({"padding":"0px 15px 5px 5px", "margin":"0px"}).html('All changes are calculated as the percent change from start year to end year. Calculations involving dollar amounts are inflation-adusted. Rankings for each category are based on a composite score of the changes in the three indicators within each category.')
 
 			openFlexBox.on("mousedown",function(d,i){
 				flexBoxOpen = !flexBoxOpen;
 				d3.select(this).text(flexBoxOpen ? " Hide the indicator definitions." : " Define the indicators»");
 				if(!flexBoxOpen){
-					flexBoxOuter.interrupt().transition().duration(600).style("height","0px");
+					flexBoxOuter.interrupt().transition().duration(600).style({"height":"0px","margin-bottom":"0px"})
+						.each("end",function(d,i){
+							self.refreshHeight();
+						});
 				}else{
 					try{
 						var box = flexBox.node().getBoundingClientRect();
@@ -688,7 +747,11 @@
 					catch(e){
 						var height = "auto";
 					}
-					flexBoxOuter.transition().duration(600).style("height",height).each("end",function(d,i){return flexBoxOuter.style("height","auto")});
+					flexBoxOuter.transition().duration(600).style({"height":height,"margin-bottom":"15px"})
+						.each("end",function(d,i){
+							flexBoxOuter.style("height","auto");
+							self.refreshHeight();
+						});
 				}
 			});
 
@@ -743,26 +806,26 @@
 
 
 			var catMenu = mapAndCharts.append("div").classed("c-fix",true).style({"background-color":"#dddddd", "padding":"0px 15px", "height":"25px","border-bottom":"1px solid #aaaaaa"});
-			catMenu.append("p").style({"float":"left","right":"0px 15px 0px 0px","font-size":"13px","padding":"6px 8px 6px 0px", "line-height":"1em"}).text("Select: ")
+			catMenu.append("p").style({"float":"left","right":"0px 15px 0px 0px","font-size":"13px","padding":"6px 8px 6px 0px", "line-height":"1em","font-weight":"bold"}).text("Select: ")
 			var categoryButtons = catMenu.selectAll("div").data([{c:"gr", l:"Growth"}, {c:"pro", l:"Prosperity"}, {c:"inc", l:"Inclusion"}])
 										 .enter().append("div").classed("generic-button",true).classed("generic-button-selected",function(d,i){return i===0})
 										 .style({"float":"left","margin":"0px 4px 0px 0px","border":"none","height":"100%"});
 				categoryButtons.append("p").text(function(d,i){return d.l}).style("padding","6px 8px");
 
 
-			var mapWrap = mapAndCharts.append("div").style("overflow","visible").style({"padding":"0px 0px 0px 0px","position":"relative"});
+			var mapWrap = mapAndCharts.append("div").style("overflow","visible").style({"padding":"0px 0px 0px 0px","position":"relative","z-index":"5"});
 			//add another div and create the map within it
 			var map = new dotMap(mapWrap.append("div").node());
 			map.makeResponsive();
 
 
-			//CHARTSS SETUP
-			var chartWrap = mapAndCharts.append("div").style("overflow","visible");
+			//CHARTS SETUP
+			var chartWrap = mapAndCharts.append("div").style({"overflow":"visible","position":"relative","z-index":"3"});
 			var chartHeight = 85;
 			var chartPad = 45;
 			var threeChartPad = 0;
 							
-			var chartTitleWrap = chartWrap.append("div").style({"position":"relative","z-index":"5"});
+			var chartTitleWrap = chartWrap.append("div");
 			var chartTitle = chartTitleWrap.append("p").classed("charts-title",true)
 				                    .html('Change in the selected metro area over time')
 				                    .style({"margin":"0px 15px 5px 10px","font-weight":"bold"});
@@ -774,15 +837,14 @@
 			chartLegend.append("p").text(function(d,i){return d}).style({"line-height":"1em","margin":"0px","float":"left"});
 
 
-			var chartSVG = chartWrap.append("svg").style({"width":"100%","height":((chartHeight*3)+(chartPad*4)+35)+"px"}).append("g").attr("transform","translate(0,0)");
+			var chartSVG = chartWrap.append("svg").style({"width":"100%","height":((chartHeight*3)+(chartPad*2)+35+65)+"px"})
+									.append("g").attr("transform","translate(50,35)");
 			var chartG = chartSVG.selectAll("g").data([1,2,3]).enter().append("g")
 												.attr("transform",function(d,i){return "translate(0," + i*(chartHeight+chartPad) + ")"});
 			//add y-axes to each group
 			chartG.append("g").classed("d3-axis-group",true).attr("transform","translate(0,0)");
 
 			var xaxis = chartSVG.append("g").attr("transform","translate(0,"+((3*chartHeight)+(2*chartPad)+10)+")").classed("d3-axis-group",true);
-				//xaxis.append("line").attr({"x1":"0%","x2":"100%","y1":"1","y2":"1","stroke":"#aaaaaa", "stroke-width":"1px"})
-				//					.style("shape-rendering","crispEdges");
 
 			chartG.append("rect").attr({"width":"100%","height":chartHeight+"px","fill":"#fbfbfb", "stroke":"#dddddd"})
 				  .classed("chart-back",true).style("shape-rendering","crispEdges");
@@ -791,12 +853,13 @@
 			chartG.append("path").classed("metro-trend-line",true).attr({"d":"M0,0", "stroke":"rgb(9, 95, 181)"});
 			chartG.append("text").classed("chart-title",true).attr({x:"0",y:"-6"}).attr({"font-size":"13px"}).text("...")
 			var chartHoverDot = chartG.append("g").style("visibility","hidden").classed("chart-hover-dot-group",true);
-			//chartHoverDot.append("line").attr({"x1":0, "x2":0, "y1":0, "y2":chartHeight, stroke:"#dddddd"});
-			chartHoverDot.append("rect").attr({"width":"50px", "height":"13px", fill:"#ffffff", opacity:0.8, x:"0", y:"-17",stroke:"none"})
-			chartHoverDot.append("circle").attr({"cx":0, "cy":0, "r":3, "fill":"rgb(9, 95, 181)"});
-			chartHoverDot.append("text").attr({"x":0, "y":0, "font-size":"11px", "dy":-5, "dx":3, "text-anchor":"start"});
+			var hoverPanels = chartSVG.append("g"); //hold verticalBlinds
 
-			var hoverPanels = chartSVG.append("g");
+			var chartNote = chartWrap.append("p").text("Data unavailable for 2000–05; values are interpolated for these years.")
+								 				.style({"font-size":"13px","margin":"-10px 10px 0px 45px"})
+
+
+
 			//store in view
 			this.store("mapData",{large:map, dataBound:false});
 
@@ -807,7 +870,7 @@
 			this.store("tableSortButtons", tableSortButtons);
 
 			this.store("mapWrap", mapWrap);
-			this.store("charts", {wrap:chartWrap, height:chartHeight, pad:chartPad, group:chartSVG, groups: chartG, title: chartTitle, legend:chartLegend, xaxis:xaxis, hover:hoverPanels});
+			this.store("charts", {wrap:chartWrap, height:chartHeight, pad:chartPad, group:chartSVG, groups: chartG, title: chartTitle, legend:chartLegend, xaxis:xaxis, hover:hoverPanels, note:chartNote});
 
 			//period and category
 			this.store("period","Five");
