@@ -134,12 +134,9 @@ function MetroInteractive(appWrapperElement){
 
 	//view listeners need to:
 	// draw a view for a selected metro
-	// each listener should take 
 	// view listeners will 1) change views and draw selected metro version. if the view is already shown, it just draws the selected metro version of the view.
 	var viewRegister = {};
 	var viewList = [];
-
-	//view listener that will be called when the view is changed
 
 	//setupView will be run one time -- its code must be synchronous -- it has access to the slide wrap and slide header area through the this object.
 	//redrawView will be run each time changeView is called -- its code must be synchronous -- it has access to the viewOps object as the this object
@@ -154,7 +151,7 @@ function MetroInteractive(appWrapperElement){
 		//create a "view slide" in the DOM
 		var outer_slide = S.viewWrap.append("div").classed("metro-interactive-view-wrap",true);
 		var slide = outer_slide.append("div").classed("metro-interactive-view c-fix out-of-view",true).datum(viewNum);
-			slide.append("div").classed("metro-interactive-view-marker",true); //.append("p").text(viewNum);
+			slide.append("div").classed("metro-interactive-view-marker",true);
 		var slideHeader = slide.append("div").classed("metro-interactive-view-header",true);
 
 		S.allSlides = S.viewWrap.selectAll(".metro-interactive-view"); //update selection of slides
@@ -168,6 +165,7 @@ function MetroInteractive(appWrapperElement){
 		viewOps.firstDraw = true; //useful for determining if particular information should be shown on first view
 		viewOps.getMetro = function(){return S.metro;}
 		viewOps.setMetro = function(code){S.setMetro(code);}
+		viewOps.refreshHeight = refresh_view_wrap_height;
 		viewOps.dataState = 0; // 0: empty, 1: loading, 2: ready, -1: error
 		viewOps.dataStore = {raw:null, processed:null, storage:{}}; //placeholder for the view data
 		viewOps.container = slide;
@@ -249,6 +247,18 @@ function MetroInteractive(appWrapperElement){
 
 		}
 
+		function refresh_view_wrap_height(){
+			try{
+				var rect = slide.node().getBoundingClientRect();
+				var h = Math.round(rect.bottom - rect.top)+20; //20px margin
+				if(h<200){throw "BadHeight"}
+				S.viewWrap.style("height",h+"px");
+			}
+			catch(e){
+				S.viewWrap.style("height","2000px"); //arbitrary, tall height
+			}			
+		}
+
 		//TWO FUNCTIONS FOR SHOWING DATA: 1) IF DATA ALREADY LOADED: JUST DRAW IT, 2) DATA NOT LOADED: LOAD DATA AND JUST DRAW IT
 		//switch to the selected view and redraw
 		//Levels: [TOP] changeView() calls [validate() and viewOps.show()]
@@ -266,14 +276,13 @@ function MetroInteractive(appWrapperElement){
 				slide.classed("bad-view",true);
 			}
 			
+			S.changeEventReset(); //reset the change event in case any code within a view relies on this
 			viewOps.firstDraw = false; //it's been drawn
 
 			viewLoaded();
 
 			//any time you (re)draw the view, resize the wrapper height
-			var rect = slide.node().getBoundingClientRect();
-			var h = Math.round(rect.bottom - rect.top)+100; //big margin for error
-			S.viewWrap.style("height",h+"px");
+			refresh_view_wrap_height();
 		}
 
 		//get data and show view
@@ -296,7 +305,6 @@ function MetroInteractive(appWrapperElement){
 						viewOps.dataStore.raw = dat;
 						viewOps.dataState = 2; //data loaded!
 						draw_view(); //draw the view
-						S.changeEventReset(); //reset the change event in case any code within a view relies on this
 					}
 				});
 			}
@@ -308,7 +316,6 @@ function MetroInteractive(appWrapperElement){
 				//data is loaded (2) or there is no data to load asynchronously (3)...
 				draw_view();  //draw
 				show_this_slide();  //and show the view
-				S.changeEventReset(); //reset the change event in case any code within a view relies on this
 			}
 			else if(viewOps.dataState===0){
 				//data is not loaded...
@@ -316,12 +323,12 @@ function MetroInteractive(appWrapperElement){
 				show_this_slide();  //and show the view 
 			}
 			else if(viewOps.dataState===1){
-				//data is loading... the view will be drawn in the callback... the latest metro will be retrieved in redrawView
+				//data is loading... the view will be drawn in the callback... the latest metro should be retrieved in redrawView
 				show_this_slide()  //make sure this is the view that is being shown
 			}
 		}
 
-		//register the methods -- view0 is considered the default
+		//register the methods -- view0 is considered the default //viewList is used to create a nav menu
 		viewRegister[viewIndex] = viewOps;
 		viewList.push(viewIndex);
 
@@ -329,7 +336,7 @@ function MetroInteractive(appWrapperElement){
 
 		append_loading_icon(slide);
 
-		return(viewOps);
+		return viewOps;
 	}
 
 
@@ -364,7 +371,7 @@ function MetroInteractive(appWrapperElement){
 			var newhash = viewCode + "G" + metroCode;
 			if(!!setHash){set_hash(newhash)}
 
-			//Record change event -- reset then record
+			//Reset then record change event
 			S.changeEventReset();
 
 			if(S.view != viewCode && S.metro != metroCode){
@@ -386,7 +393,7 @@ function MetroInteractive(appWrapperElement){
 			S.metro = metroCode;
 
 			
-			//because the data
+			//show this view -- eventually calls the low level function draw_view associated with each view -- it will reset state
 			viewRegister[viewCode].show();
 			if(viewMenuCtrl.bilt){
 				viewMenuCtrl.syncButtons();
@@ -397,10 +404,10 @@ function MetroInteractive(appWrapperElement){
 		}
 	}
 
-	//qc, or "quick change" wrappers for changeView, when you just want to change metro or view and force a hash change
+	//"qc" or "quick change" wrappers for changeView, when you just want to change metro or view and force a hash change
 	function qcMetro(metroCode){changeView(S.view, metroCode, true);}
 	function qcView(viewCode){changeView(viewCode, S.metro, true);}
-	function qcRedraw(){changeView(S.view, S.metro, false);} //redraw the current view -- for resize events
+	function qcRedraw(){changeView(S.view, S.metro, false);} //redraw the current view -- for resize events -- doesn't reset hash
 
 	//build_view_nav can only be called once everything has been registered -- i.e. in S.cap
 	viewMenuCtrl.build = function(){
@@ -409,9 +416,8 @@ function MetroInteractive(appWrapperElement){
 		buttons.exit().remove();
 		buttons.select("p").text(function(d,i){return viewRegister[d].name()});
 		buttons.on("mousedown", function(d,i){
-			//buttons.classed("nav-menu-button-selected",false);
-			//d3.select(this).classed("nav-menu-button-selected",true);
 			qcView(d);
+			//changeView, called by qcView, calls this.syncButtons
 		});
 
 		this.bilt = true;
@@ -468,7 +474,7 @@ function MetroInteractive(appWrapperElement){
 			var h = {view:a[0], metro:a[1]}
 		}
 		catch(e){
-			var h = {view:"", metro:""}; //use empty string rather than null so changeView is triggered (see below)
+			var h = {view:"", metro:""}; //use empty string rather than null so changeView is (always) triggered (even when view and metro are null; see below)
 		}
 		finally{
 			return h;
@@ -494,8 +500,9 @@ function MetroInteractive(appWrapperElement){
 
 	function append_loading_icon(wrapper_selection){
 		var svg = wrapper_selection.append("div").style({width:"65px", height:"65px", position:"absolute", top:"400px", left:"50%"})
+									.classed("metro-interactive-loading-icon",true)
 									.append("svg").style({"width":"100%","height":"100%","margin-left":"-32px"})
-									.classed("metro-interactive-loading-icon",true).append("g").attr("transform","translate(5,5)");
+									.append("g").attr("transform","translate(5,5)");
 		
 		var widths = [14,14,14];
 		var xs = [0,20,40];
@@ -503,9 +510,11 @@ function MetroInteractive(appWrapperElement){
 		var heights = [15,25,20];
 		var cols = ["#3e83c1","#65a4e5","#8ac6ff"];
 
-		var bar1 = svg.selectAll("rect.base").data(heights).enter().append("rect").attr({width:14, y:15}).attr("x",function(d,i){return i*20})
-						.style("height",function(d,i){return d}).attr("y",function(d,i){return 25-d})
-						.style("fill",function(d,i){return cols[i]});
+		var bar1 = svg.selectAll("rect").data(heights).enter().append("rect").attr({width:14})
+						.attr("x",function(d,i){return i*20})
+						.attr("height",function(d,i){return d+"px"})
+						.attr("y",function(d,i){return 25-d})
+						.attr("fill",function(d,i){return cols[i]});
 
 		svg.append("text").style({"font-family":"arial","font-size":"13px"}).attr({x:"27",y:"43","text-anchor":"middle"}).text("LOADING");
 
