@@ -1,7 +1,7 @@
 //view 1 - "inclusion by race" view
 	(function(){
-		//var dataFile = "data/inclusionByRace.json";
-		var dataFile = "/~/media/multimedia/interactives/2016/MetroMonitor/data/inclusionByRace.json";
+		var dataFile = "data/inclusionByRace.json";
+		//var dataFile = "/~/media/multimedia/interactives/2016/MetroMonitor/data/inclusionByRace.json";
 
 		var colors = ['#053769', '#a4c7f2', '#cccccc', '#ffa626', '#ff5e1a'];
 

@@ -1,0 +1,11 @@
+TO DO
+
+Option to download data view data without drawing it. >>> Then you just wait till a request to draw the view occurs (changeView) in which case you need to either just draw it if the data are ready, or queue the drawView afterward. Could have a variable, undefined, at outset and then if defined when data downloaded, execute it, var.call().
+
+so, viewOps.show cases:
+
+dataLoaded >>> draw!
+dataNotLoaded >>> get download, initialize callback variable to draw
+dataLoading >>> initialize callback variable
+
+note that if you initialize a data download for an out of view slide, you don't want to actually do any drawing following the download, this is why you need the placeholder for the draw callback.

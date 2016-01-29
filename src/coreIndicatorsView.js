@@ -3,8 +3,8 @@
 	(function(){
 		var colors = ['#053769', '#a4c7f2', '#cccccc', '#ffa626', '#ff5e1a'];
 		
-		//var dataFile = "data/coreIndicators.json";
-		var dataFile = "/~/media/multimedia/interactives/2016/MetroMonitor/data/coreIndicators.json";
+		var dataFile = "data/coreIndicators.json";
+		//var dataFile = "/~/media/multimedia/interactives/2016/MetroMonitor/data/coreIndicators.json";
 
 		var periods = {"Five":"2009 to 2014", "One":"2013 to 2014", "Ten":"2004 to 2014"};
 
@@ -54,6 +54,8 @@
 
 
 		function drawDetailedTable(metro, period, g, formats){
+			//console.log(metro);
+
 			var grI = getInd("gr");
 			var proI = getInd("pro");
 			var incI = getInd("inc");

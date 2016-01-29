@@ -146,7 +146,8 @@ function MetroInteractive(appWrapperElement){
 	S.addView = function(setupView, redrawView, data_uri, metroLookup){
 		var viewNum = numViews;
 		var viewIndex = "V"+viewNum;
-		var viewName = viewIndex; //can be set by user later
+		var viewName = viewIndex; //can be set by user later - for use in menu
+		var viewTitle = null; //for use in each slide title
 
 		//create a "view slide" in the DOM
 		var outer_slide = S.viewWrap.append("div").classed("metro-interactive-view-wrap",true);
@@ -167,33 +168,40 @@ function MetroInteractive(appWrapperElement){
 		viewOps.setMetro = function(code){S.setMetro(code);}
 		viewOps.refreshHeight = refresh_view_wrap_height;
 		viewOps.dataState = 0; // 0: empty, 1: loading, 2: ready, -1: error
-		viewOps.dataStore = {raw:null, processed:null, storage:{}}; //placeholder for the view data
-		viewOps.container = slide;
+		viewOps.dataStore = {data: {raw:null, processed:null}, storage: {}}; //placeholder for the view data
+		viewOps.container = viewOps.slide = slide;
 		viewOps.header = slideHeader;
 		viewOps.lookup = S.metroLookup;
-		viewOps.name = function(name){
-			if(name===null || typeof name === "undefined"){
+		viewOps.name = function(name, title){
+			if(arguments.length===0){
 				return viewName;
+			}
+			else if(arguments.length===1){
+				viewName = name;
 			}
 			else{
 				viewName = name;
+				viewTitle = title;
+
+				var title = slideHeader.selectAll("p").data([title]);
+				title.enter().append("p");
+				title.exit().remove();
+				title.text(function(d,i){return d});
 			}
 		}
-		viewOps.viewData = function(name, data){
+		viewOps.data = function(name, data){
 			if(arguments.length===0){
-				return viewOps.dataStore.raw;
+				return viewOps.dataStore.data.raw;
 			}
 			else if(arguments.length===1){
-				return viewOps.dataStore[name];
-			}
-			else if(arguments.length===2){
-				viewOps.dataStore[name] = data;
-				return data;
+				return viewOps.dataStore.data[name];
 			}
 			else{
-				return [];
+				viewOps.dataStore.data[name] = data;
+				return data;
 			}
 		}
+		viewOps.viewData = viewOps.data; //for backwards compatibility
 
 		//get or set arbitrary name-value pairs in dataStore.storage.
 		viewOps.store = function(name, value){
@@ -306,7 +314,7 @@ function MetroInteractive(appWrapperElement){
 						viewOps.dataState = -1;
 					}
 					else{
-						viewOps.dataStore.raw = dat;
+						viewOps.dataStore.data.raw = dat;
 						viewOps.dataState = 2; //data loaded!
 						draw_view(); //draw the view
 					}
