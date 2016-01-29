@@ -50,16 +50,24 @@
 
 		})
 
-		segments.select("line").attr({"x1":0,"y1":0,"y2":0,"x2":0,"stroke-width":"6"}).style("stroke",function(d,i){return segLegend[d.ind]})
-							   .transition().ease("linear").delay(function(d,i){return (i*1000)+1000}).duration(1000)
-							   .attr("x2",function(d,i){return d.share*100});
+		var lines = segments.select("line").attr({"x1":0,"y1":0,"y2":0,"x2":0,"stroke-width":"6"}).style("stroke",function(d,i){return segLegend[d.ind]});
+		content.on("mousedown",function(){
+			lines.transition().ease("linear").delay(function(d,i){return (i*1000)}).duration(1000)
+							 .attr("x2",function(d,i){return d.share*100});
+		})
+		
 	}
 
 	function setupBase(){
 		this.name("Detail","Racing to an economy for all...");
 		var content = this.slide.append("div").style("padding","15px");
+		content.append("p").text("[CLICK HERE TO START]").style({"text-align":"center", "cursor":"pointer"});
+		content.selectAll("p.legendEntry").data(order).enter().append("p").text(function(d,i){return d})
+				.style("color",function(d,i){return segLegend[d]}).style({"float":"left", "margin-right":"8px"});
+		content.append("div").style({"width":0,"height":0,"clear":"both","position":"relative"});
 		this.store("content", content);
 		this.store("svg", content.append("svg").style({"width":"100%", "height":"100%"}))
+
 	}
 
 	var view = MetroMonitorVersion2.addView(setupBase, redrawBase, dataFile);
